@@ -151,7 +151,7 @@ export function insertElFirst(child, parent){
  *
  * @type {Object}
  * @private
- */
+ */ 
 const elData = {};
 
 /*

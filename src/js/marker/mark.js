@@ -11,6 +11,8 @@ import log from '../utils/log.js';
 import config from '../config.js';
 import {Component} from '../videojs-classes.js';
 
+import MarkDialog from '../mark-form/mark-dialog.js';
+
 /**
  * Private global variables
  */
@@ -39,6 +41,7 @@ class Mark extends Component {
     }  
     
     this.activeMark = null;
+		this.markDialogOptions = config[this.options.dialogName];
   }
   
   /**
@@ -109,7 +112,7 @@ class Mark extends Component {
   }
   
   /**
-   * Draws the active 
+   * Draws the active Mark
    */
   drawActiveMark(progress) {
     const mark = this.activeMark;
@@ -145,7 +148,10 @@ class Mark extends Component {
    * @method handleStart
    */
   endActiveMark(point) {
-    
+    let markDialog = new MarkDialog(this.player_, this.markDialogOptions);
+		
+		// We use this in replacement of addChild because we need a markDialog for each end of a mark
+		this.activeMark.insertBefore(markDialog.createDialog(), null);
   }
   
   /**
@@ -161,6 +167,12 @@ class Mark extends Component {
     return seekBar.vertical();
   }
   
+	/**
+	 * Saves the mark time in the _startTimes array
+	 *  
+	 * @param {Number} time The start time of the mark
+	 * @method setMarkStartTime
+	 */
   setMarkStartTime(time) {
     _startTimes.push(time);
   }

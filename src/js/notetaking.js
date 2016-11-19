@@ -59,7 +59,7 @@ class NoteTaking {
     }
   }
   
-  addMarkerToggle(options){
+  addMarkerToggle(options) {
     if (this.player && this.player.controlBar) {
       var controlBar = this.player.controlBar;
             

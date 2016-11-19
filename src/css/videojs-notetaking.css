@@ -43,17 +43,62 @@
 .ntk-marks li {
   min-width: 3px;
   height: 0.3em;
-  background-color: yellow;
   list-style: none;
   margin: 0;
   position: absolute;
+	background-color: rgba(0,0,0,0.2);
 }
 
 .ntk-activeMark {
-  
+	background-color: yellow;
 }
 
 .ntk-dialog {
-	
+	position: absolute;
+	bottom: 40px;
+	background: rgba(43, 51, 63, 0.7);
+	padding: 16px 8px 10px;
+	border-radius: 4px;
 }
 
+.ntk-dialog-title {
+	width: 100%;
+	color: #555;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 6px 8px;
+	margin-bottom: 5px;
+}
+
+.ntk-dialog-textarea {
+	width: 100%;
+	color: #555;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 6px 8px;
+}
+
+.ntk-dialog-save,
+.ntk-dialog-delete {
+	display: inline-block;
+	background-color: #c9302c;
+	padding: 6px 12px;
+	text-align: center;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	text-align: center;
+}
+button.ntk-dialog-save.fa,
+button.ntk-dialog-delete.fa {
+	font-size: 18px;
+}
+
+.ntk-lg-dialog {
+	width: 200px;
+	height: 160px;
+}
+
+.ntk-md-dialog {
+	width: 150px;
+	height: 140px;
+}

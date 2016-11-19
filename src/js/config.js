@@ -61,6 +61,7 @@ options.Mark = {
   className: 'vjs-progress-holder ntk-marks',
   activeClassName: 'ntk-activeMark',
   idPrefix: 'M',
+	dialogName: 'MarkDialog'
 }
 
 options.MarkDialog = {
@@ -69,14 +70,17 @@ options.MarkDialog = {
 	form: {
 		className: 'ntk-dialog-form'
 	},
+	title: {
+		className: 'ntk-dialog-title'
+	},
 	textArea: {
 		className: 'ntk-dialog-textarea'
 	},
 	save: {
-		className: 'ntk-dialog-save'
+		className: 'ntk-dialog-save fa fa-floppy-o'
 	},
 	delete: {
-		className: 'ntk-dialog-delete'
+		className: 'ntk-dialog-delete fa fa-trash-o'
 	}
 }
 
