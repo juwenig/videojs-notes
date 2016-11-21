@@ -9,7 +9,11 @@ var options = {
 options.MarkerToggle = {
   name: 'MarkerToggle',
   addTo: 'controlBar',
-  className: 'ntk-marker',
+  className: {
+		
+	},
+	
+	'ntk-marker',
   parentClassName: 'fa-stack',
   iconClassName: 'fa fa-stack-2x',
   iconClassNames: {
@@ -56,31 +60,32 @@ options.BoardCreate = {
   className: 'ntk-board-create'
 }
 
-options.Mark = {
-  name: 'Mark',
+options.Marks = {
+  name: 'Marks',
   className: 'vjs-progress-holder ntk-marks',
-  activeClassName: 'ntk-activeMark',
-  idPrefix: 'M',
 	dialogName: 'MarkDialog'
+}
+
+options.MarkItem = {
+	name: 'MarkItem',
+	className: {
+		active: 'ntk-active-mark',
+		inactive: 'ntk-mark'
+	},
+	id: {
+		mark: 'M'
+	}
 }
 
 options.MarkDialog = {
 	name: 'MarkDialog',
-	className: 'ntk-dialog',
-	form: {
-		className: 'ntk-dialog-form'
-	},
-	title: {
-		className: 'ntk-dialog-title'
-	},
-	textArea: {
-		className: 'ntk-dialog-textarea'
-	},
-	save: {
-		className: 'ntk-dialog-save fa fa-floppy-o'
-	},
-	delete: {
-		className: 'ntk-dialog-delete fa fa-trash-o'
+	className: {
+		dialog: 'ntk-dialog',
+		form: 'ntk-dialog-form',
+		title: 'ntk-dialog-title',
+		note: 'ntk-dialog-note',
+		save: 'ntk-dialog-save fa fa-floppy-o',
+		delete: 'ntk-dialog-delete fa fa-trash-o'
 	}
 }
 

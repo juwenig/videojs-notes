@@ -33,6 +33,13 @@ class DisableControl extends Component {
     this.injectEls(options.inject);
   }
   
+	/**
+	 * Attaches elements from source to dest
+	 * ie. Attaches Mark object to board create and board select
+	 *
+	 * @param mapping Maps what object needs to be attached to what
+	 * @method injectEls
+	 */
   injectEls(mapping) {
 		mapping.forEach(function(map){
 			var obj = this.getChild(map.what);
@@ -43,6 +50,11 @@ class DisableControl extends Component {
 		}, this);
   }
   
+	/**
+	 * Creates a DisableControl element
+	 *
+	 * @method createEl
+	 */
   createEl() {
     return Dom.createEl('div', {
       className: this.options_.className

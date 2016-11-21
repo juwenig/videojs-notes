@@ -6,6 +6,8 @@ import log from '../utils/log.js';
 
 import {Component} from '../videojs-classes.js';
 import config from '../config.js';
+import Notes from '../notes/notes.js';
+import Mark from '../marker/mark.js';
 
 
 class MarkDialog extends Component {
@@ -13,17 +15,19 @@ class MarkDialog extends Component {
 		options = mergeOptions(MarkDialog.prototype.options_, options);
 		super(player, options);
 		
+		this.mark = options.mark;
 		this.options = options;
-		this.player = player;
 	}
+	
+// SECTION : CREATE DIALOG
 	
 	/**
 	 * Changed name from createEl because Component calls createDialog and 
 	 * that is unintended
 	 *
-	 * @method createDialog
+	 * @method createEl
 	 */
-	createDialog() {
+	createEl() {
 		// Determine the size and add appropriate class
 		var sizeClass = this.calculateSizeClass();
 		var parentDiv = this.createContainer(sizeClass);
@@ -42,36 +46,57 @@ class MarkDialog extends Component {
 		
 		// ** SAVE BUTTON ** //
 		var save = buttons.insertBefore(this.createSaveButton(), null);
-		Events.on(save, 'click', this.handleSave);
+
 		// ** DELETE BUTTON ** //
 		var del = buttons.insertBefore(this.createDeleteButton(), null);
-		Events.on(del, 'click', this.handleDelete);
 		
+		Events.on(this.player().el(), 'click', this.handleEscape);
 		return parentDiv;
 	}
 	
-	createContainer(addClasses) {
+	/**
+	 * Creates the container element for the mark
+	 *
+	 * @param classes The additional class names to add
+	 * @method createContainer
+	 */
+	createContainer(classes) {
 		var props = {
-			className: `${this.options.className}`	
+			className: `${this.options_.className}`	
 		}
 		var el = Dom.createEl('div', props);
-		if (addClasses !== '') {
-			Dom.addElClass(el, addClasses);
+		if (classes !== '') {
+			Dom.addElClass(el, classes);
 		} 
-		
+		// Need to stop events from propogating on clicks on container
+		let disablePropagation = function(event) {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+		}
+		Events.on(el, 'click', disablePropagation);
 		return el;
 	}
 	
+	/**
+	 * Creates the form element to nest under the container
+	 * 
+	 * @method createForm
+	 */
 	createForm() {
 		var props = { 
-			className: `${this.options.form.className}`
+			className: `${this.options_.form.className}`
 		}
 		return Dom.createEl('form', props);
 	}
 	
+	/**
+	 * Creates the title input to nest under the form
+	 *
+	 * @method createTitle
+	 */
 	createTitle() {
 		var props = {
-			className: `${this.options.title.className}`
+			className: `${this.options_.title.className}`
 		}
 		var attrs = {
 			placeholder: 'Title',
@@ -80,14 +105,20 @@ class MarkDialog extends Component {
 		return Dom.createEl('input', props, attrs);
 	}
 	
-	createNoteInput(addClasses) {
+	/**
+	 * Creates the note text area for the form
+	 *
+	 * @param classes The additional class names to add
+	 * @method createNoteInput
+	 */
+	createNoteInput(classes) {
 		var rows = 3;
 		var props = {
 			placeholder: 'Note',
-			className: `${this.options.textArea.className}`
+			className: `${this.options_.textArea.className}`
 		}
 		
-		if (addClasses === 'ntk-lg-dialog') {
+		if (classes === 'ntk-lg-dialog') {
 			rows = 5;
 		}
 		var attrs = {
@@ -96,46 +127,82 @@ class MarkDialog extends Component {
 		return Dom.createEl('textarea', props, attrs);
 	}
 	
+	/**
+	 * Creates the save button for the form
+	 *
+	 * @method createSaveButton
+	 */
 	createSaveButton() {
 		var props = {
-			className: `${this.options.save.className}`
+			className: `${this.options_.save.className}`
 		}
 		var attrs = {
 			type: 'button'
 		}
-		return Dom.createEl('button', props, attrs);
+		var el = Dom.createEl('button', props, attrs);
+		Events.on(el, 'click', this.handleSave);
+		return el;
 	}
 	
+	/**
+	 * Creates the delete button for the form
+	 *
+	 * @method createDeleteButton
+	 */
 	createDeleteButton() {
 		var props = {
-			className: `${this.options.delete.className}`
+			className: `${this.options_.delete.className}`
 		}
 		var attrs = {
 			type: 'button'
 		}
-		return Dom.createEl('button', props, attrs);
+		var el = Dom.createEl('button', props, attrs);
+		Events.on(el, 'click', this.handleDelete);
+		return el;
 	}
 	
+// END SECTION : CREATE DIALOG
+	
+// SECTION : EVENT HANDLERS
 	/*
 	 * Handles the saving of the notes
 	 * 
 	 * @method handleSave
 	 */
-	handleSave() {
+	handleSave(event) {
 		console.log('saving...');
+		event.preventDefault();
+		event.stopImmediatePropagation();
 	}
 	
-	handleDelete() {
-		console.log('deleting...')
+	handleDelete(event) {
+		console.log('deleting...');
+		event.preventDefault();
+		event.stopImmediatePropagation();
 	}
 	
+	handleEscape(event) {
+		console.log('Escaped dialog...');
+		
+		event.preventDefault();
+		event.stopImmediatePropagation();
+	}
+	
+// END SECTION : EVENT HANDLERS
+	
+// SECTION : DIALOG UTILITY
+	
+	/**
+   * Adds a class name that corresponds to a dialog size dependent on the video dim
+	 * 
+	 * @method calculateSizeClass
+	 */
 	calculateSizeClass() {
 		// YouTube videos have 1.77 ratio width:height
 		// Coursera videos have 1.77 ratio width:height
 		var className = 'ntk'
-		var height = this.player.videoHeight();
-		var width = this.player.videoWidth();
-		console.log('' + height + 'px :' + width + 'px');
+		var height = this.player().videoHeight();
+		var width = this.player().videoWidth();
 		if (width >= 850 && height >= 400) {
 			className = 'ntk-lg-dialog';
 		} else if (width >= 700 && height >= 400) {
@@ -146,6 +213,8 @@ class MarkDialog extends Component {
 		
 		return className;
 	}
+	
+// END SECTION : DIALOG UTILITY
 }
 
 MarkDialog.prototype.options_ = config.MarkDialog;

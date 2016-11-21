@@ -24,11 +24,35 @@ class Notes {
       id = id + Guid.newGUID();
     }
     this.id_ = id;
+		
+		this.notes = [] // Keep notes objects here
   }
   
+	/**
+	 * Saves note to the array
+	 *
+	 * @param note The note to save
+	 * @return notes array index of saved note
+	 * @method saveNote
+	 */
+	saveNote(note) {
+		this.notes.push(note);
+		return (this.notes.length - 1);
+	}
+	
+	/**
+	 * Pushes notes to the server
+	 * 
+	 * @method pushNotes
+	 */
+	pushNotes() {
+	
+	}
+	
   /**
    * Returns the name of the class
    * 
+	 * @method name
    */
   static name() {
     return 'Notes';

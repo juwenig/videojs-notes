@@ -19,10 +19,6 @@ class BoardCreate extends Board {
     options = mergeOptions(BoardCreate.prototype.options_, options);
   }
   
-  attachEls(el){
-    this[el.name().toLowerCase()] = el;
-  }
-  
   /**
    * Give the element button specific class names
    * 
@@ -73,7 +69,7 @@ class BoardCreate extends Board {
    */
   handleMouseMove(event){
     let progress = this.calculateDistance(event);
-    this.mark.drawActiveMark(progress);
+    this.mark.updateActiveMark(progress);
   }
   
   /**

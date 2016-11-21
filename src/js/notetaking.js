@@ -46,6 +46,12 @@ class NoteTaking {
     notetaking.markerToggle = this.addMarkerToggle(markerToggleOptions);
   }
  
+	/**
+	 * Adds our seekbar over the progressControl of the vjs player to disable 
+	 * default functionality of the progressControl
+	 *
+	 * @method addDisableControl
+	 */
   addDisableControl(options) {    
     if (this.player && this.player.controlBar) {
       var controlBar = this.player.controlBar;

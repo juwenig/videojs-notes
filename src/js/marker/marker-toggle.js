@@ -34,6 +34,7 @@ class MarkerToggle extends Button {
    * @method createChild
    */
   createEl() {
+		// Button creates the container el with classnames taken from buildCSSClass
     const el = super.createEl();
     
     const iconClass = this.options_.iconClassName;

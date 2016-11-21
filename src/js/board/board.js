@@ -32,6 +32,17 @@ class Board extends Component {
     
     this.activeMark = null; 
   }
+	
+	/**
+	 * Attaches elements that are not direct children elements to this element
+	 * ie. The Mark object
+	 * 
+	 * @param el The element to attach
+	 * @method attachEls
+	 */
+	attachEls(el){
+    this[el.name().toLowerCase()] = el;
+  }
   
   /**
    * Create the component's DOM element

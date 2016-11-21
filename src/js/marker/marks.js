@@ -28,10 +28,11 @@ var _guids = 0;
  *
  * @param {Player|Object} player
  * @param {Object=} options
- * @Mark
+ * @Marks
  */
-class Mark extends Component {
+class Marks extends Component {
   constructor(player, options) {
+		options = mergeOptions(Mark.prototype.options_, options);
     super(player, options);
     this.player_ = player;
 		
@@ -41,6 +42,7 @@ class Mark extends Component {
     }  
     
     this.activeMark = null;
+		this.markDialog = null;
 		this.markDialogOptions = config[this.options.dialogName];
   }
   
@@ -92,12 +94,17 @@ class Mark extends Component {
     return activeMark
   }
   
+	/**
+	 * Removes the current mark
+	 * 
+	 * @method deleteNewMark
+	 */
   deleteNewMark() {
-    
+    this.contentEl().removeChild(this.activeMark);
   }
   
   /**
-   * Handles the creation of a new mark
+   * Handles the creation of a new mark and is API for board-create
    *
    * @param {Number} time Start time of mark
    * @method newActiveMark
@@ -112,9 +119,12 @@ class Mark extends Component {
   }
   
   /**
-   * Draws the active Mark
+   * Draws the active Mark and is API for board-create
+	 *
+	 * @param progress The point along the seekbar the user has the mouse dragged over in percentage
+	 * @method updateActiveMark
    */
-  drawActiveMark(progress) {
+  updateActiveMark(progress) {
     const mark = this.activeMark;
 
     if (!mark) {
@@ -142,16 +152,18 @@ class Mark extends Component {
   }
   
   /**
-   * Handles the end of a new mark
+   * Handles the end of a new mark and is API for board-create
    *
    * @param {Number} time End time of mark
    * @method handleStart
    */
   endActiveMark(point) {
-    let markDialog = new MarkDialog(this.player_, this.markDialogOptions);
+		var options = mergeOptions(config[Mark.prototype.options_.dialogName], {mark: this});
+    //this.markDialog = new MarkDialog(this.player_, options);
+		this.activeMark.addChild('MarkDialog', options);
 		
 		// We use this in replacement of addChild because we need a markDialog for each end of a mark
-		this.activeMark.insertBefore(markDialog.createDialog(), null);
+		//this.activeMark.insertBefore(this.markDialog.createDialog(), null);
   }
   
   /**
@@ -182,7 +194,7 @@ class Mark extends Component {
   }
 }
 
-Mark.prototype.options_ = config.Mark;
+Marks.prototype.options_ = config.Marks;
 
-Component.registerComponent('Mark', Mark);
-export default Mark;
+Component.registerComponent('Marks', Marks);
+export default Marks;

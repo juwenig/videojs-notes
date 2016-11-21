@@ -18,10 +18,6 @@ class BoardSelect extends Board {
     options = mergeOptions(BoardSelect.prototype.options_, options);
   }
   
-  attachEls(el){
-    this[el.name().toLowerCase()] = el;
-  }
-  
   /**
    * Give the element button specific class names
    * 
