@@ -69,7 +69,7 @@ options.MarkItem = {
 		active: 'ntk-active-mark',
 		inactive: 'ntk-mark'
 	},
-	id: {
+	idName: {
 		mark: 'M'
 	}
 }

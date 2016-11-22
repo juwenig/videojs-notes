@@ -12,6 +12,7 @@ import config from '../config.js';
 import {Component} from '../videojs-classes.js';
 
 import MarkDialog from '../mark-form/mark-dialog.js';
+import MarkItem from './mark-item.js';
 
 /**
  * Private global variables
@@ -19,9 +20,6 @@ import MarkDialog from '../mark-form/mark-dialog.js';
 var _startTimes = [];
 var _endTimes = [];
 var _markIDs = [];
-
-var _guids = 0;
-
 
 /**
  * Overlays element over the player seek bar in order to inhibit triggering of seek bar events
@@ -56,24 +54,6 @@ class Marks extends Component {
     });
   }
   
-  /** 
-   * Gets the markup for creating the mark
-	 * 
-	 * @method getMarkup
-   */
-  getMarkup() {
-    return {
-      tag: 'li',
-      properties: {
-        startPoint: 0,
-        className: this.options_.activeClassName
-      },
-      attributes: {
-        id: this.options_.idPrefix + (_guids++).toString()
-      }
-    }
-  }
-  
   /**
    * Creates a new mark at given point
 	 * 
@@ -84,13 +64,9 @@ class Marks extends Component {
     const childNodes = this.contentEl().children;
     const refNode = childNodes[childNodes.length] || null;
     
-    let markup = this.getMarkup();
-    markup.properties.startPoint = point;
-    let el = Dom.createEl(markup.tag, markup.properties, markup.attributes);
-    
-    let activeMark = this.contentEl().insertBefore(el, refNode);
-    
-    return activeMark
+    var newMark = new MarkItem(this.player())
+    newMark.el().startPoint = point;
+   	return this.addChild(newMark);
   }
   
 	/**
