@@ -2,13 +2,13 @@
  * @file marker.js
  */
 
-import * as Dom from '../utils/dom.js';
+import * as Dom from './utils/dom.js';
 
-import mergeOptions from '../utils/merge-options.js';
-import log from '../utils/log.js';
+import mergeOptions from './utils/merge-options.js';
+import log from './utils/log.js';
 
-import config from '../config.js';
-import {Menu, Button, Component} from '../videojs-classes.js';
+import config from './config.js';
+import {Menu, Button, Component} from './videojs-classes.js';
 
 class MarkerToggle extends Button {
   constructor(player, options) {
@@ -19,10 +19,8 @@ class MarkerToggle extends Button {
     this.targetSelect = this.targetParent.getChild('BoardSelect');
     this.targetCreate = this.targetParent.getChild('BoardCreate');
     
-    this.statuses = null; // setup in createEl
     this.statusInd = 0;
-    this.status = this.statuses[this.statusInd];
-    this.iconClassNames = options.iconClassNames;
+    this.status = this.options_.statuses[this.statusInd];
     
     this.controlText(this.status.replace(/([A-Z])/g, ' $1'));
   }
@@ -37,7 +35,7 @@ class MarkerToggle extends Button {
     const el = super.createEl();
     
 		const className = this.options_.className;
-    const this.statuses = this.options_.statuses;
+    const statuses = this.options_.statuses;
   
     var tag = 'span';
     var props = {
@@ -47,12 +45,12 @@ class MarkerToggle extends Button {
     
     tag = 'i';
     props = {
-      className: `${className.icons['ScrollBar']}`
+      className: `${className.icons['Base']} ${className.icons['ScrollBar']}`
     };
     const iconTop = topEl.insertBefore(Dom.createEl(tag, props), null);
     
     props = {
-      className: `${className.active} ${className.icons[statuses[0]]}`
+      className: ` ${className.active}  ${className.icons['Base']} ${className.icons[statuses[0]]}`
     };
     const iconBottom = topEl.insertBefore(Dom.createEl(tag, props), iconTop);
     
@@ -77,32 +75,34 @@ class MarkerToggle extends Button {
    * @method handleClick
    */ 
   handleClick() {  
-    const modeIcon = this.modeIcon;
-    var numStats = this.statuses.length;
+    var modeIcon = this.modeIcon;
+		var statuses = this.options_.statuses;
+		var className = this.options_.className;
+    var numStats = statuses.length;
     
-    Dom.removeElClass(modeIcon, this.iconClassNames[this.status]);
+    Dom.removeElClass(modeIcon, className.icons[this.status]);
     
     // Change the status, classNames for the marker icon, and enable/disable the Board elements
     this.statusInd = (this.statusInd + 1) % numStats;
-    this.status = this.statuses[this.statusInd];
+    this.status = statuses[this.statusInd];
     this.controlText(this.status.replace(/([A-Z])/g, ' $1'));
     if (this.statusInd < 2) {
-      Dom.addElClass(modeIcon, this.iconClassNames[this.status]);
+      Dom.addElClass(modeIcon, className.icons[this.status]);
     }
     
     // The default shows the icon for 'CreateNote' - after transitioning to this mode 
     // icon should change to 'SelectNote' and the targetCreate should be enabled
     // Similarly, when the icon for 'SelectNote' shows, the icon should change to
     // 'ScrollBar' and should hide the parent
-    if (this.status === this.statuses[1]) {
+    if (this.status === statuses[1]) {
       this.targetParent.show();
       this.targetCreate.show(); // Normal -> Create
       this.targetSelect.hide();
-    } else if (this.status === this.statuses[2]) {
+    } else if (this.status === statuses[2]) {
       this.targetParent.show();
       this.targetSelect.show(); // Create -> Select
       this.targetCreate.hide();
-    } else if (this.status === this.statuses[0]) {
+    } else if (this.status === statuses[0]) {
       this.targetParent.hide(); // Go to Create
     }
     

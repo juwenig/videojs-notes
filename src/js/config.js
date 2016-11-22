@@ -13,9 +13,10 @@ options.MarkerToggle = {
 		marker: 'ntk-marker',
 		parent: 'fa-stack',
 		icons: {
-			CreateNote: 'fa fa-stack-2x fa-pencil',
-			SelectNote: 'fa fa-stack-2x fa-hand-pointer-o',
-			ScrollBar: 'fa fa-stack-2x fa-sticky-note-o',
+			Base: 'fa fa-stack-2x',
+			CreateNote: 'fa-pencil',
+			SelectNote: 'fa-hand-pointer-o',
+			ScrollBar: 'fa-sticky-note-o',
 		},
 		active: 'ntk-marker-active'
 	},
@@ -30,14 +31,14 @@ options.DisableControl = {
   name: 'DisableControl',
   addTo: 'controlBar:progressControl',
   children: [
-    'Mark',
+    'Marks',
     'BoardSelect',
     'BoardCreate'
   ],
   className: 'vjs-progress-control ntk-disable-control',
 	inject: [
-		{src: 'Mark', dest: 'BoardSelect'},
-		{src: 'Mark', dest: 'BoardCreate'}
+		{src: 'Marks', dest: 'BoardSelect'},
+		{src: 'Marks', dest: 'BoardCreate'}
 	]
 }
 
@@ -49,12 +50,14 @@ options.Board = {
 
 options.BoardSelect = {
   name: 'BoardSelect',
-  className: 'ntk-board-select'
+  className: 'ntk-board-select',
+	mark: 'Marks'
 }
 
 options.BoardCreate = {
   name: 'BoardCreate',
-  className: 'ntk-board-create'
+  className: 'ntk-board-create',
+	mark: 'Marks'
 }
 
 options.Marks = {
@@ -69,9 +72,7 @@ options.MarkItem = {
 		active: 'ntk-active-mark',
 		inactive: 'ntk-mark'
 	},
-	idName: {
-		mark: 'M'
-	}
+	idName: 'M'
 }
 
 options.MarkDialog = {

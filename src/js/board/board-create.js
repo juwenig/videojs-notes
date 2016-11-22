@@ -45,7 +45,7 @@ class BoardCreate extends Board {
    * @method handleMouseDown
    */
   handleMouseDown(event) {
-    const doc = this.mark.el_.ownerDocument;
+    const doc = this[this.options_.mark.toLocaleLowerCase()].el_.ownerDocument;
     
     event.preventDefault();
     Dom.blockTextSelection();
@@ -56,7 +56,7 @@ class BoardCreate extends Board {
 
     let startPoint = this.calculateDistance(event);
     
-    this.mark.startActiveMark(startPoint);
+    this[this.options_.mark.toLocaleLowerCase()].startActiveMark(startPoint);
     this.handleMouseMove(event);
   }
   
@@ -68,7 +68,7 @@ class BoardCreate extends Board {
    */
   handleMouseMove(event){
     let progress = this.calculateDistance(event);
-    this.mark.updateActiveMark(progress);
+    this[this.options_.mark.toLocaleLowerCase()].updateActiveMark(progress);
   }
   
   /**
@@ -78,7 +78,7 @@ class BoardCreate extends Board {
    * @method handleMouseUp
    */
   handleMouseUp(event) {
-    const doc = this.mark.el_.ownerDocument;
+    const doc = this[this.options_.mark.toLocaleLowerCase()].el_.ownerDocument;
     
     Dom.unblockTextSelection();
     
@@ -87,7 +87,7 @@ class BoardCreate extends Board {
     this.off(doc, 'touchend', this.handleMouseUp);
     
     let endPoint = this.calculateDistance(event);
-    this.mark.endActiveMark(endPoint);
+    this[this.options_.mark.toLocaleLowerCase()].endActiveMark(endPoint);
   }
 }
 

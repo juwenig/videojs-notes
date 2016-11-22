@@ -32,7 +32,7 @@ class Marks extends Component {
   constructor(player, options) {
 		var id = player.id ? `${player.id()}_mark_${Guid.newGUID()}` : `mark_${Guid.newGUID()}`;
 		options.id = id;
-		options = mergeOptions(Mark.prototype.options_, options, {id: id});
+		options = mergeOptions(Marks.prototype.options_, options, {id: id});
     super(player, options);
 		
 		// require an id just in case there are multiple feeds associated to this
@@ -64,7 +64,7 @@ class Marks extends Component {
     const childNodes = this.contentEl().children;
     const refNode = childNodes[childNodes.length] || null;
     
-    var newMark = new MarkItem(this.player())
+    var newMark = new MarkItem(this.player(), {})
     newMark.el().startPoint = point;
    	return this.addChild(newMark);
   }
@@ -90,7 +90,7 @@ class Marks extends Component {
     this.setMarkStartTime(time);
     this.activeMark = this.createNewMark(point);
     
-    this.activeMark.style.left = (point * 100).toFixed(2) + '%';
+    this.activeMark.el().style.left = (point * 100).toFixed(2) + '%';
   }
   
   /**
@@ -100,7 +100,7 @@ class Marks extends Component {
 	 * @method updateActiveMark
    */
   updateActiveMark(progress) {
-    const mark = this.activeMark;
+    const mark = this.activeMark.el();
 
     if (!mark) {
       return;
@@ -114,7 +114,7 @@ class Marks extends Component {
       progress = 0;
     }
     
-    let offSetPercent = (progress - this.activeMark.startPoint);
+    let offSetPercent = (progress - this.activeMark.el().startPoint);
     // Convert to a percentage for setting
     const percentage = (offSetPercent * 100).toFixed(2) + '%';
     
@@ -133,7 +133,7 @@ class Marks extends Component {
    * @method handleStart
    */
   endActiveMark(point) {
-		var options = mergeOptions(config[Mark.prototype.options_.dialogName], {mark: this});
+		var options = mergeOptions(config[Marks.prototype.options_.dialogName], {mark: this});
     //this.markDialog = new MarkDialog(this.player_, options);
 		this.activeMark.addChild('MarkDialog', options);
 		

@@ -16,7 +16,7 @@ import mergeOptions from './utils/merge-options.js';
 import config from './config.js';
 
 import Notes from './notes/notes.js';
-import MarkerToggle from './marker/marker-toggle.js'
+import MarkerToggle from './marker-toggle.js'
 import DisableControl from './disable-control.js';
 
 class NoteTaking {

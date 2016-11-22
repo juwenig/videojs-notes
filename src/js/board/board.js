@@ -9,7 +9,8 @@ import assign from 'object.assign';
 
 import config from '../config.js';
 import {Component} from '../videojs-classes.js';
-import Mark from '../marker/mark.js';
+
+import Marks from '../marker/marks.js';
 
 /**
  * The board creates a new Notes object that goes along with a Mark object

@@ -11,10 +11,27 @@ import log from '../utils/log.js';
 import config from '../config.js';
 import {Component} from '../videojs-classes.js';
 
-class MarkItem {
+
+class MarkItem extends Component {
 	constructor(player, options){
-		options = mergeOptions(this.prototype.options_, options);
+		options = mergeOptions(MarkItem.prototype.options_, options);
 		super(player, options);
+	}
+	
+	createEl() {
+		var tag = 'li';
+		var props = {
+			startPoint: 0,
+      className: this.options_.className.active
+		};
+		var attrs = {
+			id: `${this.options_.idName} ${Guid.newGUID().toString()}`
+		}
+		return Dom.createEl(tag, props, attrs);
+	}
+	
+	handleClick(event) {
+		
 	}
 }
 

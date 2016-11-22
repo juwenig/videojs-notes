@@ -9,6 +9,7 @@ import log from '../utils/log.js';
 
 import config from '../config.js';
 import {Component} from '../videojs-classes.js';
+
 import Board from './board.js';
 
 class BoardSelect extends Board {

@@ -6,8 +6,9 @@ import log from '../utils/log.js';
 
 import {Component} from '../videojs-classes.js';
 import config from '../config.js';
+
 import Notes from '../notes/notes.js';
-import Mark from '../marker/mark.js';
+import Marks from '../marker/marks.js';
 
 
 class MarkDialog extends Component {
@@ -37,7 +38,7 @@ class MarkDialog extends Component {
 		
 		// ** TEXTAREA ** //
 		var note = form.insertBefore(this.createNoteInput(sizeClass), null);
-		
+
 		// ** BUTTONS ** //
 		var buttons = form.insertBefore(Dom.createEl('div'), null);
 		
@@ -46,8 +47,8 @@ class MarkDialog extends Component {
 
 		// ** DELETE BUTTON ** //
 		var del = buttons.insertBefore(this.createDeleteButton(), null);
+		Events.on(this.player().el(), 'click', this.handlePlayerClick);
 		
-		Events.on(this.player().el(), 'click', this.handleEscape);
 		return parentDiv;
 	}
 	
@@ -59,18 +60,14 @@ class MarkDialog extends Component {
 	 */
 	createContainer(classes) {
 		var props = {
-			className: `${this.options_.className}`	
+			className: `${this.options_.className.dialog}`	
 		}
 		var el = Dom.createEl('div', props);
 		if (classes !== '') {
 			Dom.addElClass(el, classes);
 		} 
-		// Need to stop events from propogating on clicks on container
-		let disablePropagation = function(event) {
-			event.preventDefault();
-			event.stopImmediatePropagation();
-		}
-		Events.on(el, 'click', disablePropagation);
+		
+		Events.on(el, 'click', this.handleContainerClick);
 		return el;
 	}
 	
@@ -81,7 +78,7 @@ class MarkDialog extends Component {
 	 */
 	createForm() {
 		var props = { 
-			className: `${this.options_.form.className}`
+			className: `${this.options_.className.form}`
 		}
 		return Dom.createEl('form', props);
 	}
@@ -93,7 +90,7 @@ class MarkDialog extends Component {
 	 */
 	createTitle() {
 		var props = {
-			className: `${this.options_.title.className}`
+			className: `${this.options_.className.title}`
 		}
 		var attrs = {
 			placeholder: 'Title',
@@ -112,7 +109,7 @@ class MarkDialog extends Component {
 		var rows = 3;
 		var props = {
 			placeholder: 'Note',
-			className: `${this.options_.textArea.className}`
+			className: `${this.options_.className.note}`
 		}
 		
 		if (classes === 'ntk-lg-dialog') {
@@ -131,7 +128,7 @@ class MarkDialog extends Component {
 	 */
 	createSaveButton() {
 		var props = {
-			className: `${this.options_.save.className}`
+			className: `${this.options_.className.save}`
 		}
 		var attrs = {
 			type: 'button'
@@ -148,7 +145,7 @@ class MarkDialog extends Component {
 	 */
 	createDeleteButton() {
 		var props = {
-			className: `${this.options_.delete.className}`
+			className: `${this.options_.className.delete}`
 		}
 		var attrs = {
 			type: 'button'
@@ -181,6 +178,7 @@ class MarkDialog extends Component {
 	 */
 	handleDelete(event) {
 		console.log('deleting...');
+		
 		event.preventDefault();
 		event.stopImmediatePropagation();
 	}
@@ -193,6 +191,8 @@ class MarkDialog extends Component {
 	 */
 	handlePlayerClick(event) {
 		console.log('Escaped dialog...');
+		console.log(this.options_);
+		this.options_.marks.deleteNewMark();
 		
 		event.preventDefault();
 		event.stopImmediatePropagation();

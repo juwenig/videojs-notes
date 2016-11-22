@@ -27,7 +27,7 @@ class DisableControl extends Component {
     options = mergeOptions(DisableControl.prototype.options_, options);
     super(player, options);
     
-    player.notetaking_.marks = this.getChild('Mark');
+    player.notetaking_.marks = this.getChild('Marks');
     this.hide();
     
     this.injectEls(options.inject);
