@@ -14,9 +14,6 @@ class MarkDialog extends Component {
 	constructor(player, options){
 		options = mergeOptions(MarkDialog.prototype.options_, options);
 		super(player, options);
-		
-		this.mark = options.mark;
-		this.options = options;
 	}
 	
 // SECTION : CREATE DIALOG
@@ -167,6 +164,7 @@ class MarkDialog extends Component {
 	/*
 	 * Handles the saving of the notes
 	 * 
+	 * @param event Event object
 	 * @method handleSave
 	 */
 	handleSave(event) {
@@ -175,15 +173,38 @@ class MarkDialog extends Component {
 		event.stopImmediatePropagation();
 	}
 	
+	/**
+	 * Handles the deletion of notes
+	 *
+	 * @param event Event object
+	 * @method handleDelete
+	 */
 	handleDelete(event) {
 		console.log('deleting...');
 		event.preventDefault();
 		event.stopImmediatePropagation();
 	}
 	
-	handleEscape(event) {
+	/**
+	 * Handles clicking on the player object to exit dialog
+	 *
+	 * @param event Event object
+	 * @method handlePlayerClick
+	 */
+	handlePlayerClick(event) {
 		console.log('Escaped dialog...');
 		
+		event.preventDefault();
+		event.stopImmediatePropagation();
+	}
+	
+	/**
+	 * Disables the click from propogating to the player
+	 *
+	 * @param event Event object
+	 * @method handleContainerClick
+	 */
+	handleContainerClick(event) {
 		event.preventDefault();
 		event.stopImmediatePropagation();
 	}

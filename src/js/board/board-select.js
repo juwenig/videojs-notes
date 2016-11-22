@@ -13,9 +13,8 @@ import Board from './board.js';
 
 class BoardSelect extends Board {
   constructor(player, options) {
+		options = mergeOptions(BoardSelect.prototype.options_, options);
     super(player, options);
-    
-    options = mergeOptions(BoardSelect.prototype.options_, options);
   }
   
   /**

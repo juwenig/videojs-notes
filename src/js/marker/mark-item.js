@@ -13,7 +13,8 @@ import {Component} from '../videojs-classes.js';
 
 class MarkItem {
 	constructor(player, options){
-		
+		options = mergeOptions(this.prototype.options_, options);
+		super(player, options);
 	}
 }
 

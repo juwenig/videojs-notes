@@ -85,10 +85,6 @@ class NoteTaking {
       log.warn('The notes element is already registered.');
     }
   }
-  
-  findInChildrenTree(){
-    
-  }
 }
 
 NoteTaking.prototype.options_ = config;

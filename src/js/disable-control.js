@@ -42,8 +42,8 @@ class DisableControl extends Component {
 	 */
   injectEls(mapping) {
 		mapping.forEach(function(map){
-			var obj = this.getChild(map.what);
-			var dest = this.getChild(map.into);
+			var obj = this.getChild(map.src);
+			var dest = this.getChild(map.dest);
 			if (typeof dest.attachEls === 'function') {
 				dest.attachEls(obj);
 			}

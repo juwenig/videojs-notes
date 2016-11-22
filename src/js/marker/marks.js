@@ -32,14 +32,13 @@ var _guids = 0;
  */
 class Marks extends Component {
   constructor(player, options) {
-		options = mergeOptions(Mark.prototype.options_, options);
+		var id = player.id ? `${player.id()}_mark_${Guid.newGUID()}` : `mark_${Guid.newGUID()}`;
+		options.id = id;
+		options = mergeOptions(Mark.prototype.options_, options, {id: id});
     super(player, options);
-    this.player_ = player;
 		
 		// require an id just in case there are multiple feeds associated to this
-    if (player && player.id && player.id()) {
-      this.id_ = `${player.id()}_mark_${Guid.newGUID()}`;
-    }  
+    
     
     this.activeMark = null;
 		this.markDialog = null;

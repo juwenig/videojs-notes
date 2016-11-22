@@ -10,23 +10,20 @@ options.MarkerToggle = {
   name: 'MarkerToggle',
   addTo: 'controlBar',
   className: {
-		
+		marker: 'ntk-marker',
+		parent: 'fa-stack',
+		icons: {
+			CreateNote: 'fa fa-stack-2x fa-pencil',
+			SelectNote: 'fa fa-stack-2x fa-hand-pointer-o',
+			ScrollBar: 'fa fa-stack-2x fa-sticky-note-o',
+		},
+		active: 'ntk-marker-active'
 	},
-	
-	'ntk-marker',
-  parentClassName: 'fa-stack',
-  iconClassName: 'fa fa-stack-2x',
-  iconClassNames: {
-    CreateNote: 'fa-pencil',
-    SelectNote: 'fa-hand-pointer-o',
-    ScrollBar: 'fa-sticky-note-o',
-  },
-  activeIcon: 'ntk-marker-active',
-  markerStatuses: [
+  statuses: [
     'CreateNote',
     'SelectNote',
     'ScrollBar'
-  ],
+  ]
 }
 
 options.DisableControl = {
@@ -39,8 +36,8 @@ options.DisableControl = {
   ],
   className: 'vjs-progress-control ntk-disable-control',
 	inject: [
-		{what: 'Mark', into: 'BoardSelect'},
-		{what: 'Mark', into: 'BoardCreate'}
+		{src: 'Mark', dest: 'BoardSelect'},
+		{src: 'Mark', dest: 'BoardCreate'}
 	]
 }
 

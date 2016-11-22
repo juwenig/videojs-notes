@@ -12,15 +12,14 @@ import {Menu, Button, Component} from '../videojs-classes.js';
 
 class MarkerToggle extends Button {
   constructor(player, options) {
+		options = mergeOptions(MarkerToggle.prototype.options_, options);
     super(player, options);
-    
-    options = mergeOptions(MarkerToggle.prototype.options_, options);
-    
+       
     this.targetParent = player.notetaking_.disableControl;
     this.targetSelect = this.targetParent.getChild('BoardSelect');
     this.targetCreate = this.targetParent.getChild('BoardCreate');
     
-    this.statuses = options.markerStatuses;
+    this.statuses = null; // setup in createEl
     this.statusInd = 0;
     this.status = this.statuses[this.statusInd];
     this.iconClassNames = options.iconClassNames;
@@ -37,26 +36,23 @@ class MarkerToggle extends Button {
 		// Button creates the container el with classnames taken from buildCSSClass
     const el = super.createEl();
     
-    const iconClass = this.options_.iconClassName;
-    const iconClasses = this.options_.iconClassNames;
-    const statuses = this.options_.markerStatuses;
-    const activeIcon = this.options_.activeIcon;
-    const parentClass = this.options_.parentClassName;
+		const className = this.options_.className;
+    const this.statuses = this.options_.statuses;
   
     var tag = 'span';
     var props = {
-      className: `${parentClass}`
+      className: `${className.parent}`
     };
     const topEl = el.insertBefore(Dom.createEl(tag, props), null);
     
     tag = 'i';
     props = {
-      className: `${iconClass} ${iconClasses['ScrollBar']}`
+      className: `${className.icons['ScrollBar']}`
     };
     const iconTop = topEl.insertBefore(Dom.createEl(tag, props), null);
     
     props = {
-      className: `${iconClass} ${activeIcon} ${iconClasses[statuses[0]]}`
+      className: `${className.active} ${className.icons[statuses[0]]}`
     };
     const iconBottom = topEl.insertBefore(Dom.createEl(tag, props), iconTop);
     
@@ -120,7 +116,7 @@ class MarkerToggle extends Button {
    * @method buildCSSClass
    */
   buildCSSClass() {
-    return `${this.options_.className} ${super.buildCSSClass()}`;
+    return `${this.options_.className.marker} ${super.buildCSSClass()}`;
   }
   
   /**
