@@ -70,21 +70,24 @@ options.MarkItem = {
 	name: 'MarkItem',
 	className: {
 		active: 'ntk-active-mark',
-		inactive: 'ntk-mark'
+		inactive: 'ntk-inactive-mark'
 	},
-	idName: 'M'
+	idPrefix: 'M'
 }
 
 options.MarkDialog = {
 	name: 'MarkDialog',
 	className: {
+		background: 'ntk-dialog-background',
 		dialog: 'ntk-dialog',
 		form: 'ntk-dialog-form',
 		title: 'ntk-dialog-title',
 		note: 'ntk-dialog-note',
 		save: 'ntk-dialog-save fa fa-floppy-o',
 		delete: 'ntk-dialog-delete fa fa-trash-o'
-	}
+	},
+	markClass: 'ntk-marks',
+	markID: ''
 }
 
 options.Notes = {

@@ -15,13 +15,6 @@ import MarkDialog from '../mark-form/mark-dialog.js';
 import MarkItem from './mark-item.js';
 
 /**
- * Private global variables
- */
-var _startTimes = [];
-var _endTimes = [];
-var _markIDs = [];
-
-/**
  * Overlays element over the player seek bar in order to inhibit triggering of seek bar events
  *
  * @param {Player|Object} player
@@ -35,9 +28,6 @@ class Marks extends Component {
 		options = mergeOptions(Marks.prototype.options_, options, {id: id});
     super(player, options);
 		
-		// require an id just in case there are multiple feeds associated to this
-    
-    
     this.activeMark = null;
 		this.markDialog = null;
 		this.markDialogOptions = config[this.options.dialogName];
@@ -61,9 +51,6 @@ class Marks extends Component {
 	 * @method createNewMark
    */
   createNewMark(point) {
-    const childNodes = this.contentEl().children;
-    const refNode = childNodes[childNodes.length] || null;
-    
     var newMark = new MarkItem(this.player(), {})
     newMark.el().startPoint = point;
    	return this.addChild(newMark);
@@ -86,8 +73,6 @@ class Marks extends Component {
    */
   startActiveMark(point) {
     let time = this.player_.duration() * point;
-    
-    this.setMarkStartTime(time);
     this.activeMark = this.createNewMark(point);
     
     this.activeMark.el().style.left = (point * 100).toFixed(2) + '%';
@@ -133,12 +118,10 @@ class Marks extends Component {
    * @method handleStart
    */
   endActiveMark(point) {
-		var options = mergeOptions(config[Marks.prototype.options_.dialogName], {mark: this});
-    //this.markDialog = new MarkDialog(this.player_, options);
-		this.activeMark.addChild('MarkDialog', options);
-		
-		// We use this in replacement of addChild because we need a markDialog for each end of a mark
-		//this.activeMark.insertBefore(this.markDialog.createDialog(), null);
+		var options = {
+			markID: this.activeMark.el().id
+		}
+		this.activeMark.addChild(Marks.prototype.options_.dialogName, options);
   }
   
   /**
@@ -152,20 +135,6 @@ class Marks extends Component {
     let seekBar = progressControl.getChild('seekBar');
 
     return seekBar.vertical();
-  }
-  
-	/**
-	 * Saves the mark time in the _startTimes array
-	 *  
-	 * @param {Number} time The start time of the mark
-	 * @method setMarkStartTime
-	 */
-  setMarkStartTime(time) {
-    _startTimes.push(time);
-  }
-  
-  endMarkStartTime(time) {
-    _endTimes.push(time);
   }
 }
 

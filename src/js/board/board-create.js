@@ -49,8 +49,8 @@ class BoardCreate extends Board {
     
     event.preventDefault();
     Dom.blockTextSelection();
-    
-    this.on(doc, 'mousemove', this.handleMouseMove);
+
+		this.on(doc, 'mousemove', this.handleMouseMove);
     this.on(doc, 'mouseup', this.handleMouseUp);
     this.on(doc, 'touchend', this.handleMouseUp);
 

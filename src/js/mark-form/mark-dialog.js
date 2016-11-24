@@ -2,6 +2,7 @@ import * as Dom from '../utils/dom.js';
 
 import mergeOptions from '../utils/merge-options.js';
 import * as Events from '../utils/events.js';
+import * as Fn from '../utils/fn.js';
 import log from '../utils/log.js';
 
 import {Component} from '../videojs-classes.js';
@@ -15,6 +16,12 @@ class MarkDialog extends Component {
 	constructor(player, options){
 		options = mergeOptions(MarkDialog.prototype.options_, options);
 		super(player, options);
+		
+		if (!!this.player_.el().ntk) {
+			this.player_.el().ntk.markDialog = this.el();
+		} else {
+			this.player_.el().ntk = {markDialog: this.el()};
+		}
 	}
 	
 // SECTION : CREATE DIALOG
@@ -26,6 +33,8 @@ class MarkDialog extends Component {
 	 * @method createEl
 	 */
 	createEl() {
+		var background = this.createBackground();
+		
 		// Determine the size and add appropriate class
 		var sizeClass = this.calculateSizeClass();
 		var parentDiv = this.createContainer(sizeClass);
@@ -47,9 +56,21 @@ class MarkDialog extends Component {
 
 		// ** DELETE BUTTON ** //
 		var del = buttons.insertBefore(this.createDeleteButton(), null);
-		Events.on(this.player().el(), 'click', this.handlePlayerClick);
+		Events.on(this.player().el(), 'click', Fn.bind(this,this.handlePlayerClick));
 		
 		return parentDiv;
+	}
+	
+	/**
+	 * Creates the background that sits in front of the video player
+	 *
+	 * @method createBackground
+	 */
+	createBackground(){
+		var props = {
+			className: `${this.options_.className.background}`
+		}
+		return Dom.createEl('div', props);
 	}
 	
 	/**
@@ -190,9 +211,13 @@ class MarkDialog extends Component {
 	 * @method handlePlayerClick
 	 */
 	handlePlayerClick(event) {
-		console.log('Escaped dialog...');
-		console.log(this.options_);
-		this.options_.marks.deleteNewMark();
+		Events.off(this.player().el(), 'click', this.handlePlayerClick);
+		var mark = this.player_.el().ntk.activeMark;
+		var parent = mark.parentElement;
+		
+		if (mark !== '') {
+			parent.removeChild(mark);
+		}
 		
 		event.preventDefault();
 		event.stopImmediatePropagation();
