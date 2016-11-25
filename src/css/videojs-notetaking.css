@@ -49,8 +49,13 @@
 	background-color: rgba(0,0,0,0.2);
 }
 
-.ntk-active-mark {
+.ntk-marks .ntk-active-mark {
 	background-color: yellow;
+}
+
+.ntk-mark-selected {
+	border: 1px solid yellow;
+	border-radius: 5px;
 }
 
 .ntk-dialog-background{

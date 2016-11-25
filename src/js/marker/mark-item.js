@@ -18,10 +18,12 @@ class MarkItem extends Component {
 		super(player, options);
 		
 		if (!!this.player_.el().ntk) {
-			this.player_.el().ntk.activeMark = this.el();
+			this.player().el().ntk.activeMark = this.el();
 		} else {
-			this.player_.el().ntk = {activeMark: this.el()};
+			this.player().el().ntk = {activeMark: this.el()};
 		}
+		
+		this.addMarkItemListeners();
 	}
 	
 	createEl() {
@@ -33,11 +35,31 @@ class MarkItem extends Component {
 		var attrs = {
 			id: `${this.options_.idPrefix}${Guid.newGUID().toString()}`
 		}
+		
 		return Dom.createEl(tag, props, attrs);
 	}
 	
+	
 	handleClick(event) {
-		
+		this.el_.style["border"] = "1px solid yellow"
+		this.el_.style["border-radius"] = "5px";
+		console.log("Get mark id of: ", this.el_.id);
+	}
+	
+	handleHover(event) {
+		this.el_.style["border"] = "1px solid yellow"
+		this.el_.style["border-radius"] = "5px";
+	}
+	
+	addMarkItemListeners() {
+		this.on('click', this.handleClick);
+		this.on('onmouseover', this.handleHover);
+		console.log('here')
+	}
+	
+	removeMarkItemListeners() {
+		this.off('click', handle);
+		this.off('onmouseover', this.handleHover);
 	}
 }
 

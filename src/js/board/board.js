@@ -66,8 +66,6 @@ class Board extends Component {
    * @method handleClick
    */
   handleClick(event) {
-    event.stopImmediatePropagation();
-    event.preventDefault();
   }
   
   /**

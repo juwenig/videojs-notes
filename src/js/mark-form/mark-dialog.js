@@ -22,6 +22,11 @@ class MarkDialog extends Component {
 		} else {
 			this.player_.el().ntk = {markDialog: this.el()};
 		}
+		
+		if ('controls_' in this.player()) {
+			this.player().controls_ = false;
+		}
+		
 	}
 	
 // SECTION : CREATE DIALOG
@@ -56,8 +61,8 @@ class MarkDialog extends Component {
 
 		// ** DELETE BUTTON ** //
 		var del = buttons.insertBefore(this.createDeleteButton(), null);
-		Events.on(this.player().el(), 'click', Fn.bind(this,this.handlePlayerClick));
-		
+		// We cannot add this to the tech_ object so this will have to do for now..
+		this.player().tech_.on('click', Fn.bind(this, this.handleTechClick));
 		return parentDiv;
 	}
 	
@@ -210,9 +215,12 @@ class MarkDialog extends Component {
 	 * @param event Event object
 	 * @method handlePlayerClick
 	 */
-	handlePlayerClick(event) {
-		Events.off(this.player().el(), 'click', this.handlePlayerClick);
-		var mark = this.player_.el().ntk.activeMark;
+	handleTechClick(event) {
+		var mark = this.player().el().ntk.activeMark;
+		if ('controls_' in this.player()) {
+			this.player().controls_ = true;
+		}
+		
 		var parent = mark.parentElement;
 		
 		if (mark !== '') {
@@ -221,6 +229,8 @@ class MarkDialog extends Component {
 		
 		event.preventDefault();
 		event.stopImmediatePropagation();
+		
+		this.player().tech_.off('click', this.handleTechClick);
 	}
 	
 	/**
