@@ -13,17 +13,28 @@ import videojs from 'video.js';
 import * as Dom from './utils/dom.js';
 import log from './utils/log.js';
 import mergeOptions from './utils/merge-options.js';
+import toTitleCase from './utils/to-title-case.js';
 import config from './config.js';
 
 import Notes from './notes/notes.js';
 import MarkerToggle from './marker-toggle.js'
 import DisableControl from './disable-control.js';
 
-class NoteTaking {
+import {Component} from './videojs-classes.js';
+
+class NoteTaking extends Component {
   constructor(player, options) {
-    options = mergeOptions(this.options_, options);
+    options = mergeOptions(NoteTaking.prototype.options_, options);
+		super(player, options);
+		
     this.player = player;
-    this.player.notetaking_ = this.player.notetaking_ || {};
+    
+		if (!this.player.notetaking_) {
+			this.player.notetaking_ = this;
+		} else {
+			this.oldData = this.player.notetaking_;
+			this.player.notetaking_ = this;
+		}
     
     if (options.id === 'string'){
       this.id = options.id;
@@ -42,14 +53,14 @@ class NoteTaking {
     // Register and add the control bar to the player only once and on constructor
     const notetaking = this.player.notetaking_; 
     
-    notetaking.disableControl = this.addDisableControl(disableControlOptions);
+    this.addDisableControl(disableControlOptions);
     notetaking.markerToggle = this.addMarkerToggle(markerToggleOptions);
   }
  
 	/**
-	 * Adds our seekbar over the progressControl of the vjs player to disable 
-	 * default functionality of the progressControl
+	 * Adds disable control to the progress control that exists on the current player
 	 *
+	 * @param options Options for the DisableControl component
 	 * @method addDisableControl
 	 */
   addDisableControl(options) {    
@@ -58,8 +69,10 @@ class NoteTaking {
       
       if (controlBar.progressControl) {
         let progressControl = controlBar.progressControl;
-        
-        var disableControl = progressControl.addChild('disableControl', {});
+        if (progressControl.getChild('DisableControl')) {
+					throw new Error('There is already a Disable Control attached to the progress control');
+				}
+        var disableControl = progressControl.addChild('disableControl', options);
         return disableControl;
       }
     }
@@ -68,12 +81,50 @@ class NoteTaking {
   addMarkerToggle(options) {
     if (this.player && this.player.controlBar) {
       var controlBar = this.player.controlBar;
-            
+      
+			if (controlBar.getChild('MarkerToggle')) {
+				throw new Error('There is already a Marker Toggle attached to the control bar');
+			}
       var markerToggle = controlBar.addChild('markerToggle', options);
       return markerToggle;
     }
   }
+	
+	notetaking() {
+		if (!this.player.notetaking_) {
+			return;
+		}
+		
+		return this.player.notetaking_;
+	}
   
+	registerElement(name, element) {
+		if (name) {
+			name = toTitleCase(name);
+		} else {
+			return;
+		}
+		
+		if (!this.elements_) {
+			this.elements_ = {};
+		}
+		
+		this.elements_[name] = element;
+		
+		return element;
+	}
+	
+	getElement(name) {
+		if (name) {
+			name = toTitleCase(name);
+		} else {
+			return;
+		}
+		
+		return this.elements_[name];
+	}
+	
+	/// MIGHT DELETE
   registerNotes(el) {    
     // Checks if the el is already in notes_
     if (!this.notes_[el]) {
@@ -89,4 +140,5 @@ class NoteTaking {
 
 NoteTaking.prototype.options_ = config;
 
+Component.registerComponent('NoteTaking', NoteTaking);
 export default NoteTaking;

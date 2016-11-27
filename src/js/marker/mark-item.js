@@ -24,6 +24,10 @@ class MarkItem extends Component {
 		}
 		
 		this.addMarkItemListeners();
+		
+		if ("notetaking_" in this.player()) {
+			this.player().notetaking_[this.name()] = this;
+		}
 	}
 	
 	createEl() {
@@ -54,7 +58,6 @@ class MarkItem extends Component {
 	addMarkItemListeners() {
 		this.on('click', this.handleClick);
 		this.on('onmouseover', this.handleHover);
-		console.log('here')
 	}
 	
 	removeMarkItemListeners() {

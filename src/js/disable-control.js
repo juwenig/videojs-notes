@@ -11,7 +11,7 @@ import config from './config.js';
 
 import BoardSelect from './board/board-select.js';
 import BoardCreate from './board/board-create.js';
-import {Component} from './videojs-classes.js';
+import {NoteTakingComponent, Component} from './videojs-classes.js';
 
 /**
  * Overalys element over the player seek bar in order to inhibit triggering of seek bar events
@@ -21,7 +21,7 @@ import {Component} from './videojs-classes.js';
  * @extends Component
  * @DisableControl
  */
-class DisableControl extends Component {
+class DisableControl extends NoteTakingComponent {
   constructor(player, options) {
     options.reportTouchActivity = false;
     options = mergeOptions(DisableControl.prototype.options_, options);
@@ -31,6 +31,10 @@ class DisableControl extends Component {
     this.hide();
     
     this.injectEls(options.inject);
+		
+		if ("notetaking_" in this.player()) {
+			this.player().notetaking_[this.name()] = this;
+		}
   }
   
 	/**
@@ -58,7 +62,7 @@ class DisableControl extends Component {
   createEl() {
     return Dom.createEl('div', {
       className: this.options_.className
-    }, {});
+    });
   }
 }
 

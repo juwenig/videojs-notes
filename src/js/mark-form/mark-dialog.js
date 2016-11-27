@@ -5,28 +5,32 @@ import * as Events from '../utils/events.js';
 import * as Fn from '../utils/fn.js';
 import log from '../utils/log.js';
 
-import {Component} from '../videojs-classes.js';
+import {NoteTakingComponent, Component} from '../videojs-classes.js';
 import config from '../config.js';
 
 import Notes from '../notes/notes.js';
 import Marks from '../marker/marks.js';
 
 
-class MarkDialog extends Component {
+class MarkDialog extends NoteTakingComponent {
 	constructor(player, options){
 		options = mergeOptions(MarkDialog.prototype.options_, options);
 		super(player, options);
 		
 		if (!!this.player_.el().ntk) {
-			this.player_.el().ntk.markDialog = this.el();
+			this.player().el().ntk.markDialog = this.el();
 		} else {
-			this.player_.el().ntk = {markDialog: this.el()};
+			this.player().el().ntk = {markDialog: this.el()};
 		}
 		
-		if ('controls_' in this.player()) {
+		// Disables player controls so that background click does not pause/play video
+		if ("controls_" in this.player()) {
 			this.player().controls_ = false;
 		}
 		
+		if ("notetaking_" in this.player()) {
+			this.player().notetaking_[this.name()] = this;
+		}
 	}
 	
 // SECTION : CREATE DIALOG
@@ -62,6 +66,7 @@ class MarkDialog extends Component {
 		// ** DELETE BUTTON ** //
 		var del = buttons.insertBefore(this.createDeleteButton(), null);
 		// We cannot add this to the tech_ object so this will have to do for now..
+		this.on(this.player().tech_, 'click', this.handleTechClick);
 		this.player().tech_.on('click', Fn.bind(this, this.handleTechClick));
 		return parentDiv;
 	}

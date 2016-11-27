@@ -34,7 +34,7 @@ const onPlayerReady = (player, options) => {
   }
   
   // Adds plugin class to player element
-  player.addClass('vjs-notetaking');
+  player.addClass('ntk-videojs');
   
   // Checks if notetaking object is already associated with the player
   if (!player.notetaking_) {

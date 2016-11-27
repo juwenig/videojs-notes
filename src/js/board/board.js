@@ -32,6 +32,9 @@ class Board extends Component {
     this.on('click', this.handleClick);
     
     this.activeMark = null; 
+		if ("notetaking_" in this.player()) {
+			this.player().notetaking_[this.name()] = this;
+		}
   }
 	
 	/**

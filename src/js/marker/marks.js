@@ -31,6 +31,10 @@ class Marks extends Component {
     this.activeMark = null;
 		this.markDialog = null;
 		this.markDialogOptions = config[this.options.dialogName];
+		
+		if ("notetaking_" in this.player()) {
+			this.player().notetaking_[this.name()] = this;
+		}
   }
   
   /**
@@ -51,7 +55,7 @@ class Marks extends Component {
 	 * @method createNewMark
    */
   createNewMark(point) {
-    var newMark = new MarkItem(this.player(), {})
+    var newMark = new MarkItem(this.player(), {});
     newMark.el().startPoint = point;
    	return this.addChild(newMark);
   }

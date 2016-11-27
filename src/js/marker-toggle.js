@@ -8,14 +8,14 @@ import mergeOptions from './utils/merge-options.js';
 import log from './utils/log.js';
 
 import config from './config.js';
-import {Menu, Button, Component} from './videojs-classes.js';
+import {NoteTakingButton, Component} from './videojs-classes.js';
 
-class MarkerToggle extends Button {
+class MarkerToggle extends NoteTakingButton {
   constructor(player, options) {
 		options = mergeOptions(MarkerToggle.prototype.options_, options);
     super(player, options);
-       
-    this.targetParent = player.notetaking_.disableControl;
+    
+    this.targetParent = this.getElement('DisableControl');
     this.targetSelect = this.targetParent.getChild('BoardSelect');
     this.targetCreate = this.targetParent.getChild('BoardCreate');
     
@@ -23,6 +23,10 @@ class MarkerToggle extends Button {
     this.status = this.options_.statuses[this.statusInd];
     
     this.controlText(this.status.replace(/([A-Z])/g, ' $1'));
+		
+		if ("notetaking_" in this.player()) {
+			this.player().notetaking_[this.name()] = this;
+		}
   }
   
   /**
@@ -36,23 +40,25 @@ class MarkerToggle extends Button {
     
 		const className = this.options_.className;
     const statuses = this.options_.statuses;
-  
+  	
+		// Container Span
     var tag = 'span';
     var props = {
       className: `${className.parent}`
     };
     const topEl = el.insertBefore(Dom.createEl(tag, props), null);
     
-    tag = 'i';
+		// Icon 1
     props = {
       className: `${className.icons['Base']} ${className.icons['ScrollBar']}`
     };
-    const iconTop = topEl.insertBefore(Dom.createEl(tag, props), null);
+    const iconTop = topEl.insertBefore(Dom.createEl('i', props), null);
     
+		// Icon 2
     props = {
       className: ` ${className.active}  ${className.icons['Base']} ${className.icons[statuses[0]]}`
     };
-    const iconBottom = topEl.insertBefore(Dom.createEl(tag, props), iconTop);
+    const iconBottom = topEl.insertBefore(Dom.createEl('i', props), iconTop);
     
     this.modeIcon = iconBottom;
     
