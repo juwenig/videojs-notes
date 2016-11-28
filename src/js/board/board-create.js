@@ -6,10 +6,9 @@ import * as Dom from '../utils/dom.js';
 
 import mergeOptions from '../utils/merge-options.js';
 import log from '../utils/log.js';
+import {Component} from '../utils/vjs-classes.js';
 
 import config from '../config.js';
-import {Component} from '../videojs-classes.js';
-
 import Board from './board.js';
 
 class BoardCreate extends Board {

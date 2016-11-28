@@ -6,12 +6,12 @@ import * as Dom from './utils/dom.js';
 
 import mergeOptions from './utils/merge-options.js';
 import log from './utils/log.js';
+import {Component} from './utils/vjs-classes.js';
 
 import config from './config.js';
 
 import BoardSelect from './board/board-select.js';
 import BoardCreate from './board/board-create.js';
-import {NoteTakingComponent, Component} from './videojs-classes.js';
 
 /**
  * Overalys element over the player seek bar in order to inhibit triggering of seek bar events
@@ -21,7 +21,7 @@ import {NoteTakingComponent, Component} from './videojs-classes.js';
  * @extends Component
  * @DisableControl
  */
-class DisableControl extends NoteTakingComponent {
+class DisableControl extends Component {
   constructor(player, options) {
     options.reportTouchActivity = false;
     options = mergeOptions(DisableControl.prototype.options_, options);
@@ -31,10 +31,6 @@ class DisableControl extends NoteTakingComponent {
     this.hide();
     
     this.injectEls(options.inject);
-		
-		if ("notetaking_" in this.player()) {
-			this.player().notetaking_[this.name()] = this;
-		}
   }
   
 	/**
@@ -46,8 +42,8 @@ class DisableControl extends NoteTakingComponent {
 	 */
   injectEls(mapping) {
 		mapping.forEach(function(map){
-			var obj = this.getChild(map.src);
-			var dest = this.getChild(map.dest);
+			const obj = this.getChild(map.src);
+			const dest = this.getChild(map.dest);
 			if (typeof dest.attachEls === 'function') {
 				dest.attachEls(obj);
 			}

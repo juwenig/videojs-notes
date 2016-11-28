@@ -4,32 +4,22 @@ import mergeOptions from '../utils/merge-options.js';
 import * as Events from '../utils/events.js';
 import * as Fn from '../utils/fn.js';
 import log from '../utils/log.js';
+import {Component} from '../utils/vjs-classes.js';
 
-import {NoteTakingComponent, Component} from '../videojs-classes.js';
 import config from '../config.js';
 
 import Notes from '../notes/notes.js';
 import Marks from '../marker/marks.js';
 
 
-class MarkDialog extends NoteTakingComponent {
+class MarkDialog extends Component {
 	constructor(player, options){
 		options = mergeOptions(MarkDialog.prototype.options_, options);
 		super(player, options);
 		
-		if (!!this.player_.el().ntk) {
-			this.player().el().ntk.markDialog = this.el();
-		} else {
-			this.player().el().ntk = {markDialog: this.el()};
-		}
-		
 		// Disables player controls so that background click does not pause/play video
 		if ("controls_" in this.player()) {
 			this.player().controls_ = false;
-		}
-		
-		if ("notetaking_" in this.player()) {
-			this.player().notetaking_[this.name()] = this;
 		}
 	}
 	
@@ -42,29 +32,29 @@ class MarkDialog extends NoteTakingComponent {
 	 * @method createEl
 	 */
 	createEl() {
-		var background = this.createBackground();
+		const background = this.createBackground();
 		
 		// Determine the size and add appropriate class
-		var sizeClass = this.calculateSizeClass();
-		var parentDiv = this.createContainer(sizeClass);
+		const sizeClass = this.calculateSizeClass();
+		let parentDiv = this.createContainer(sizeClass);
 		
 		// ** FORM ** //
-		var form = parentDiv.insertBefore(this.createForm(), null);
+		let form = parentDiv.insertBefore(this.createForm(), null);
 		
 		// ** TITLE ** //
-		var title = form.insertBefore(this.createTitle(), null);
+		let title = form.insertBefore(this.createTitle(), null);
 		
 		// ** TEXTAREA ** //
-		var note = form.insertBefore(this.createNoteInput(sizeClass), null);
+		let note = form.insertBefore(this.createNoteInput(sizeClass), null);
 
 		// ** BUTTONS ** //
-		var buttons = form.insertBefore(Dom.createEl('div'), null);
+		let buttons = form.insertBefore(Dom.createEl('div'), null);
 		
 		// ** SAVE BUTTON ** //
-		var save = buttons.insertBefore(this.createSaveButton(), null);
+		let save = buttons.insertBefore(this.createSaveButton(), null);
 
 		// ** DELETE BUTTON ** //
-		var del = buttons.insertBefore(this.createDeleteButton(), null);
+		let del = buttons.insertBefore(this.createDeleteButton(), null);
 		// We cannot add this to the tech_ object so this will have to do for now..
 		this.on(this.player().tech_, 'click', this.handleTechClick);
 		this.player().tech_.on('click', Fn.bind(this, this.handleTechClick));
@@ -77,7 +67,7 @@ class MarkDialog extends NoteTakingComponent {
 	 * @method createBackground
 	 */
 	createBackground(){
-		var props = {
+		let props = {
 			className: `${this.options_.className.background}`
 		}
 		return Dom.createEl('div', props);
@@ -90,10 +80,10 @@ class MarkDialog extends NoteTakingComponent {
 	 * @method createContainer
 	 */
 	createContainer(classes) {
-		var props = {
+		let props = {
 			className: `${this.options_.className.dialog}`	
 		}
-		var el = Dom.createEl('div', props);
+		let el = Dom.createEl('div', props);
 		if (classes !== '') {
 			Dom.addElClass(el, classes);
 		} 
@@ -108,7 +98,7 @@ class MarkDialog extends NoteTakingComponent {
 	 * @method createForm
 	 */
 	createForm() {
-		var props = { 
+		let props = { 
 			className: `${this.options_.className.form}`
 		}
 		return Dom.createEl('form', props);
@@ -120,10 +110,10 @@ class MarkDialog extends NoteTakingComponent {
 	 * @method createTitle
 	 */
 	createTitle() {
-		var props = {
+		let props = {
 			className: `${this.options_.className.title}`
 		}
-		var attrs = {
+		let attrs = {
 			placeholder: 'Title',
 			type: 'text'
 		}
@@ -137,8 +127,8 @@ class MarkDialog extends NoteTakingComponent {
 	 * @method createNoteInput
 	 */
 	createNoteInput(classes) {
-		var rows = 3;
-		var props = {
+		let rows = 3;
+		let props = {
 			placeholder: 'Note',
 			className: `${this.options_.className.note}`
 		}
@@ -146,7 +136,7 @@ class MarkDialog extends NoteTakingComponent {
 		if (classes === 'ntk-lg-dialog') {
 			rows = 5;
 		}
-		var attrs = {
+		let attrs = {
 			rows: rows
 		}
 		return Dom.createEl('textarea', props, attrs);
@@ -158,13 +148,13 @@ class MarkDialog extends NoteTakingComponent {
 	 * @method createSaveButton
 	 */
 	createSaveButton() {
-		var props = {
+		let props = {
 			className: `${this.options_.className.save}`
 		}
-		var attrs = {
+		let attrs = {
 			type: 'button'
 		}
-		var el = Dom.createEl('button', props, attrs);
+		let el = Dom.createEl('button', props, attrs);
 		Events.on(el, 'click', this.handleSave);
 		return el;
 	}
@@ -175,13 +165,13 @@ class MarkDialog extends NoteTakingComponent {
 	 * @method createDeleteButton
 	 */
 	createDeleteButton() {
-		var props = {
+		let props = {
 			className: `${this.options_.className.delete}`
 		}
-		var attrs = {
+		let attrs = {
 			type: 'button'
 		}
-		var el = Dom.createEl('button', props, attrs);
+		let el = Dom.createEl('button', props, attrs);
 		Events.on(el, 'click', this.handleDelete);
 		return el;
 	}
@@ -221,12 +211,12 @@ class MarkDialog extends NoteTakingComponent {
 	 * @method handlePlayerClick
 	 */
 	handleTechClick(event) {
-		var mark = this.player().el().ntk.activeMark;
+		let mark = this.player().el().ntk.activeMark;
 		if ('controls_' in this.player()) {
 			this.player().controls_ = true;
 		}
 		
-		var parent = mark.parentElement;
+		let parent = mark.parentElement;
 		
 		if (mark !== '') {
 			parent.removeChild(mark);
@@ -261,9 +251,9 @@ class MarkDialog extends NoteTakingComponent {
 	calculateSizeClass() {
 		// YouTube videos have 1.77 ratio width:height
 		// Coursera videos have 1.77 ratio width:height
-		var className = 'ntk'
-		var height = this.player().videoHeight();
-		var width = this.player().videoWidth();
+		let className = 'ntk'
+		let height = this.player().videoHeight();
+		let width = this.player().videoWidth();
 		if (width >= 850 && height >= 400) {
 			className = 'ntk-lg-dialog';
 		} else if (width >= 700 && height >= 400) {

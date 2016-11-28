@@ -7,9 +7,9 @@ import * as Guid from '../utils/guid.js';
 
 import mergeOptions from '../utils/merge-options.js';
 import log from '../utils/log.js';
+import {Component} from '../utils/vjs-classes.js';
 
 import config from '../config.js';
-import {Component} from '../videojs-classes.js';
 
 import MarkDialog from '../mark-form/mark-dialog.js';
 import MarkItem from './mark-item.js';
@@ -23,7 +23,7 @@ import MarkItem from './mark-item.js';
  */
 class Marks extends Component {
   constructor(player, options) {
-		var id = player.id ? `${player.id()}_mark_${Guid.newGUID()}` : `mark_${Guid.newGUID()}`;
+		let id = player.id ? `${player.id()}_mark_${Guid.newGUID()}` : `mark_${Guid.newGUID()}`;
 		options.id = id;
 		options = mergeOptions(Marks.prototype.options_, options, {id: id});
     super(player, options);
@@ -55,7 +55,7 @@ class Marks extends Component {
 	 * @method createNewMark
    */
   createNewMark(point) {
-    var newMark = new MarkItem(this.player(), {});
+    let newMark = new MarkItem(this.player(), {});
     newMark.el().startPoint = point;
    	return this.addChild(newMark);
   }
@@ -122,7 +122,7 @@ class Marks extends Component {
    * @method handleStart
    */
   endActiveMark(point) {
-		var options = {
+		let options = {
 			markID: this.activeMark.el().id
 		}
 		this.activeMark.addChild(Marks.prototype.options_.dialogName, options);

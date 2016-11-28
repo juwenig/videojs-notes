@@ -5,10 +5,9 @@ import * as Dom from '../utils/dom.js';
 
 import mergeOptions from '../utils/merge-options.js';
 import log from '../utils/log.js';
-import assign from 'object.assign';
+import {Component} from '../utils/vjs-classes.js';
 
 import config from '../config.js';
-import {Component} from '../videojs-classes.js';
 
 import Marks from '../marker/marks.js';
 
@@ -54,12 +53,12 @@ class Board extends Component {
    * @return {Element}
    * @method createEl
    */
-  createEl(tag = 'div', props = {}, attributes = {}) {
-    props = assign(props, {
+  createEl() {
+    let props = {
       className: `${Board.prototype.options_.className} ${this.buildCSSClass()}`
-    });
+    };
     
-     return super.createEl(tag, props, attributes);
+     return super.createEl('div', props);
   }
   
   /**

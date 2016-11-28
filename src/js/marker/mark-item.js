@@ -7,10 +7,9 @@ import * as Guid from '../utils/guid.js';
 
 import mergeOptions from '../utils/merge-options.js';
 import log from '../utils/log.js';
+import {Component} from '../utils/vjs-classes.js';
 
 import config from '../config.js';
-import {Component} from '../videojs-classes.js';
-
 
 class MarkItem extends Component {
 	constructor(player, options){
@@ -31,12 +30,12 @@ class MarkItem extends Component {
 	}
 	
 	createEl() {
-		var tag = 'li';
-		var props = {
+		let tag = 'li';
+		let props = {
 			startPoint: 0,
       className: this.options_.className.active
 		};
-		var attrs = {
+		let attrs = {
 			id: `${this.options_.idPrefix}${Guid.newGUID().toString()}`
 		}
 		

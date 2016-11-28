@@ -1,4 +1,4 @@
-var options = {
+let options = {
   id: 'vjs-notetaking',
   savenotes: 'none',
   url: '',
@@ -18,7 +18,7 @@ options.MarkerToggle = {
 			SelectNote: 'fa-hand-pointer-o',
 			ScrollBar: 'fa-sticky-note-o',
 		},
-		active: 'ntk-marker-active'
+		modeIcon: 'ntk-marker-mode-icon'
 	},
   statuses: [
     'CreateNote',

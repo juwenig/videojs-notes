@@ -6,27 +6,23 @@ import * as Dom from './utils/dom.js';
 
 import mergeOptions from './utils/merge-options.js';
 import log from './utils/log.js';
+import {Button, Component} from './utils/vjs-classes.js';
 
 import config from './config.js';
-import {NoteTakingButton, Component} from './videojs-classes.js';
 
-class MarkerToggle extends NoteTakingButton {
+class MarkerToggle extends Button {
   constructor(player, options) {
 		options = mergeOptions(MarkerToggle.prototype.options_, options);
     super(player, options);
     
-    this.targetParent = this.getElement('DisableControl');
+    this.targetParent = this.getElement('DisableControl')[0];
     this.targetSelect = this.targetParent.getChild('BoardSelect');
     this.targetCreate = this.targetParent.getChild('BoardCreate');
-    
+		
     this.statusInd = 0;
     this.status = this.options_.statuses[this.statusInd];
     
     this.controlText(this.status.replace(/([A-Z])/g, ' $1'));
-		
-		if ("notetaking_" in this.player()) {
-			this.player().notetaking_[this.name()] = this;
-		}
   }
   
   /**
@@ -42,8 +38,8 @@ class MarkerToggle extends NoteTakingButton {
     const statuses = this.options_.statuses;
   	
 		// Container Span
-    var tag = 'span';
-    var props = {
+    let tag = 'span';
+    let props = {
       className: `${className.parent}`
     };
     const topEl = el.insertBefore(Dom.createEl(tag, props), null);
@@ -81,10 +77,10 @@ class MarkerToggle extends NoteTakingButton {
    * @method handleClick
    */ 
   handleClick() {  
-    var modeIcon = this.modeIcon;
-		var statuses = this.options_.statuses;
-		var className = this.options_.className;
-    var numStats = statuses.length;
+    let modeIcon = this.modeIcon;
+		let statuses = this.options_.statuses;
+		let className = this.options_.className;
+    let numStats = statuses.length;
     
     Dom.removeElClass(modeIcon, className.icons[this.status]);
     

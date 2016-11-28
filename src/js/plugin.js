@@ -42,9 +42,9 @@ const onPlayerReady = (player, options) => {
     player.notetaking_ = new NoteTaking(player, options)
   }
    
-  var id = options.id;
+  let id = options.id;
 
-  var el = null;
+  let el = null;
 
   if (id) {
     el = Dom.getEl(id);
@@ -74,7 +74,7 @@ const onPlayerReady = (player, options) => {
 const notetaking = function(options) {
   this.ready(() => {
     // Create an unique identifier if not given an id
-    var id = {id: `${defaults.id}_${Guid.newGUID()}`};
+    let id = {id: `${defaults.id}_${Guid.newGUID()}`};
     
     onPlayerReady(this, videojs.mergeOptions(defaults, id, options));
   });

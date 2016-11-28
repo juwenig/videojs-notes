@@ -1,11 +1,6 @@
 /* 
- *  videojs-notetaking architecture 
- *    - setup.js: setup and initializing first DOM element for the notetaking plugin
- *    - notetaking.js: outlines the NoteTaking class 
- *    - notes.js: outlines the Notes class
- *    - live-feed.js: outlines the LiveFeed class, which constructs the DOM elements for display
- *    - notes-dialog.js: outlines the NotesDialog class
- *   
+ *  Used to 
+ *    
  */
 
 import videojs from 'video.js';
@@ -14,13 +9,13 @@ import * as Dom from './utils/dom.js';
 import log from './utils/log.js';
 import mergeOptions from './utils/merge-options.js';
 import toTitleCase from './utils/to-title-case.js';
+import {Component} from './utils/vjs-classes.js';
+
 import config from './config.js';
 
 import Notes from './notes/notes.js';
 import MarkerToggle from './marker-toggle.js'
 import DisableControl from './disable-control.js';
-
-import {Component} from './videojs-classes.js';
 
 class NoteTaking extends Component {
   constructor(player, options) {
@@ -32,6 +27,7 @@ class NoteTaking extends Component {
 		if (!this.player.notetaking_) {
 			this.player.notetaking_ = this;
 		} else {
+			// Keep Old Data for conflicts with notetaking_
 			this.oldData = this.player.notetaking_;
 			this.player.notetaking_ = this;
 		}
@@ -65,14 +61,14 @@ class NoteTaking extends Component {
 	 */
   addDisableControl(options) {    
     if (this.player && this.player.controlBar) {
-      var controlBar = this.player.controlBar;
+      let controlBar = this.player.controlBar;
       
       if (controlBar.progressControl) {
         let progressControl = controlBar.progressControl;
         if (progressControl.getChild('DisableControl')) {
 					throw new Error('There is already a Disable Control attached to the progress control');
 				}
-        var disableControl = progressControl.addChild('disableControl', options);
+        let disableControl = progressControl.addChild('disableControl', options);
         return disableControl;
       }
     }
@@ -80,12 +76,12 @@ class NoteTaking extends Component {
   
   addMarkerToggle(options) {
     if (this.player && this.player.controlBar) {
-      var controlBar = this.player.controlBar;
+      let controlBar = this.player.controlBar;
       
 			if (controlBar.getChild('MarkerToggle')) {
 				throw new Error('There is already a Marker Toggle attached to the control bar');
 			}
-      var markerToggle = controlBar.addChild('markerToggle', options);
+      let markerToggle = controlBar.addChild('markerToggle', options);
       return markerToggle;
     }
   }
@@ -98,6 +94,14 @@ class NoteTaking extends Component {
 		return this.player.notetaking_;
 	}
   
+	/**
+	 * Stores instantiated component objects onto this class
+	 *
+	 * @param {String=} name Name of the object to store, used later for lookup
+	 * @param {Object=} element Component object to store
+	 * @return {Element}
+	 * @method registerElement
+	 */
 	registerElement(name, element) {
 		if (name) {
 			name = toTitleCase(name);
@@ -109,11 +113,22 @@ class NoteTaking extends Component {
 			this.elements_ = {};
 		}
 		
-		this.elements_[name] = element;
+		if (this.elements_[name]) {
+			this.elements_[name].push(element);
+		} else {
+			this.elements_[name] = [element];
+		}
 		
 		return element;
 	}
 	
+	/**
+	 * Gets the stored object
+	 *
+	 * @param {String=} name The name of the object you would like to retrieve
+	 * @return {Element|Array}
+	 * @method getElement
+	 */
 	getElement(name) {
 		if (name) {
 			name = toTitleCase(name);
@@ -122,6 +137,16 @@ class NoteTaking extends Component {
 		}
 		
 		return this.elements_[name];
+	}
+	
+	/**
+	 * Retrieves the old data that was set to 
+	 *
+	 * @return {Object}
+	 * @method retrieveOldData
+	 */
+	retrieveOldData() {
+		return this.oldData;
 	}
 	
 	/// MIGHT DELETE
@@ -136,6 +161,8 @@ class NoteTaking extends Component {
       log.warn('The notes element is already registered.');
     }
   }
+	
+	
 }
 
 NoteTaking.prototype.options_ = config;
