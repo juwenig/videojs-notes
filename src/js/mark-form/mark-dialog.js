@@ -56,7 +56,6 @@ class MarkDialog extends Component {
 		// ** DELETE BUTTON ** //
 		let del = buttons.insertBefore(this.createDeleteButton(), null);
 		// We cannot add this to the tech_ object so this will have to do for now..
-		this.on(this.player().tech_, 'click', this.handleTechClick);
 		this.player().tech_.on('click', Fn.bind(this, this.handleTechClick));
 		return parentDiv;
 	}

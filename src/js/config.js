@@ -6,8 +6,8 @@ let options = {
   notesSection: true
 }
 
-options.MarkerToggle = {
-  name: 'MarkerToggle',
+options.MarkerButton = {
+  name: 'MarkerButton',
   addTo: 'controlBar',
   className: {
 		marker: 'ntk-marker',
@@ -32,7 +32,6 @@ options.DisableControl = {
   addTo: 'controlBar:progressControl',
   children: [
     'Marks',
-    'BoardSelect',
     'BoardCreate'
   ],
   className: 'vjs-progress-control ntk-disable-control',

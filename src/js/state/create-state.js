@@ -11,33 +11,23 @@ import {Component} from '../utils/vjs-classes.js';
 import config from '../config.js';
 import Board from './board.js';
 
-class BoardCreate extends Board {
-  constructor(player, options) {
-    options = mergeOptions(BoardCreate.prototype.options_, options);
-		super(player, options);
-  }
-  
+/**
+ * Handles events for creating marks
+ * 
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @class MarkCreate
+ */
+class MarkCreate {
   /**
-   * Give the element button specific class names
-   * 
-   * @method buildCSSClass
-   */
-  buildCSSClass() {
-    return `${BoardCreate.prototype.options_.className}`;
-  }
-  
-  /**
-   * Selects a mark from mark list
-   * 
-   * @param {Object} event Event object
-   * @method handleClick
-   */
-  handleClick(event) {
-    event.stopImmediatePropagation();
-    event.preventDefault();
-  }
-  
-  /**
+	 * Stops propogation of marks element click event to parent elements
+	 */
+	handleClick(event) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
+	}
+	
+	/**
    * Triggers the mark start event for a new active mark
    * 
    * @param {Object} event Event object
@@ -90,7 +80,7 @@ class BoardCreate extends Board {
   }
 }
 
-BoardCreate.prototype.options_ = config.BoardCreate;
+MarkCreate.prototype.options_ = config.MarkCreate;
 
-Component.registerComponent('BoardCreate', BoardCreate)
-export default BoardCreate;
+Component.registerComponent('MarkCreate', MarkCreate)
+export default MarkCreate;

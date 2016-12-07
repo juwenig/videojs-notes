@@ -9,43 +9,33 @@ import log from '../utils/log.js';
 import {Component} from '../utils/vjs-classes.js';
 
 import config from '../config.js';
-
 import Board from './board.js';
 
-class BoardSelect extends Board {
-  constructor(player, options) {
-		options = mergeOptions(BoardSelect.prototype.options_, options);
-    super(player, options);
-  }
-  
+/**
+ * Handles events for selecting marks
+ * 
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @class MarkCreate
+ */
+class MarkSelect {
   /**
-   * Give the element button specific class names
-   * 
-   * @method buildCSSClass
-   */
-  buildCSSClass() {
-    return `${BoardSelect.prototype.options_.className}`;
-  }
-  
-  /**
-   * Handles the click event by pulling all marks that correspond to selected time point
-   * 
-   * @param {Object} event Event object
-   * @method handleClick
-   */
-  handleClick(event) {
-    /* todo: mark function */
-  }
-  
-  /**
+	 * Stops propogation of marks element click event to parent elements
+	 */
+	handleClick(event) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
+	}
+	
+	/**
    * Triggers the mark start event for a new active mark
    * 
    * @param {Object} event Event object
    * @method handleMouseDown
    */
   handleMouseDown(event) {
-    event.stopImmediatePropagation();
     event.preventDefault();
+		event.stopImmediatePropagation();
   }
   
   /**
@@ -55,8 +45,8 @@ class BoardSelect extends Board {
    * @method handleMouseMove
    */
   handleMouseMove(event){
-    event.stopImmediatePropagation();
     event.preventDefault();
+		event.stopImmediatePropagation();
   }
   
   /**
@@ -66,12 +56,12 @@ class BoardSelect extends Board {
    * @method handleMouseUp
    */
   handleMouseUp(event) {
-    event.stopImmediatePropagation();
     event.preventDefault();
+		event.stopImmediatePropagation();
   }
 }
 
-BoardSelect.prototype.options_ = config.BoardSelect;
+MarkSelect.prototype.options_ = config.MarkSelect;
 
-Component.registerComponent('BoardSelect', BoardSelect)
-export default BoardSelect;
+Component.registerComponent('MarkSelect', MarkSelect)
+export default MarkSelect;

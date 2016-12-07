@@ -14,7 +14,7 @@ import {Component} from './utils/vjs-classes.js';
 import config from './config.js';
 
 import Notes from './notes/notes.js';
-import MarkerToggle from './marker-toggle.js'
+import MarkerButton from './marker-button.js'
 import DisableControl from './disable-control.js';
 
 class NoteTaking extends Component {
@@ -43,14 +43,14 @@ class NoteTaking extends Component {
     }
     
     // Separate the Mark and the DisableControl options from config
-    const markerToggleOptions = options.MarkerToggle;
+    const markerButtonOptions = options.MarkerButton;
     const disableControlOptions = options.DisableControl;
     
     // Register and add the control bar to the player only once and on constructor
     const notetaking = this.player.notetaking_; 
     
     this.addDisableControl(disableControlOptions);
-    notetaking.markerToggle = this.addMarkerToggle(markerToggleOptions);
+    this.addMarkerButton(markerButtonOptions);
   }
  
 	/**
@@ -74,15 +74,15 @@ class NoteTaking extends Component {
     }
   }
   
-  addMarkerToggle(options) {
+  addMarkerButton(options) {
     if (this.player && this.player.controlBar) {
       let controlBar = this.player.controlBar;
       
-			if (controlBar.getChild('MarkerToggle')) {
-				throw new Error('There is already a Marker Toggle attached to the control bar');
+			if (controlBar.getChild('MarkerButton')) {
+				throw new Error('There is already a Marker Button attached to the control bar');
 			}
-      let markerToggle = controlBar.addChild('markerToggle', options);
-      return markerToggle;
+      let markerButton = controlBar.addChild('markerButton', options);
+      return markerButton;
     }
   }
 	

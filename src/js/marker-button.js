@@ -10,9 +10,9 @@ import {Button, Component} from './utils/vjs-classes.js';
 
 import config from './config.js';
 
-class MarkerToggle extends Button {
+class MarkerButton extends Button {
   constructor(player, options) {
-		options = mergeOptions(MarkerToggle.prototype.options_, options);
+		options = mergeOptions(MarkerButton.prototype.options_, options);
     super(player, options);
     
     this.targetParent = this.getElement('DisableControl')[0];
@@ -50,9 +50,9 @@ class MarkerToggle extends Button {
     };
     const iconTop = topEl.insertBefore(Dom.createEl('i', props), null);
     
-		// Icon 2
+		// Icon 2 used for 
     props = {
-      className: ` ${className.active}  ${className.icons['Base']} ${className.icons[statuses[0]]}`
+      className: `${className.modeIcon}  ${className.icons['Base']} ${className.icons[statuses[0]]}`
     };
     const iconBottom = topEl.insertBefore(Dom.createEl('i', props), iconTop);
     
@@ -84,7 +84,7 @@ class MarkerToggle extends Button {
     
     Dom.removeElClass(modeIcon, className.icons[this.status]);
     
-    // Change the status, classNames for the marker icon, and enable/disable the Board elements
+    // Change the icon for the button
     this.statusInd = (this.statusInd + 1) % numStats;
     this.status = statuses[this.statusInd];
     this.controlText(this.status.replace(/([A-Z])/g, ' $1'));
@@ -92,7 +92,19 @@ class MarkerToggle extends Button {
       Dom.addElClass(modeIcon, className.icons[this.status]);
     }
     
-    // The default shows the icon for 'CreateNote' - after transitioning to this mode 
+		switch (this.status) {
+			case statuses[1]:
+				this.trigger('oncreatemode');
+				break;
+			case statuses[2]:
+				this.trigger('onselectmode');
+				break;
+			case statuses[0]:
+				this.trigger('onnormalmode');
+				break;
+		}
+				
+		// The default shows the icon for 'CreateNote' - after transitioning to this mode 
     // icon should change to 'SelectNote' and the targetCreate should be enabled
     // Similarly, when the icon for 'SelectNote' shows, the icon should change to
     // 'ScrollBar' and should hide the parent
@@ -135,8 +147,8 @@ class MarkerToggle extends Button {
   }
 }
 
-MarkerToggle.prototype.options_ = config.MarkerToggle;
-MarkerToggle.prototype.controlText_ = 'markerToggle';
+MarkerButton.prototype.options_ = config.MarkerButton;
+MarkerButton.prototype.controlText_ = 'markerButton';
 
-Component.registerComponent('MarkerToggle', MarkerToggle);
-export default MarkerToggle;
+Component.registerComponent('MarkerButton', MarkerButton);
+export default MarkerButton;

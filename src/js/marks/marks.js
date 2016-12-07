@@ -15,7 +15,7 @@ import MarkDialog from '../mark-form/mark-dialog.js';
 import MarkItem from './mark-item.js';
 
 /**
- * Overlays element over the player seek bar in order to inhibit triggering of seek bar events
+ * Controls the CRUD operations for the mark items
  *
  * @param {Player|Object} player
  * @param {Object=} options
@@ -48,6 +48,10 @@ class Marks extends Component {
     });
   }
   
+	handleClick() {
+		
+	}
+	
   /**
    * Creates a new mark at given point
 	 * 
@@ -122,10 +126,34 @@ class Marks extends Component {
    * @method handleStart
    */
   endActiveMark(point) {
-		let options = {
-			markID: this.activeMark.el().id
-		}
 		this.activeMark.addChild(Marks.prototype.options_.dialogName, options);
+  }
+  
+	/**
+   * Get percentage of video played
+   *
+   * @return {Number} Percentage played
+   * @method getPercent
+   */
+  getPercent() {
+    const percent = this.player_.currentTime() / this.player_.duration();
+
+    return percent >= 1 ? 1 : percent;
+  }
+  
+  /**
+   * Calculate distance for slider
+   *
+   * @param {Object} event Event object
+   * @method calculateDistance
+   */
+  calculateDistance(event) {
+    const position = Dom.getPointerPosition(this.el_, event);
+
+    if (this.vertical()) {
+      return position.y;
+    }
+    return position.x;
   }
   
   /**

@@ -46,7 +46,6 @@ class MarkItem extends Component {
 	handleClick(event) {
 		this.el_.style["border"] = "1px solid yellow"
 		this.el_.style["border-radius"] = "5px";
-		console.log("Get mark id of: ", this.el_.id);
 	}
 	
 	handleHover(event) {
@@ -63,6 +62,8 @@ class MarkItem extends Component {
 		this.off('click', handle);
 		this.off('onmouseover', this.handleHover);
 	}
+	
+	
 }
 
 MarkItem.prototype.options_ = config.MarkItem;
