@@ -11,21 +11,20 @@ import {Component} from '../utils/vjs-classes.js';
 
 import config from '../config.js';
 
-import MarkDialog from '../mark-form/mark-dialog.js';
-import MarkItem from './mark-item.js';
+import Board from '../board.js';
 
 /**
  * Controls the CRUD operations for the mark items
  *
  * @param {Player|Object} player
  * @param {Object=} options
- * @Marks
+ * @MarkCollection
  */
-class Marks extends Component {
+class MarkCollection extends Board(Component) {
   constructor(player, options) {
 		let id = player.id ? `${player.id()}_mark_${Guid.newGUID()}` : `mark_${Guid.newGUID()}`;
 		options.id = id;
-		options = mergeOptions(Marks.prototype.options_, options, {id: id});
+		options = mergeOptions(MarkCollection.prototype.options_, options, {id: id});
     super(player, options);
 		
     this.activeMark = null;
@@ -38,7 +37,7 @@ class Marks extends Component {
   }
   
   /**
-   * Creates the parent element for holding all marks
+   * Creates the parent element for holding all MarkCollection
 	 * 
 	 * @method createEl
    */
@@ -48,6 +47,8 @@ class Marks extends Component {
     });
   }
   
+	/** ATTACH EVENT HANDLERS ON THE UL ELEMENT THAT TAKES 100% WIDTH OF 
+	THE SCROLL BAR - THIS LOGIC SHOULD GO INSIDE THE STATES CLASSES**/
 	handleClick() {
 		
 	}
@@ -126,7 +127,7 @@ class Marks extends Component {
    * @method handleStart
    */
   endActiveMark(point) {
-		this.activeMark.addChild(Marks.prototype.options_.dialogName, options);
+		this.activeMark.addChild(MarkCollection.prototype.options_.dialogName, options);
   }
   
 	/**
@@ -170,7 +171,7 @@ class Marks extends Component {
   }
 }
 
-Marks.prototype.options_ = config.Marks;
+MarkCollection.prototype.options_ = config.MarkCollection;
 
-Component.registerComponent('Marks', Marks);
-export default Marks;
+Component.registerComponent('MarkCollection', MarkCollection);
+export default MarkCollection;

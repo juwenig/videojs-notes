@@ -1,35 +1,33 @@
-/* 
- *  Used to 
- *    
+/**
+ * Depends on the controlBar, progressControl as it exists in the DOM tree (v5.13.2)
+ * Used as the API for retrieving notes and retrieving notetaking components
+ * 
  */
 
 import videojs from 'video.js';
 
-import * as Dom from './utils/dom.js';
-import log from './utils/log.js';
-import mergeOptions from './utils/merge-options.js';
-import toTitleCase from './utils/to-title-case.js';
-import {Component} from './utils/vjs-classes.js';
+import * as Dom from './components/utils/dom.js';
+import log from './components/utils/log.js';
+import mergeOptions from './components/utils/merge-options.js';
+import toTitleCase from './components/utils/to-title-case.js';
+import {Component} from './components/utils/vjs-classes.js';
 
 import config from './config.js';
 
-import Notes from './notes/notes.js';
-import MarkerButton from './marker-button.js'
-import DisableControl from './disable-control.js';
+import MarkerButton from './components/marker-button.js'
+import Board from './components/board.js';
 
 class NoteTaking extends Component {
   constructor(player, options) {
     options = mergeOptions(NoteTaking.prototype.options_, options);
 		super(player, options);
 		
-    this.player = player;
-    
-		if (!this.player.notetaking_) {
-			this.player.notetaking_ = this;
+		if (!player.notetaking_) {
+			player.notetaking_ = this;
 		} else {
 			// Keep Old Data for conflicts with notetaking_
-			this.oldData = this.player.notetaking_;
-			this.player.notetaking_ = this;
+			this.oldData = player.notetaking_;
+			player.notetaking_ = this;
 		}
     
     if (options.id === 'string'){
@@ -43,43 +41,56 @@ class NoteTaking extends Component {
     }
     
     // Separate the Mark and the DisableControl options from config
+		const boardOptions = options.Board;
     const markerButtonOptions = options.MarkerButton;
-    const disableControlOptions = options.DisableControl;
     
-    // Register and add the control bar to the player only once and on constructor
-    const notetaking = this.player.notetaking_; 
-    
-    this.addDisableControl(disableControlOptions);
-    this.addMarkerButton(markerButtonOptions);
+    this.injectBoard(boardOptions);
+    this.injectMarkerButton(markerButtonOptions);
   }
  
 	/**
 	 * Adds disable control to the progress control that exists on the current player
 	 *
 	 * @param options Options for the DisableControl component
+	 * @return {Object=} Created Board element
 	 * @method addDisableControl
 	 */
-  addDisableControl(options) {    
-    if (this.player && this.player.controlBar) {
-      let controlBar = this.player.controlBar;
+  injectBoard(options) { 
+		let player = this.player();
+		
+    if (player && player.controlBar) {
+      let controlBar = player.controlBar;
       
       if (controlBar.progressControl) {
         let progressControl = controlBar.progressControl;
-        if (progressControl.getChild('DisableControl')) {
-					throw new Error('There is already a Disable Control attached to the progress control');
+        if (progressControl.getChild('Board')) {
+					throw new Error(
+						'There is already a Board attached to the progress control'
+					);
 				}
-        let disableControl = progressControl.addChild('disableControl', options);
-        return disableControl;
+        let board = progressControl.addChild('board', options);
+        return board;
       }
     }
   }
   
-  addMarkerButton(options) {
-    if (this.player && this.player.controlBar) {
-      let controlBar = this.player.controlBar;
+	/**
+	 * Adds control bar to the control bar that exists on the current player
+	 * 
+	 * @param {Object=} options Options passed for the MarkerButton component
+	 * @returns {Object=} Created MarkerButton object
+	 * @method injectMarkerButton
+	 */
+  injectMarkerButton(options) {
+		let player = this.player();
+		
+    if (player && player.controlBar) {
+      let controlBar = player.controlBar;
       
 			if (controlBar.getChild('MarkerButton')) {
-				throw new Error('There is already a Marker Button attached to the control bar');
+				throw new Error(
+					'There is already a MarkerButton attached to the control bar'
+				);
 			}
       let markerButton = controlBar.addChild('markerButton', options);
       return markerButton;
@@ -87,11 +98,13 @@ class NoteTaking extends Component {
   }
 	
 	notetaking() {
-		if (!this.player.notetaking_) {
+		let player = this.player();
+		
+		if (!player.notetaking_) {
 			return;
 		}
 		
-		return this.player.notetaking_;
+		return player.notetaking_;
 	}
   
 	/**
@@ -140,7 +153,7 @@ class NoteTaking extends Component {
 	}
 	
 	/**
-	 * Retrieves the old data that was set to 
+	 * Retrieves the old data that was set to notetaking
 	 *
 	 * @return {Object}
 	 * @method retrieveOldData
@@ -148,21 +161,6 @@ class NoteTaking extends Component {
 	retrieveOldData() {
 		return this.oldData;
 	}
-	
-	/// MIGHT DELETE
-  registerNotes(el) {    
-    // Checks if the el is already in notes_
-    if (!this.notes_[el]) {
-      this.notes_[el] = new Notes(this.player, mergeOptions({}, this.options.Notes));
-      if (!Dom.hasElClass(el, 'vjs-notetaking')) {
-        Dom.addElClass(el, 'vjs-notetaking'); 
-      }
-    } else {
-      log.warn('The notes element is already registered.');
-    }
-  }
-	
-	
 }
 
 NoteTaking.prototype.options_ = config;

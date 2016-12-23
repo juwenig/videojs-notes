@@ -7,6 +7,7 @@ import * as Dom from '../utils/dom.js';
 import mergeOptions from '../utils/merge-options.js';
 import log from '../utils/log.js';
 import {Component} from '../utils/vjs-classes.js';
+import logic from '../../logic/occlusion.js'
 
 import config from '../config.js';
 import Board from './board.js';
@@ -16,15 +17,16 @@ import Board from './board.js';
  * 
  * @param {Player|Object} player
  * @param {Object=} options
- * @class MarkCreate
+ * @class SelectState
  */
-class MarkSelect {
+class SelectState {
   /**
 	 * Stops propogation of marks element click event to parent elements
 	 */
 	handleClick(event) {
 		event.preventDefault();
 		event.stopImmediatePropagation();
+		
 	}
 	
 	/**
@@ -61,7 +63,7 @@ class MarkSelect {
   }
 }
 
-MarkSelect.prototype.options_ = config.MarkSelect;
+SelectState.prototype.options_ = config.SelectState;
 
-Component.registerComponent('MarkSelect', MarkSelect)
-export default MarkSelect;
+Component.registerComponent('SelectState', SelectState)
+export default SelectState;

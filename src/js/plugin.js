@@ -2,7 +2,7 @@ import videojs from 'video.js';
 
 import document from 'global/document';
 import window from 'global/window';
-import NoteTaking from './notetaking.js';
+import NoteTaking from './note-taking.js';
 
 import log from './utils/log.js';
 import * as Guid from './utils/guid.js';

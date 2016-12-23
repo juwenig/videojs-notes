@@ -26,7 +26,7 @@ class MarkerButton extends Button {
   }
   
   /**
-   * Creates a child element for changing icons
+   * Creates a wrapper element for changing icons
    * 
    * @method createChild
    */
@@ -70,6 +70,16 @@ class MarkerButton extends Button {
     // Current playback rate
     this.el().setAttribute('aria-valuenow', this.player().playbackRate());
   }
+	
+	/**
+	 * Adds an icon for a state
+	 *
+	 * @param {Object=} options The options for DOM node
+	 * @method addIcon
+	 */
+	addIcon() {
+		// Creates new icon and add element as child element to this
+	}
   
   /**
    * Toggles Disable Control

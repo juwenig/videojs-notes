@@ -10,8 +10,6 @@ import {Component} from '../utils/vjs-classes.js';
 import config from '../config.js';
 
 import MarkerButton from '../marker-button.js';
-import Marks from '../marker/marks.js';
-import MarkCreate from './mark-create.js';
 
 /**
  * Serves as an adapte the marker button triggers to the marker modes
@@ -23,12 +21,11 @@ import MarkCreate from './mark-create.js';
  */
 class NormalState extends State {
 	constructor(player, options){
-		options = mergeOptions(MarkBoard.prototype.options_, options);
+		options = mergeOptions(NormalState.prototype.options_, options);
 		super(player, options);
 		
 		/*Initialize default mode*/
 		this.mode = null;
-		this.create = new MarkCreate();
 		this.select = new MarkSelect();
 		
 		/*Attach event listener marker-button*/
@@ -58,6 +55,6 @@ class NormalState extends State {
 	}
 }
 
-MarkBoard.prototype.options_ = config.MarkBoard;
+NormalState.prototype.options_ = config.NormalState;
 
-Component.registerComponent('MarkBoard', MarkBoard);
+export default NormalState;

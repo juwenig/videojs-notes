@@ -1,4 +1,4 @@
-let options = {
+const options = {
   id: 'vjs-notetaking',
   savenotes: 'none',
   url: '',
@@ -27,36 +27,29 @@ options.MarkerButton = {
   ]
 }
 
-options.DisableControl = {
+options.Board = {
   name: 'DisableControl',
   addTo: 'controlBar:progressControl',
   children: [
-    'Marks',
-    'BoardCreate'
+    'MarkCollection'
   ],
   className: 'vjs-progress-control ntk-disable-control',
-	inject: [
-		{src: 'Marks', dest: 'BoardSelect'},
-		{src: 'Marks', dest: 'BoardCreate'}
-	]
 }
 
-options.Board = {
-  name: 'Board',
-  markName: 'Mark',
-  className: 'vjs-progress-holder vjs-slider ntk-board'
-}
-
-options.BoardSelect = {
+options.SelectState = {
   name: 'BoardSelect',
   className: 'ntk-board-select',
 	mark: 'Marks'
 }
 
-options.BoardCreate = {
+options.CreateState = {
   name: 'BoardCreate',
   className: 'ntk-board-create',
 	mark: 'Marks'
+}
+
+options.NormalState = {
+	
 }
 
 options.Marks = {
@@ -89,14 +82,7 @@ options.MarkDialog = {
 	markID: ''
 }
 
-options.Notes = {
-  name: 'Notes',
-  display: options.notesSection || options.livefeed || true
-}
 
-options.LiveFeed = {
-  name: 'LiveFeed',
-  display: options.livefeed || true
-}
+
 
 export default options;

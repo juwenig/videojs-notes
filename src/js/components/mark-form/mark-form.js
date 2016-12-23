@@ -16,4 +16,9 @@ class MarkForm extends MarkDialog {
 	constructor(player, options) {
 		
 	}
+	
+	createEl() {
+		
+	}
 }
+

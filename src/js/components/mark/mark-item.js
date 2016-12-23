@@ -42,12 +42,13 @@ class MarkItem extends Component {
 		return Dom.createEl(tag, props, attrs);
 	}
 	
-	
+	/****** THIS REQUIRES OCCLUSION RULE *******/
 	handleClick(event) {
 		this.el_.style["border"] = "1px solid yellow"
 		this.el_.style["border-radius"] = "5px";
 	}
 	
+	/****** THIS REQUIRES OCCLUSION RULE *******/
 	handleHover(event) {
 		this.el_.style["border"] = "1px solid yellow"
 		this.el_.style["border-radius"] = "5px";

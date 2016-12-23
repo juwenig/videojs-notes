@@ -16,9 +16,13 @@ import Board from './board.js';
  * 
  * @param {Player|Object} player
  * @param {Object=} options
- * @class MarkCreate
+ * @class CreateState
  */
-class MarkCreate {
+class CreateState {
+	constructor(context) {
+		this = context;
+	}
+	
   /**
 	 * Stops propogation of marks element click event to parent elements
 	 */
@@ -80,7 +84,6 @@ class MarkCreate {
   }
 }
 
-MarkCreate.prototype.options_ = config.MarkCreate;
+CreateState.prototype.options_ = config.CreateState;
 
-Component.registerComponent('MarkCreate', MarkCreate)
-export default MarkCreate;
+export default CreateState;

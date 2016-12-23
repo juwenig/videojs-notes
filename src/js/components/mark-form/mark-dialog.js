@@ -37,7 +37,7 @@ class MarkDialog extends Component {
 		// Determine the size and add appropriate class
 		const sizeClass = this.calculateSizeClass();
 		let parentDiv = this.createContainer(sizeClass);
-		
+		///***** GOING TO REFACTOR ALL OF THESE ITEMS OUT TO ITS OWN FILE *******///
 		// ** FORM ** //
 		let form = parentDiv.insertBefore(this.createForm(), null);
 		
