@@ -22,13 +22,7 @@ class NoteTaking extends Component {
     options = mergeOptions(NoteTaking.prototype.options_, options);
 		super(player, options);
 		
-		if (!player.notetaking_) {
-			player.notetaking_ = this;
-		} else {
-			// Keep Old Data for conflicts with notetaking_
-			this.oldData = player.notetaking_;
-			player.notetaking_ = this;
-		}
+		player.notetaking_ = player.notetaking_ || this;
     
     if (options.id === 'string'){
       this.id = options.id;
@@ -97,6 +91,12 @@ class NoteTaking extends Component {
     }
   }
 	
+	/**
+	 * Returns the private notetaking object
+	 * 
+	 * @return {Object}
+	 * @method notetaking
+	 */
 	notetaking() {
 		let player = this.player();
 		
@@ -150,16 +150,6 @@ class NoteTaking extends Component {
 		}
 		
 		return this.elements_[name];
-	}
-	
-	/**
-	 * Retrieves the old data that was set to notetaking
-	 *
-	 * @return {Object}
-	 * @method retrieveOldData
-	 */
-	retrieveOldData() {
-		return this.oldData;
 	}
 }
 

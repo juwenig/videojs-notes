@@ -37,7 +37,11 @@ return class Board extends A {
     
 		this.states = {};
 		
-		this.currentState = this.states[0];
+		for (state in State.states) {
+			
+		}
+		
+		this.currentState = this.setDefaultState(Object.keys()[0]);
 		
   }
   
@@ -46,29 +50,46 @@ return class Board extends A {
 	 * Sets the default state - single use
 	 * 
 	 * @param {String=} name Name of state
+	 * @method setDefaultState
 	 */
 	setDefaultState(name) {
 		if (this.state !== null) {
 			return;
 		}
 		
-		this.state = this.states;
+		this.currentState = this.states[name];
 	}
 	
 	/**
 	 * Add state to the Board
+	 * 
+	 * @param {Class} state The class for the state
+	 * @method addState
 	 */
 	addState(state) {
 		if (!State.isPrototypeOf(state)) {
 			log.error("State should contain a name property.");
 		}
 		
-		this.states.push[new state(this)]
+		let state = new state(this);
+		let name = state.name();
+		this.states[name] = state;
 	}
   
 	/**
+	 * Goes to the next state
+	 *
+	 * @method nextState
+	 */
+	nextState() {
+		if (this.state)
+			this.state.nextState();
+	}
+	
+	/**
 	 * Creates a Board element
 	 *
+	 * @return {Element}
 	 * @method createEl
 	 */
   createEl() {

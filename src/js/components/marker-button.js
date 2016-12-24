@@ -3,9 +3,7 @@
  */
 
 import * as Dom from './utils/dom.js';
-
 import mergeOptions from './utils/merge-options.js';
-import log from './utils/log.js';
 import {Button, Component} from './utils/vjs-classes.js';
 
 import config from './config.js';

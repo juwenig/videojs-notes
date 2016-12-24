@@ -2,15 +2,11 @@
  * @file board
  */
 import * as Dom from '../utils/dom.js';
-
 import mergeOptions from '../utils/merge-options.js';
-import log from '../utils/log.js';
-import {Component} from '../utils/vjs-classes.js';
 
-import config from '../config.js';
-
-import MarkerButton from '../marker-button.js';
-
+import Config from '../../config.js';
+import Board from '../board.js';
+import State from './state.js';
 /**
  * Serves as an adapte the marker button triggers to the marker modes
  * 
@@ -20,16 +16,9 @@ import MarkerButton from '../marker-button.js';
  * @class MarkerBoard
  */
 class NormalState extends State {
-	constructor(player, options){
+	constructor(context, options){
 		options = mergeOptions(NormalState.prototype.options_, options);
-		super(player, options);
-		
-		/*Initialize default mode*/
-		this.mode = null;
-		this.select = new MarkSelect();
-		
-		/*Attach event listener marker-button*/
-		
+		super(context, options);
 	}
 	
 	/**
@@ -55,6 +44,7 @@ class NormalState extends State {
 	}
 }
 
-NormalState.prototype.options_ = config.NormalState;
+NormalState.prototype.options_ = Config.NormalState;
 
+State.registerState('Normal', NormalState);
 export default NormalState;

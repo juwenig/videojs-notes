@@ -3,14 +3,13 @@
  */
 
 import * as Dom from '../utils/dom.js';
-
 import mergeOptions from '../utils/merge-options.js';
-import log from '../utils/log.js';
-import {Component} from '../utils/vjs-classes.js';
-import logic from '../../logic/occlusion.js'
 
-import config from '../config.js';
-import Board from './board.js';
+import * as Logic from '../../logic/occlusion.js'
+
+import Config from '../../config.js';
+import Board from '../board.js';
+import State from './state.js';
 
 /**
  * Handles events for selecting marks
@@ -19,7 +18,12 @@ import Board from './board.js';
  * @param {Object=} options
  * @class SelectState
  */
-class SelectState {
+class SelectState extends State {
+	constructor(context, options) {
+		options = mergeOptions(NormalState.prototype.options_, options);
+		super(context, options);
+	}
+	
   /**
 	 * Stops propogation of marks element click event to parent elements
 	 */
@@ -47,6 +51,9 @@ class SelectState {
    * @method handleMouseMove
    */
   handleMouseMove(event){
+		
+		Logic.update();
+		
     event.preventDefault();
 		event.stopImmediatePropagation();
   }
@@ -63,7 +70,7 @@ class SelectState {
   }
 }
 
-SelectState.prototype.options_ = config.SelectState;
+SelectState.prototype.options_ = Config.SelectState;
 
-Component.registerComponent('SelectState', SelectState)
+State.registerState('Select', SelectState);
 export default SelectState;

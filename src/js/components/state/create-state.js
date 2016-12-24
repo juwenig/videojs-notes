@@ -3,13 +3,13 @@
  */
 
 import * as Dom from '../utils/dom.js';
-
 import mergeOptions from '../utils/merge-options.js';
-import log from '../utils/log.js';
-import {Component} from '../utils/vjs-classes.js';
 
-import config from '../config.js';
-import Board from './board.js';
+import * as Logic from '../../logic/occlusion.js'
+
+import Config from '../../config.js';
+import Board from '../board.js';
+import State from './state.js';
 
 /**
  * Handles events for creating marks
@@ -18,9 +18,10 @@ import Board from './board.js';
  * @param {Object=} options
  * @class CreateState
  */
-class CreateState {
-	constructor(context) {
-		this = context;
+class CreateState extends State {
+	constructor(context, options) {
+		options = mergeOptions(NormalState.prototype.options_, options);
+		super(context, options);
 	}
 	
   /**
@@ -84,6 +85,7 @@ class CreateState {
   }
 }
 
-CreateState.prototype.options_ = config.CreateState;
+CreateState.prototype.options_ = Config.CreateState;
 
+State.registerState('Create', CreateState);
 export default CreateState;
