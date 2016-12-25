@@ -26,6 +26,9 @@ class CreateState extends State {
 	
   /**
 	 * Stops propogation of marks element click event to parent elements
+	 *
+	 * @param {Event} event
+	 * @method handleClick
 	 */
 	handleClick(event) {
 		event.preventDefault();
@@ -35,7 +38,7 @@ class CreateState extends State {
 	/**
    * Triggers the mark start event for a new active mark
    * 
-   * @param {Object} event Event object
+   * @param {Event} event
    * @method handleMouseDown
    */
   handleMouseDown(event) {

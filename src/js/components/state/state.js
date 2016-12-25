@@ -16,7 +16,19 @@ class State {
 		this.options_ = options;
 		this.context_ = context;
 		
-		
+		if (options.name) {
+			this.name_ = options.name;	
+		}
+	}
+	
+	/**
+	 * Returns the name of the state
+	 * 
+	 * @return {String}
+	 * @method name
+	 */
+	name() {
+		return this.name_;
 	}
 	
 	/**
@@ -27,7 +39,7 @@ class State {
 	 * @return {Object}
 	 * @method registerState
 	 */
-	static registerState(name, state){
+	static registerState(name, state) {
 		if (!name) {
       return;
     }
@@ -42,6 +54,22 @@ class State {
 
     return comp;
 	}
+	
+	static orderStates(name, order) {
+		if (!name || !order) {
+			return;
+		}
+		
+		name = toTitleCase(name);
+		
+		if (!State.order_) {
+			State.order_ = [];
+		}
+		
+		State.order_[order] = name;
+	}
+	
+	
 	
 	/**
 	 * Returns the states_ object

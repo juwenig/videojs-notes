@@ -3,10 +3,10 @@
  */
 
 import * as Dom from './utils/dom.js';
-
 import mergeOptions from './utils/merge-options.js';
 import log from './utils/log.js';
 import {Component} from './utils/vjs-classes.js';
+import 
 
 import config from './config.js';
 
@@ -38,26 +38,26 @@ return class Board extends A {
 		this.states = {};
 		
 		for (state in State.states) {
-			
+			this.addState(state);
 		}
 		
-		this.currentState = this.setDefaultState(Object.keys()[0]);
-		
+		let firstState = Object.keys(this.states)[0];
+		this.currentState_ = this.setDefaultState(firstState);;
   }
   
 	
 	/**
-	 * Sets the default state - single use
+	 * Sets the default state
 	 * 
 	 * @param {String=} name Name of state
 	 * @method setDefaultState
 	 */
 	setDefaultState(name) {
-		if (this.state !== null) {
+		if (!this.states) {
 			return;
 		}
 		
-		this.currentState = this.states[name];
+		return this.states[name];
 	}
 	
 	/**
@@ -66,26 +66,65 @@ return class Board extends A {
 	 * @param {Class} state The class for the state
 	 * @method addState
 	 */
-	addState(state) {
+	addState(state, options) {
 		if (!State.isPrototypeOf(state)) {
 			log.error("State should contain a name property.");
 		}
 		
-		let state = new state(this);
+		if (!options) {
+			options = {};
+		}
+		
+		let state = new state(this, options);
 		let name = state.name();
 		this.states[name] = state;
 	}
   
 	/**
-	 * Goes to the next state
+	 * Binds the Board events to state's event handlers
 	 *
-	 * @method nextState
+	 * @
 	 */
-	nextState() {
-		if (this.state)
-			this.state.nextState();
+	bindEventsToState() {
+		Dom.unblockTextSelection();
+
+		let state = this.currentState_;
+		this.on('click', state.handleClick);
+		this.on('mousedown', state.handleMouseDown);
+    this.on('touchstart', state.handleMouseDown);
 	}
 	
+	/**
+	 * Goes to the next state
+	 *
+	 * @method goToNextState
+	 */
+	goToNextState() {
+		let current = this.currentState_;
+		let next = Order[current];
+		
+		this.currentState_ = this.states[next];
+		return this.currentState_;
+	}
+	
+	/**
+	 * Sets the state transition order
+	 * 
+	 * @method setStateOrder
+	 */
+	setStateOrder(order) {
+		if (!this.stateOrder_) {
+			this.stateOrder_[order] = {};
+		}  
+		
+		let orderNum = 0;
+		for (state in order) {
+			if (!this.states[state])
+			this.stateOrder_[state] = orderNum;
+			orderNum++;
+		}
+	}
+
 	/**
 	 * Creates a Board element
 	 *
