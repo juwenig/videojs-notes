@@ -143,12 +143,12 @@ class NoteTaking extends Component {
 	 * @method getElement
 	 */
 	getElement(name) {
-		if (name) {
-			name = toTitleCase(name);
-		} else {
+		if (!name) {
 			return;
 		}
 		
+		name = toTitleCase(name);
+	
 		return this.elements_[name];
 	}
 }

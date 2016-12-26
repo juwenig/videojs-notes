@@ -30,7 +30,6 @@ class SelectState extends State {
 	handleClick(event) {
 		event.preventDefault();
 		event.stopImmediatePropagation();
-		
 	}
 	
 	/**
@@ -51,7 +50,6 @@ class SelectState extends State {
    * @method handleMouseMove
    */
   handleMouseMove(event){
-		
 		Logic.update();
 		
     event.preventDefault();
@@ -68,6 +66,29 @@ class SelectState extends State {
     event.preventDefault();
 		event.stopImmediatePropagation();
   }
+	
+	/**
+	 * Handles mark item click
+	 *
+	 * @param {Event} event Event object
+	 * @method handleItemClick
+	 */
+	handleItemClick(event) {
+		// do something.. 
+		
+		event.preventDefault();
+		event.stopImmediatePropagation();
+	}
+	
+	/**
+	 * Handles mark item hover
+	 */
+	handleItemHover(event) {
+		// do something..
+		
+		event.preventDefault();
+		event.stopImmediatePropagation();
+	}
 }
 
 SelectState.prototype.options_ = Config.SelectState;

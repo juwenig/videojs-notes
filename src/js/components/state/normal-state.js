@@ -21,27 +21,7 @@ class NormalState extends State {
 		super(context, options);
 	}
 	
-	/**
-	 * Handles create mode from marker-button
-	 *
-	 * @param {Event=} event
-	 * @method handleCreateMode
-	 */
-	handleCreateMode(event) {
-		event.preventDefault();
-		event.stopImmediatePropagation();
-	}
-	
-	/**
-	 * Handles select mode from marker-button
-	 *
-	 * @param {Event=} event
-	 * @method handleSelectMode
-	 */
-	handleSelectMode(event) {
-		event.preventDefault();
-		event.stopImmediatePropagation();
-	}
+
 }
 
 NormalState.prototype.options_ = Config.NormalState;

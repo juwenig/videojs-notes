@@ -8,9 +8,6 @@ import toTitleCase from '../utils/to-title-case.js';
 import Config from '../config.js';
 import Board from './board.js';
 
-/**
- * Used to interface between the 
- */
 class State {
 	constructor(context, options) {
 		this.options_ = options;

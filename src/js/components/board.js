@@ -4,7 +4,7 @@
 
 import * as Dom from './utils/dom.js';
 import mergeOptions from './utils/merge-options.js';
-import log from './utils/log.js';
+import Log from './utils/log.js';
 import {Component} from './utils/vjs-classes.js';
 import 
 
@@ -16,7 +16,7 @@ let boardExtension = function(A) {
 	if (Component.isPrototypeOf(A)) {
 		console.log('Component identified');
 	} else {
-		return false;
+		return Log.error('Board needs to be a subclass of Component');
 	}
 	
 
@@ -29,7 +29,7 @@ let boardExtension = function(A) {
  * @Board
  */
 
-return class Board extends A {
+class Board extends A {
   constructor(player, options) {
     options.reportTouchActivity = false;
     options = mergeOptions(Board.prototype.options_, options);
@@ -42,7 +42,9 @@ return class Board extends A {
 		}
 		
 		let firstState = Object.keys(this.states)[0];
-		this.currentState_ = this.setDefaultState(firstState);;
+		this.currentState_ = this.setDefaultState(firstState);
+		
+		this.triggerReady();
   }
   
 	
@@ -68,7 +70,7 @@ return class Board extends A {
 	 */
 	addState(state, options) {
 		if (!State.isPrototypeOf(state)) {
-			log.error("State should contain a name property.");
+			Log.error("State should contain a name property.");
 		}
 		
 		if (!options) {
@@ -141,6 +143,8 @@ return class Board extends A {
 Board.prototype.options_ = config.Board;
 
 Component.registerComponent('Board', Board);
-
+	
+return Board;
 } // end of boardExtension definition
+
 export default boardExtension;

@@ -13,6 +13,10 @@ class MarkerButton extends Button {
 		options = mergeOptions(MarkerButton.prototype.options_, options);
     super(player, options);
     
+		this.target_ = this.getElement('Board');
+		this.target_.ready()
+		
+		
     this.targetParent = this.getElement('DisableControl')[0];
     this.targetSelect = this.targetParent.getChild('BoardSelect');
     this.targetCreate = this.targetParent.getChild('BoardCreate');
@@ -80,7 +84,7 @@ class MarkerButton extends Button {
 	}
   
   /**
-   * Toggles Disable Control
+   * Toggles Board
    *
    * @method handleClick
    */ 
