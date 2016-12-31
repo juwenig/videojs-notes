@@ -1,5 +1,5 @@
 /**
- * @file create-icon.js
+ * @file select-icon.js
  */
 
 import * as Dom from '../utils/dom.js';
@@ -8,7 +8,7 @@ import mergeOptions from '../utils/merge-options.js';
 import Config from '../../config.js';
 import Icon from './icon.js';
 
-class CreateIcon extends Icon { 
+class NormalIcon extends Icon { 
 	constructor(options) {
 		super(options);
 	}
@@ -26,14 +26,14 @@ class CreateIcon extends Icon {
 		super.createEl(
 			'i',
 			{
-				className: 'ntk-marker-mode-icon fa fa-stack-2x fa-pencil',
+				className: 'ntk-marker-mode-icon',
 			},
 			attrs
 		)
 	}
 }
 
-CreateIcon.prototype.options_ = Config.CreateIcon;
+NormalIcon.prototype.options_ = Config.NormalIcon;
 
-Icon.registerIcon('Create', CreateIcon);
-export default CreateIcon;
+Icon.registerIcon('Normal', NormalIcon);
+export default NormalIcon;

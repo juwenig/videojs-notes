@@ -6,7 +6,6 @@ import * as Dom from './utils/dom.js';
 import mergeOptions from './utils/merge-options.js';
 import Log from './utils/log.js';
 import {Component} from './utils/vjs-classes.js';
-import 
 
 import config from './config.js';
 
@@ -21,7 +20,8 @@ let boardExtension = function(A) {
 	
 
 /**
- * Overalys element over the player seek bar in order to inhibit triggering of seek bar events
+ * Overalys element over the player seek bar in order to prevent triggering of seek bar events
+ * Adds state dependent behavior for selecting and creating notes on the seekbar
  *
  * @param {Player|Object} player
  * @param {Object=} options
@@ -35,31 +35,43 @@ class Board extends A {
     options = mergeOptions(Board.prototype.options_, options);
     super(player, options);
     
-		this.states = {};
+		// state name to state instance dict
+		this.states_ = {};
 		
-		for (state in State.states) {
-			this.addState(state);
+		// holds current state
+		this.currentState_ = null;
+		
+		// keeps the order of the states if sequential
+		this.nextState_ = {};
+		
+		// adds states from the State array and initializes order
+		let initialOrder = [];
+		for (state in State.getStates()) {			
+			this.addState(State.getState(state));
+			initialOrder.push(state);
 		}
 		
-		let firstState = Object.keys(this.states)[0];
-		this.currentState_ = this.setDefaultState(firstState);
+		this.setStateOrder(initialOrder);
+		let firstState = Object.keys(this.states_)[0];
+		this.setDefaultState(firstState);
 		
-		this.triggerReady();
+		this.bindEvents();
   }
-  
-	
+ 
 	/**
-	 * Sets the default state
+	 * Sets the default state and swaps 
 	 * 
 	 * @param {String=} name Name of state
 	 * @method setDefaultState
 	 */
 	setDefaultState(name) {
-		if (!this.states) {
+		if (!this.states_) {
 			return;
 		}
 		
-		return this.states[name];
+		this.currentState_ = this.states_[name];
+		
+		return this.states_[name];
 	}
 	
 	/**
@@ -68,8 +80,8 @@ class Board extends A {
 	 * @param {Class} state The class for the state
 	 * @method addState
 	 */
-	addState(state, options) {
-		if (!State.isPrototypeOf(state)) {
+	addState(StateClass, options) {
+		if (!State.isPrototypeOf(StateClass)) {
 			Log.error("State should contain a name property.");
 		}
 		
@@ -77,23 +89,49 @@ class Board extends A {
 			options = {};
 		}
 		
-		let state = new state(this, options);
+		let state = new StateClass(this, options);
 		let name = state.name();
-		this.states[name] = state;
+		this.states_[name] = state;
 	}
   
 	/**
 	 * Binds the Board events to state's event handlers
 	 *
-	 * @
+	 * @method bindEventsToState
 	 */
-	bindEventsToState() {
+	bindEvents() {
 		Dom.unblockTextSelection();
 
 		let state = this.currentState_;
 		this.on('click', state.handleClick);
 		this.on('mousedown', state.handleMouseDown);
     this.on('touchstart', state.handleMouseDown);
+		
+		this.triggerReady();
+	}
+	
+	/**
+	 * Converts an array describing state order to the private order data structure
+	 * 
+	 * @param {Array} order Ordered array
+	 * @method setStateOrder
+	 */
+	setStateOrder(order) {
+		if (!this.nextState_) {
+			this.nextState_ = {};
+		}  
+		
+		let orderLen = order.length;
+		for (let i = 0; i < orderLen; i++) {
+			let state = order[i]
+			let next = order[(i+1) % orderLen];
+			
+			if (!this.states_[state]){
+				Log.error("The following state is not registered with the States class: ", state);
+			}
+			
+			this.nextState_[state] = next;
+		}
 	}
 	
 	/**
@@ -103,28 +141,12 @@ class Board extends A {
 	 */
 	goToNextState() {
 		let current = this.currentState_;
-		let next = Order[current];
+		let next = this.nextState_[current];
 		
-		this.currentState_ = this.states[next];
+		this.currentState_ = this.states_[next];
+		
+		this.bindEvents();
 		return this.currentState_;
-	}
-	
-	/**
-	 * Sets the state transition order
-	 * 
-	 * @method setStateOrder
-	 */
-	setStateOrder(order) {
-		if (!this.stateOrder_) {
-			this.stateOrder_[order] = {};
-		}  
-		
-		let orderNum = 0;
-		for (state in order) {
-			if (!this.states[state])
-			this.stateOrder_[state] = orderNum;
-			orderNum++;
-		}
 	}
 
 	/**

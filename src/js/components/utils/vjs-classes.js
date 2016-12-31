@@ -20,15 +20,20 @@ let componentExtension = function(A) {
 		constructor(player, options) {
 			super(player, options);
 
-			this.registerElement();
+			this.registerElement(options.registerElement);
 		}
 
 		/**
 		 * Wrapper method for notetaking register element
 		 *
+		 * @param {Boolean} flag Set if you do not want to auto register element
 		 * @method registerElement
 		 */
-		registerElement() {
+		registerElement(flag) {
+			if (!!flag && flag) {
+				return;
+			}
+			
 			const player = this.player();
 			if (!player.notetaking()) {
 				throw new Error('No notetaking object created');
@@ -55,7 +60,13 @@ let componentExtension = function(A) {
 
 			const notetaking = player.notetaking();
 			
-			return notetaking.getElement(name);
+			let element = notetaking.getElement(name);
+			
+			if (!element) {
+				throw new Error('No element by name ', name);
+			}
+			
+			return element;
 		}
 	}
 };

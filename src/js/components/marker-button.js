@@ -3,19 +3,27 @@
  */
 
 import * as Dom from './utils/dom.js';
+import * as Fn from './utils/fn.js';
 import mergeOptions from './utils/merge-options.js';
 import {Button, Component} from './utils/vjs-classes.js';
 
-import config from './config.js';
+import Config from './config.js';
+
+import Icon from './button-icons/icon.js';
 
 class MarkerButton extends Button {
   constructor(player, options) {
 		options = mergeOptions(MarkerButton.prototype.options_, options);
     super(player, options);
     
-		this.target_ = this.getElement('Board');
-		this.target_.ready()
+		// store instances of icons
+		this.icons_ = {};
 		
+		this.currentIcon_ = null;
+		
+		this.nextIcon_ = {};
+		
+		this.target_ = this.getElement('Board');
 		
     this.targetParent = this.getElement('DisableControl')[0];
     this.targetSelect = this.targetParent.getChild('BoardSelect');
@@ -73,14 +81,31 @@ class MarkerButton extends Button {
     this.el().setAttribute('aria-valuenow', this.player().playbackRate());
   }
 	
+	initializeIcons() {
+		let initialOrder = [];
+		
+		for (icon in Icon.getIcons()) {
+			this.addIcon(Icon.getIcon(icon));
+			initialOrder.push(icon);
+		}
+	}
+	
 	/**
 	 * Adds an icon for a state
 	 *
 	 * @param {Object=} options The options for DOM node
 	 * @method addIcon
 	 */
-	addIcon() {
+	addIcon(IconClass, options) {
 		// Creates new icon and add element as child element to this
+		if (!Icon.isPrototypeOf(IconClass)) {
+			return;
+		}
+				
+		let icon = new IconClass(options);
+		let name = icon.name();
+		
+		this.icons_[name] = icon;
 	}
   
   /**
@@ -159,7 +184,7 @@ class MarkerButton extends Button {
   }
 }
 
-MarkerButton.prototype.options_ = config.MarkerButton;
+MarkerButton.prototype.options_ = Config.MarkerButton;
 MarkerButton.prototype.controlText_ = 'markerButton';
 
 Component.registerComponent('MarkerButton', MarkerButton);
