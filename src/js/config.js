@@ -1,9 +1,5 @@
 const options = {
   id: 'vjs-notetaking',
-  savenotes: 'none',
-  url: '',
-  livefeed: true,
-  notesSection: true
 }
 
 options.MarkerButton = {
@@ -26,8 +22,7 @@ options.SelectIcon = {
 }
 
 options.Board = {
-  name: 'DisableControl',
-  addTo: 'controlBar:progressControl',
+  name: 'Board',
   children: [
     'MarkCollection'
   ],
@@ -35,25 +30,15 @@ options.Board = {
 }
 
 options.SelectState = {
-  name: 'BoardSelect',
-  className: 'ntk-board-select',
-	mark: 'Marks'
+  name: 'Select',
 }
 
 options.CreateState = {
-  name: 'BoardCreate',
-  className: 'ntk-board-create',
-	mark: 'Marks'
+  name: 'Create',
 }
 
 options.NormalState = {
-	
-}
-
-options.Marks = {
-  name: 'Marks',
-  className: 'vjs-progress-holder ntk-marks',
-	dialogName: 'MarkDialog'
+	name: 'Normal'
 }
 
 options.MarkItem = {
@@ -65,20 +50,50 @@ options.MarkItem = {
 	idPrefix: 'M'
 }
 
-options.MarkDialog = {
-	name: 'MarkDialog',
-	className: {
-		background: 'ntk-dialog-background',
+options.Dialog = {
+	name: 'Dialog',
+	className: 'ntk-marks',
+	children: [
+		'DialogForm'
+	],
+	registerElement: false
+}
+
+options.DialogForm = {
+	name: 'DialogForm',
+	children: [
+		'DialogTitle',
+		'DialogText',
+		'DialogTime',
+		'DialogButtons'
+	],
+	registerElement: false
+}
+
+options.DialogButtons = {
+	name: 'DialogButtons',
+	children: [
+		'DialogSave',
+		'DialogDelete'
+	],
+	registerElement: false
+}
+
+options.DialogTime = {
+	name: 'DialogTime',
+	children: [
+		'ItemStartTime',
+		'ItemEndTime',
+	]
+}
+
+/*background: 'ntk-dialog-background',
 		dialog: 'ntk-dialog',
 		form: 'ntk-dialog-form',
 		title: 'ntk-dialog-title',
 		note: 'ntk-dialog-note',
 		save: 'ntk-dialog-save fa fa-floppy-o',
-		delete: 'ntk-dialog-delete fa fa-trash-o'
-	},
-	markClass: 'ntk-marks',
-	markID: ''
-}
+		delete: 'ntk-dialog-delete fa fa-trash-o'*/
 
 
 

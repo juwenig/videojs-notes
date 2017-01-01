@@ -29,8 +29,8 @@ let componentExtension = function(A) {
 		 * @param {Boolean} flag Set if you do not want to auto register element
 		 * @method registerElement
 		 */
-		registerElement(flag) {
-			if (!!flag && flag) {
+		registerElement(flag = true) {
+			if (!flag) {
 				return;
 			}
 			
