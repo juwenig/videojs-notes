@@ -8,23 +8,21 @@ const options = {
 
 options.MarkerButton = {
   name: 'MarkerButton',
-  addTo: 'controlBar',
-  className: {
-		marker: 'ntk-marker',
-		parent: 'fa-stack',
-		icons: {
-			Base: 'fa fa-stack-2x',
-			CreateNote: 'fa-pencil',
-			SelectNote: 'fa-hand-pointer-o',
-			ScrollBar: 'fa-sticky-note-o',
-		},
-		modeIcon: 'ntk-marker-mode-icon'
-	},
-  statuses: [
-    'CreateNote',
-    'SelectNote',
-    'ScrollBar'
-  ]
+}
+
+options.CreateIcon = {
+	name: 'Create',
+	state: 'Create'
+}
+
+options.NormalIcon = {
+	name: 'Normal',
+	state: 'Normal'
+}
+
+options.SelectIcon = {
+	name: 'Select',
+	state: 'Select'
 }
 
 options.Board = {

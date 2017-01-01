@@ -36,9 +36,6 @@ class MarkerButton extends Button {
 		this.setIconOrder(initialOrder);
 		let firstIcon = Object.keys(this.icons_)[0];
 		this.setDefaultIcon(firstIcon);
-		
-    // change on click handler
-    this.controlText(this.status.replace(/([A-Z])/g, ' $1'));
   }
   
   /**
@@ -50,28 +47,25 @@ class MarkerButton extends Button {
 		// Button creates the container el with classnames taken from buildCSSClass
     const el = super.createEl();
     
-		// Container Span
-    let tag = 'span';
-    let props = {
-      className: `${className.parent}`
-    };
-    const topEl = el.insertBefore(Dom.createEl(tag, props), null);
-    
 		// Icon 1
     props = {
-      className: `${className.icons['Base']} ${className.icons['ScrollBar']}`
+      className: `fa fa-stack-2x fa-sticky-note-o`
     };
-    const iconTop = topEl.insertBefore(Dom.createEl('i', props), null);
-    
-		// Icon 2 used for 
-    props = {
-      className: `${className.modeIcon}  ${className.icons['Base']} ${className.icons[statuses[0]]}`
-    };
-    const iconBottom = topEl.insertBefore(Dom.createEl('i', props), iconTop);
-    
-    this.modeIcon = iconBottom;
+    el.insertBefore(Dom.createEl('i', props), null);
     
     return el;
+  }
+	
+	/**
+   * Toggles Board
+   *
+   * @method handleClick
+   */ 
+  handleClick() {
+    this.goToNextIcon();
+		this.target_.goToNextState();
+		
+		this.controlText(this.currentIcon_.replace(/([A-Z])/g, ' $1'));
   }
 
   /**
@@ -171,15 +165,19 @@ class MarkerButton extends Button {
 		
 		return this.currentIcon_;
 	}
-  
-  /**
-   * Toggles Board
-   *
-   * @method handleClick
-   */ 
-  handleClick() {  
-    
-  }
+	
+	/**
+	 * Goes to the next icon
+	 *
+	 * @method goToNextIcon
+	 */
+	goToNextIcon() {
+		let current = this.currentIcon_.name();
+		let next = this.nextIcon_[current];
+		
+		this.currentIcon_ = this.icons_[next];
+		return this.currentIcon_;
+	}
   
   /**
    * Give the element button specific class names

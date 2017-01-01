@@ -147,7 +147,7 @@ class Board extends A {
 	 * @method goToNextState
 	 */
 	goToNextState() {
-		let current = this.currentState_;
+		let current = this.currentState_.name();
 		let next = this.nextState_[current];
 		
 		this.currentState_ = this.states_[next];
