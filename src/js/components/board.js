@@ -7,7 +7,7 @@ import mergeOptions from './utils/merge-options.js';
 import Log from './utils/log.js';
 import {Component} from './utils/vjs-classes.js';
 
-import config from './config.js';
+import Config from '../config.js';
 
 import State from './state/state.js';
 
@@ -25,6 +25,9 @@ let boardExtension = function(A) {
  *
  * @param {Player|Object} player
  * @param {Object=} options
+ * 				options.order flag sets whether to automatically order states based on initialization
+ *				order
+ *
  * @extends Component
  * @Board
  */
@@ -47,15 +50,20 @@ class Board extends A {
 		// adds states from the State array and initializes order
 		let initialOrder = [];
 		for (state in State.getStates()) {			
-			this.addState(State.getState(state));
+			this.addState(state, State.getState(state));
 			initialOrder.push(state);
 		}
 		
-		this.setStateOrder(initialOrder);
+		if (options.order) {
+			this.setStateOrder(initialOrder);
+		}
+		
 		let firstState = Object.keys(this.states_)[0];
 		this.setDefaultState(firstState);
 		
 		this.bindEvents();
+		
+		initialOrder = null;
   }
  
 	/**
@@ -80,7 +88,7 @@ class Board extends A {
 	 * @param {Class} state The class for the state
 	 * @method addState
 	 */
-	addState(StateClass, options) {
+	addState(name, StateClass, options) {
 		if (!State.isPrototypeOf(StateClass)) {
 			Log.error("State should contain a name property.");
 		}
@@ -90,7 +98,6 @@ class Board extends A {
 		}
 		
 		let state = new StateClass(this, options);
-		let name = state.name();
 		this.states_[name] = state;
 	}
   
@@ -148,21 +155,9 @@ class Board extends A {
 		this.bindEvents();
 		return this.currentState_;
 	}
-
-	/**
-	 * Creates a Board element
-	 *
-	 * @return {Element}
-	 * @method createEl
-	 */
-  createEl() {
-    return Dom.createEl('div', {
-      className: this.options_.className
-    });
-  }
 }
 
-Board.prototype.options_ = config.Board;
+Board.prototype.options_ = Config.Board;
 
 Component.registerComponent('Board', Board);
 	

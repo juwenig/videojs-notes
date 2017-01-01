@@ -6,7 +6,7 @@ import * as Dom from '../utils/dom.js';
 import toTitleCase from '../utils/to-title-case.js';
 import Log from '../utils/log.js';
 
-import Config from '../config.js';
+import Config from '../../config.js';
 import Board from './board.js';
 
 class State {

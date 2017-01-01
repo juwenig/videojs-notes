@@ -49,6 +49,26 @@ class Icon {
 	}
 	
 	/**
+	  * Returns the icon element
+		* 
+		* @return {Element}
+		* @method el
+	  */
+	el() {
+		return this.el_;
+	}
+	
+	/**
+	 * Returns the state associated with the icon
+	 *
+	 * @return {String}
+	 * @method state
+	 */
+	state() {
+		return this.state_;
+	}
+	
+	/**
 	 * Adds a state to the private states object
 	 * 
 	 * @param {String} name Name of the state

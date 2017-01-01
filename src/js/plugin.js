@@ -4,9 +4,9 @@ import document from 'global/document';
 import window from 'global/window';
 import NoteTaking from './note-taking.js';
 
-import log from './utils/log.js';
-import * as Guid from './utils/guid.js';
-import * as Dom from './utils/dom.js';
+import log from './components/utils/log.js';
+import * as Guid from './components/utils/guid.js';
+import * as Dom from './components/utils/dom.js';
 
 import defaults from './config.js';
 

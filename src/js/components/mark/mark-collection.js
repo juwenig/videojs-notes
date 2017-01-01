@@ -4,12 +4,11 @@
 
 import * as Dom from '../utils/dom.js';
 import * as Guid from '../utils/guid.js';
-
 import mergeOptions from '../utils/merge-options.js';
 import log from '../utils/log.js';
 import {Component} from '../utils/vjs-classes.js';
 
-import config from '../config.js';
+import config from '../../config.js';
 
 import Board from '../board.js';
 
@@ -46,12 +45,6 @@ class MarkCollection extends Board(Component) {
       className: this.options_.className
     });
   }
-  
-	/** ATTACH EVENT HANDLERS ON THE UL ELEMENT THAT TAKES 100% WIDTH OF 
-	THE SCROLL BAR - THIS LOGIC SHOULD GO INSIDE THE STATES CLASSES**/
-	handleClick() {
-		
-	}
 	
   /**
    * Creates a new mark at given point
@@ -169,6 +162,7 @@ class MarkCollection extends Board(Component) {
 
     return seekBar.vertical();
   }
+	
 }
 
 MarkCollection.prototype.options_ = config.MarkCollection;

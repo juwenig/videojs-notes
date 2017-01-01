@@ -7,7 +7,7 @@ import * as Fn from './utils/fn.js';
 import mergeOptions from './utils/merge-options.js';
 import {Button, Component} from './utils/vjs-classes.js';
 
-import Config from './config.js';
+import Config from '../config.js';
 
 import Icon from './button-icons/icon.js';
 
@@ -23,15 +23,21 @@ class MarkerButton extends Button {
 		
 		this.nextIcon_ = {};
 		
+		// the element that changes state
 		this.target_ = this.getElement('Board');
 		
-    this.targetParent = this.getElement('DisableControl')[0];
-    this.targetSelect = this.targetParent.getChild('BoardSelect');
-    this.targetCreate = this.targetParent.getChild('BoardCreate');
+		let initialOrder = [];
 		
-    this.statusInd = 0;
-    this.status = this.options_.statuses[this.statusInd];
-    
+		for (icon in Icon.getIcons()) {
+			this.addIcon(icon, Icon.getIcon(icon));
+			initialOrder.push(icon);
+		}
+		
+		this.setIconOrder(initialOrder);
+		let firstIcon = Object.keys(this.icons_)[0];
+		this.setDefaultIcon(firstIcon);
+		
+    // change on click handler
     this.controlText(this.status.replace(/([A-Z])/g, ' $1'));
   }
   
@@ -44,9 +50,6 @@ class MarkerButton extends Button {
 		// Button creates the container el with classnames taken from buildCSSClass
     const el = super.createEl();
     
-		const className = this.options_.className;
-    const statuses = this.options_.statuses;
-  	
 		// Container Span
     let tag = 'span';
     let props = {
@@ -81,31 +84,92 @@ class MarkerButton extends Button {
     this.el().setAttribute('aria-valuenow', this.player().playbackRate());
   }
 	
-	initializeIcons() {
-		let initialOrder = [];
-		
-		for (icon in Icon.getIcons()) {
-			this.addIcon(Icon.getIcon(icon));
-			initialOrder.push(icon);
-		}
-	}
-	
 	/**
 	 * Adds an icon for a state
 	 *
 	 * @param {Object=} options The options for DOM node
 	 * @method addIcon
 	 */
-	addIcon(IconClass, options) {
+	addIcon(name, IconClass, options) {
 		// Creates new icon and add element as child element to this
 		if (!Icon.isPrototypeOf(IconClass)) {
 			return;
 		}
+		
+		if (!options) {
+			options = {};
+		}
 				
 		let icon = new IconClass(options);
-		let name = icon.name();
 		
 		this.icons_[name] = icon;
+	}
+	
+	/**
+	 * Converts an array describing state order to the private order data structure
+	 * 
+	 * @param {Array} order Ordered array
+	 * @method setIconOrder
+	 */
+	setIconOrder(order) {
+		if (!this.nextIcon_) {
+			this.nextIcon_ = {};
+		}  
+		
+		let orderLen = order.length;
+		for (let i = 0; i < orderLen; i++) {
+			let icon = order[i]
+			let next = order[(i+1) % orderLen];
+			
+			if (!this.icons_[icon]){
+				Log.error("The following state is not registered with the States class: ", icon);
+			}
+			
+			this.nextIcon_[icon] = next;
+		}
+		
+		this.syncStateOrder(order);
+	}
+	
+	/**
+	 * Sets the state order from current icon order
+	 * 
+	 * @param {Array} order Ordered array
+	 * @method setStateOrder
+	 */
+	syncStateOrder(order) {
+		if (!this.target_) {
+			return;
+		}
+		
+		let stateOrder = [];
+		let orderLen = order.length;
+		for (let i = 0; i < orderLen; i++) {
+			let icon = order[i];
+			let state = this.icons_[icon].state();
+			stateOrder.push(state);
+		}
+		
+		this.target_.setStateOrder(stateOrder);
+	}
+	
+	/**
+	 * Sets the default state and swaps 
+	 * 
+	 * @param {String=} name Name of state
+	 * @method setDefaultState
+	 */
+	setDefaultIcon(name) {
+		if (!this.icons_) {
+			return;
+		}
+		
+		this.currentIcon_ = this.icons_[name];
+		
+		let state = this.currentIcon_.state();
+		this.target_.setDefaultState(state);
+		
+		return this.currentIcon_;
 	}
   
   /**
@@ -114,51 +178,7 @@ class MarkerButton extends Button {
    * @method handleClick
    */ 
   handleClick() {  
-    let modeIcon = this.modeIcon;
-		let statuses = this.options_.statuses;
-		let className = this.options_.className;
-    let numStats = statuses.length;
     
-    Dom.removeElClass(modeIcon, className.icons[this.status]);
-    
-    // Change the icon for the button
-    this.statusInd = (this.statusInd + 1) % numStats;
-    this.status = statuses[this.statusInd];
-    this.controlText(this.status.replace(/([A-Z])/g, ' $1'));
-    if (this.statusInd < 2) {
-      Dom.addElClass(modeIcon, className.icons[this.status]);
-    }
-    
-		switch (this.status) {
-			case statuses[1]:
-				this.trigger('oncreatemode');
-				break;
-			case statuses[2]:
-				this.trigger('onselectmode');
-				break;
-			case statuses[0]:
-				this.trigger('onnormalmode');
-				break;
-		}
-				
-		// The default shows the icon for 'CreateNote' - after transitioning to this mode 
-    // icon should change to 'SelectNote' and the targetCreate should be enabled
-    // Similarly, when the icon for 'SelectNote' shows, the icon should change to
-    // 'ScrollBar' and should hide the parent
-    if (this.status === statuses[1]) {
-      this.targetParent.show();
-      this.targetCreate.show(); // Normal -> Create
-      this.targetSelect.hide();
-    } else if (this.status === statuses[2]) {
-      this.targetParent.show();
-      this.targetSelect.show(); // Create -> Select
-      this.targetCreate.hide();
-    } else if (this.status === statuses[0]) {
-      this.targetParent.hide(); // Go to Create
-    }
-    
-    event.stopImmediatePropagation();
-    event.preventDefault(); 
   }
   
   /**
@@ -167,7 +187,7 @@ class MarkerButton extends Button {
    * @method buildCSSClass
    */
   buildCSSClass() {
-    return `${this.options_.className.marker} ${super.buildCSSClass()}`;
+    return 'ntk-marker fa-stack';
   }
   
   /**
