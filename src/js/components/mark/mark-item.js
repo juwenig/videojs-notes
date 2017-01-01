@@ -53,18 +53,6 @@ class MarkItem extends Component {
 		this.el_.style["border"] = "1px solid yellow"
 		this.el_.style["border-radius"] = "5px";
 	}
-	
-	addMarkItemListeners() {
-		this.on('click', this.handleClick);
-		this.on('onmouseover', this.handleHover);
-	}
-	
-	removeMarkItemListeners() {
-		this.off('click', handle);
-		this.off('onmouseover', this.handleHover);
-	}
-	
-	
 }
 
 MarkItem.prototype.options_ = config.MarkItem;
