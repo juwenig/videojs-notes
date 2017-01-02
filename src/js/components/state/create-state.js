@@ -1,5 +1,5 @@
 /**
- * @file board
+ * @file create-state.js
  */
 
 import * as Dom from '../utils/dom.js';
@@ -8,7 +8,7 @@ import mergeOptions from '../utils/merge-options.js';
 import * as Logic from '../../logic/occlusion.js'
 
 import Config from '../../config.js';
-import Board from '../board.js';
+
 import State from './state.js';
 
 /**

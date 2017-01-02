@@ -1,11 +1,11 @@
 /**
- * @file board
+ * @file normal-state.js
  */
 import * as Dom from '../utils/dom.js';
 import mergeOptions from '../utils/merge-options.js';
 
 import Config from '../../config.js';
-import Board from '../board.js';
+
 import State from './state.js';
 /**
  * Serves as an adapte the marker button triggers to the marker modes

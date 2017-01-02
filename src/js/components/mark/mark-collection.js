@@ -8,6 +8,7 @@ import mergeOptions from '../utils/merge-options.js';
 import log from '../utils/log.js';
 import {Component} from '../utils/vjs-classes.js';
 
+
 import config from '../../config.js';
 
 import Board from '../board.js';
@@ -21,7 +22,7 @@ import Board from '../board.js';
  */
 class MarkCollection extends Board(Component) {
   constructor(player, options) {
-		let id = player.id ? `${player.id()}_mark_${Guid.newGUID()}` : `mark_${Guid.newGUID()}`;
+		let id = player.id ? `marks_${player.id()}` : `marks_${Guid.newGUID()}`;
 		options.id = id;
 		options = mergeOptions(MarkCollection.prototype.options_, options, {id: id});
     super(player, options);
@@ -53,8 +54,11 @@ class MarkCollection extends Board(Component) {
 	 * @method createNewMark
    */
   createNewMark(point) {
-    let newMark = new MarkItem(this.player(), {});
-    newMark.el().startPoint = point;
+		options = {
+			startTime: position
+		};
+		
+    let newMark = new MarkItem(this.player(), options);
    	return this.addChild(newMark);
   }
   
@@ -136,7 +140,7 @@ class MarkCollection extends Board(Component) {
   }
   
   /**
-   * Calculate distance for slider
+   * Gets the mouse position in percentage x y within parent element
    *
    * @param {Object} event Event object
    * @method calculateDistance
