@@ -16,6 +16,13 @@ class Dialog extends Component {
 		if ("controls_" in this.player()) {
 			this.player().controls_ = false;
 		}
+		
+		if (!options.mark) {
+			Log.warn('New dialog constructed without associated mark');
+			this.mark_ = new MarkItem(player);
+		} else {
+			this.mark_ = options.mark;
+		}
 	}
 	
 // SECTION : CREATE DIALOG
@@ -51,14 +58,14 @@ class Dialog extends Component {
 	 * @method handlePlayerClick
 	 */
 	handleTechClick(event) {
-		let mark = this.player().el().ntk.activeMark;
+		let mark = this.mark_;
 		if ('controls_' in this.player()) {
 			this.player().controls_ = true;
 		}
 		
 		let parent = mark.parentElement;
 		
-		if (mark !== '') {
+		if (parent) {
 			parent.removeChild(mark);
 		}
 		

@@ -25,8 +25,7 @@ options.Board = {
   name: 'Board',
   children: [
     'MarkCollection'
-  ],
-  className: 'vjs-progress-control ntk-disable-control',
+  ]
 }
 
 options.SelectState = {
@@ -47,7 +46,7 @@ options.MarkItem = {
 		active: 'ntk-active-mark',
 		inactive: 'ntk-inactive-mark'
 	},
-	idPrefix: 'M'
+	registerElement: false
 }
 
 options.Dialog = {
@@ -70,28 +69,22 @@ options.DialogForm = {
 	registerElement: false
 }
 
+options.DialogTitle = {
+	name: 'DialogTitle',
+	registerElement: false
+}
+
 options.DialogButtons = {
 	name: 'DialogButtons',
-	children: [
-		'DialogSave',
-		'DialogDelete'
-	],
 	registerElement: false
 }
 
 options.DialogTime = {
 	name: 'DialogTime',
-	children: [
-		'ItemStartTime',
-		'ItemEndTime',
-	]
+	registerElement: false
 }
 
-/*background: 'ntk-dialog-background',
-		dialog: 'ntk-dialog',
-		form: 'ntk-dialog-form',
-		title: 'ntk-dialog-title',
-		note: 'ntk-dialog-note',
+/*
 		save: 'ntk-dialog-save fa fa-floppy-o',
 		delete: 'ntk-dialog-delete fa fa-trash-o'*/
 

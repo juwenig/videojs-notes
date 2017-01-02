@@ -3,17 +3,25 @@ import {Component} from '../utils/vjs-classes.js';
 
 import Config from '../config.js';
 
-class DialogForm extends Component {
+class DialogText extends Component {
 	constructor(player, options) {
-		options = mergeOptions(DialogForm.prototype.options_, options);
+		options = mergeOptions(DialogText.prototype.options_, options);
 		super(player, options);
 	}
 	
 	createEl(tag = 'form', props = {}, attrs = {}) {
+		let rows;
+		
+		
+		
 		props = assign({
-			className: 'ntk-dialog-form'
+			className: 'ntk-dialog-text'
 		});
 		
+		attrs = assign({
+			placeholder: 'Notes',
+			rows: rows
+		})
 		const el = super.createEl(tag, props, attrs);
 		
 		// We cannot add this to the tech_ object so this will have to do for now..
@@ -21,7 +29,7 @@ class DialogForm extends Component {
 	}
 }
 
-DialogForm.prototype.options_ = Config.DialogForm;
+DialogText.prototype.options_ = Config.DialogText;
 
-Component.registerComponent('DialogForm', DialogForm);
-export default DialogForm;
+Component.registerComponent('DialogText', DialogText);
+export default DialogText;
