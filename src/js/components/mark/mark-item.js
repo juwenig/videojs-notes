@@ -15,31 +15,28 @@ class MarkItem extends Component {
 	constructor(player, options){
 		options = mergeOptions(MarkItem.prototype.options_, options);
 		super(player, options);
-		
-		if (!!this.player_.el().ntk) {
-			this.player().el().ntk.activeMark = this.el();
+				
+		if (!options.time) {
+			this.setTimeRange();
 		} else {
-			this.player().el().ntk = {activeMark: this.el()};
+			this.setTimeRange(options.time);
 		}
 		
-		this.addMarkItemListeners();
-		
-		if ("notetaking_" in this.player()) {
-			this.player().notetaking_[this.name()] = this;
+		if (options.vertical) {
+			this.vertical_ = options.vertical;
 		}
 	}
 	
-	createEl() {
-		let tag = 'li';
+	createEl(tag = 'li', props = {}, attrs = {}) {
 		let props = {
 			startPoint: 0,
-      className: this.options_.className.active
+      className: 'ntk-active-mark'
 		};
 		let attrs = {
-			id: `${this.options_.idPrefix}${Guid.newGUID().toString()}`
+			id: `Item_${Guid.newGUID().toString()}`
 		}
 		
-		return Dom.createEl(tag, props, attrs);
+		return super.createEl(tag, props, attrs);
 	}
 	
 	setStart(point) {
@@ -47,45 +44,62 @@ class MarkItem extends Component {
 		let leftPosition = point;
 		
 		leftPosition = (point * 100).toFixed(2) + '%';
+		
 		style.left = leftPosition;
 	}
 	
-	setLength(dimension, length) {
+	setLength(length) {
 		let el = this.el();
 		
-		if (dimension === "height") {
-			el.height(length, true);
-		} else if (dimension === "width") {
-			el.width(length, true);
+		if (typeof length !== 'number' ||
+        length !== progress ||
+        length < 0 ||
+        length === Infinity) {
+      length = 0;
+    }
+    
+    let offSetPercent = (length - this.time_.start);
+    // Convert to a percentage for setting
+    const percentLength = (offSetPercent * 100).toFixed(2) + '%';
+		
+		if (this.vertical_) {
+			el.height(percentLength, true);
+		} else {
+			el.width(percentLength, true);
 		}
 	}
 	
 	setFocus(focused) {
 		if (focused) {
-			this.addClass('ntk-focus-mark')
+			this.addClass('ntk-mark-focused')
 		} else {
-			this.removeClass('ntk-focus-mark');
+			this.removeClass('ntk-mark-focused');
 		}
 	}
 	
 	setSelect(selected) {
 		if (selected) {
-			this.addClass('ntk-select-mark');
+			this.addClass('ntk-mark-selected');
 		} else {
-			this.removeClass('ntk-select-mark');
+			this.removeClass('ntk-mark-selected');
 		}
 	}
 	
-	/****** THIS REQUIRES OCCLUSION RULE *******/
-	handleClick(event) {
-		this.el_.style["border"] = "1px solid white"
-		this.el_.style["border-radius"] = "5px";
-	}
-	
-	/****** THIS REQUIRES OCCLUSION RULE *******/
-	handleHover(event) {
-		this.el_.style["border"] = "1px solid yellow"
-		this.el_.style["border-radius"] = "5px";
+	setTimeRange(timeRange = []) {
+		if (!this.time_) {
+			this.time_ = {
+				start: 0,
+				end: 0
+			};
+		} 
+		
+		if (timeRange[0]) {
+			this.time_.start = timeRange[0];
+		} 
+		
+		if (timeRange[1]) {
+			this.time_.end = timeRange[1];
+		}
 	}
 }
 

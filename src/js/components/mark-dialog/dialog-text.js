@@ -11,8 +11,18 @@ class DialogText extends Component {
 	
 	createEl(tag = 'form', props = {}, attrs = {}) {
 		let rows;
+		let size = this.player().notetaking().getPlayerSize();
 		
-		
+		switch(size) {
+			case 'large': 
+				rows = 5;
+				break;
+			case 'medium':
+				rows = 3;
+				break;
+			default:
+				rows = 2;
+		}
 		
 		props = assign({
 			className: 'ntk-dialog-text'

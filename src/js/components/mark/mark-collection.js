@@ -8,10 +8,10 @@ import mergeOptions from '../utils/merge-options.js';
 import log from '../utils/log.js';
 import {Component} from '../utils/vjs-classes.js';
 
-
 import config from '../../config.js';
 
 import Board from '../board.js';
+import Dialog from '../mark-dialog/dialog.js';
 
 /**
  * Controls the CRUD operations for the mark items
@@ -22,18 +22,10 @@ import Board from '../board.js';
  */
 class MarkCollection extends Board(Component) {
   constructor(player, options) {
-		let id = player.id ? `marks_${player.id()}` : `marks_${Guid.newGUID()}`;
-		options.id = id;
-		options = mergeOptions(MarkCollection.prototype.options_, options, {id: id});
+		options = mergeOptions(MarkCollection.prototype.options_, options);
     super(player, options);
 		
-    this.activeMark = null;
-		this.markDialog = null;
-		this.markDialogOptions = config[this.options.dialogName];
-		
-		if ("notetaking_" in this.player()) {
-			this.player().notetaking_[this.name()] = this;
-		}
+    this.mark_ = null;
   }
   
   /**
@@ -55,7 +47,8 @@ class MarkCollection extends Board(Component) {
    */
   createNewMark(point) {
 		options = {
-			startTime: position
+			time: [point, point],
+			vertical: this.vertical()
 		};
 		
     let newMark = new MarkItem(this.player(), options);
@@ -68,53 +61,7 @@ class MarkCollection extends Board(Component) {
 	 * @method deleteNewMark
 	 */
   deleteNewMark() {
-    this.contentEl().removeChild(this.activeMark);
-  }
-  
-  /**
-   * Handles the creation of a new mark and is API for board-create
-   *
-   * @param {Number} time Start time of mark
-   * @method newActiveMark
-   */
-  startActiveMark(point) {
-    let time = this.player_.duration() * point;
-    this.activeMark = this.createNewMark(point);
-    
-    this.activeMark.el().style.left = (point * 100).toFixed(2) + '%';
-  }
-  
-  /**
-   * Draws the active Mark and is API for board-create
-	 *
-	 * @param progress The point along the seekbar the user has the mouse dragged over in percentage
-	 * @method updateActiveMark
-   */
-  updateActiveMark(progress) {
-    const mark = this.activeMark.el();
-
-    if (!mark) {
-      return;
-    }
-
-    // Protect against no duration and other division issues
-    if (typeof progress !== 'number' ||
-        progress !== progress ||
-        progress < 0 ||
-        progress === Infinity) {
-      progress = 0;
-    }
-    
-    let offSetPercent = (progress - this.activeMark.el().startPoint);
-    // Convert to a percentage for setting
-    const percentage = (offSetPercent * 100).toFixed(2) + '%';
-    
-    // Set the new bar width or height
-    if (this.vertical()) {
-      mark.style.height = percentage;
-    } else {
-      mark.style.width = percentage;
-    }
+    this.el().removeChild(this.activeMark);
   }
   
   /**
@@ -140,7 +87,7 @@ class MarkCollection extends Board(Component) {
   }
   
   /**
-   * Gets the mouse position in percentage x y within parent element
+   * Gets the mouse position in percentage x y within this element
    *
    * @param {Object} event Event object
    * @method calculateDistance

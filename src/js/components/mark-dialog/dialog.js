@@ -24,9 +24,7 @@ class Dialog extends Component {
 			this.mark_ = options.mark;
 		}
 	}
-	
-// SECTION : CREATE DIALOG
-	
+		
 	/**
 	 * Changed name from createEl because Component calls createDialog and 
 	 * that is unintended
@@ -34,7 +32,19 @@ class Dialog extends Component {
 	 * @method createEl
 	 */
 	createEl(tag = 'div', props = {}, attrs = {}) {
-		let sizeClass = this.assignSizeClass();
+		let sizeClass;
+		let size = this.player().notetaking().getPlayerSize();
+		
+		switch(size) {
+			case 'large': 
+				sizeClass = 'ntk-lg-dialog';
+				break;
+			case 'medium':
+				sizeClass = 'ntk-md-dialog';
+				break;
+			default:
+				sizeClass = '';
+		}
 		
 		props = assign({
 			className: `${sizeClass} ntk-dialog`
@@ -47,10 +57,6 @@ class Dialog extends Component {
 		return el;
 	}
 	
-	// should be moved over to mark-item on click event handler 
-	// whenever mark-item is created, the dialog should be created
-	// whenever mark-item is selected ('clicked on'), the dialog should be created
-	// therefore 
 	/**
 	 * Handles clicking on the player object to exit dialog
 	 *
@@ -85,39 +91,9 @@ class Dialog extends Component {
 		event.preventDefault();
 		event.stopImmediatePropagation();
 	}
-	
-// END SECTION : EVENT HANDLERS
-	
-// SECTION : DIALOG UTILITY
-	
-	/**
-   * Adds a class name that corresponds to a dialog size dependent on the video dim
-	 * 
-	 * @method calculateSizeClass
-	 */
-	assignSizeClass() {
-		// YouTube videos have 1.77 ratio width:height
-		// Coursera videos have 1.77 ratio width:height
-		let className = '';
-
-		let height = this.player().videoHeight();
-		let width = this.player().videoWidth();
-		
-		if (width >= 850 && height >= 400) {
-			className = 'ntk-lg-dialog';
-		} else if (width >= 700 && height >= 400) {
-			className = 'ntk-md-dialog';
-		} else {
-			className = '';
-		}
-		
-		return className;
-	}
-	
-// END SECTION : DIALOG UTILITY
 }
 
 Dialog.prototype.options_ = Config.Dialog;
 
 Component.registerComponent('Dialog', Dialog);
-export default MarkDialog;
+export default Dialog;

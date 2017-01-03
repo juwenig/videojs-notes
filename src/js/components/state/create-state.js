@@ -42,7 +42,7 @@ class CreateState extends State {
    * @method handleMouseDown
    */
   handleMouseDown(event) {
-    const doc = this[this.options_.mark.toLocaleLowerCase()].el_.ownerDocument;
+    const doc = this.el().ownerDocument;
     
     event.preventDefault();
     Dom.blockTextSelection();
@@ -53,7 +53,7 @@ class CreateState extends State {
 
     let startPoint = this.calculateDistance(event);
     
-    this[this.options_.mark.toLocaleLowerCase()].startActiveMark(startPoint);
+    this.createNewMark(startPoint);
     this.handleMouseMove(event);
   }
   
@@ -65,7 +65,7 @@ class CreateState extends State {
    */
   handleMouseMove(event){
     let progress = this.calculateDistance(event);
-    this[this.options_.mark.toLocaleLowerCase()].updateActiveMark(progress);
+    this.updateActiveMark(progress);
   }
   
   /**
@@ -75,7 +75,7 @@ class CreateState extends State {
    * @method handleMouseUp
    */
   handleMouseUp(event) {
-    const doc = this[this.options_.mark.toLocaleLowerCase()].el_.ownerDocument;
+    const doc = this.el().ownerDocument;
     
     Dom.unblockTextSelection();
     
@@ -84,7 +84,7 @@ class CreateState extends State {
     this.off(doc, 'touchend', this.handleMouseUp);
     
     let endPoint = this.calculateDistance(event);
-    this[this.options_.mark.toLocaleLowerCase()].endActiveMark(endPoint);
+    this.endActiveMark(endPoint);
   }
 }
 

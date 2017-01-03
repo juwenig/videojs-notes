@@ -1,7 +1,7 @@
 /**
  * @file merge-options.js
  */
-import merge from 'lodash-compat/object/merge';
+import merge from 'lodash/merge';
 
 function isPlain(obj) {
   return !!obj
@@ -25,7 +25,7 @@ const customizer = function(destination, source) {
   // If the new value is a plain object but the first object value is not
   // we need to create a new object for the first object to merge with.
   // This makes it consistent with how merge() works by default
-  // and also protects from later changes the to first object affecting
+// and also protects from later changes the to first object affecting
   // the second object's values.
   if (!isPlain(destination)) {
     return mergeOptions(source);

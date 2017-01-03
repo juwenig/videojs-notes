@@ -29,23 +29,23 @@ options.Board = {
 }
 
 options.SelectState = {
-  name: 'Select',
+  name: 'Select'
 }
 
 options.CreateState = {
-  name: 'Create',
+  name: 'Create'
 }
 
 options.NormalState = {
 	name: 'Normal'
 }
 
+options.MarkCollection = {
+	name: 'MarkCollection'
+}
+
 options.MarkItem = {
 	name: 'MarkItem',
-	className: {
-		active: 'ntk-active-mark',
-		inactive: 'ntk-inactive-mark'
-	},
 	registerElement: false
 }
 
@@ -76,6 +76,10 @@ options.DialogTitle = {
 
 options.DialogButtons = {
 	name: 'DialogButtons',
+	childre: [
+		'DialogSave',
+		'DialogDelete'
+	], 
 	registerElement: false
 }
 

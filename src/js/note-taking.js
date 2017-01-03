@@ -12,10 +12,10 @@ import mergeOptions from './components/utils/merge-options.js';
 import toTitleCase from './components/utils/to-title-case.js';
 import {Component} from './components/utils/vjs-classes.js';
 
-import config from './config.js';
+import Config from './config.js';
 
 import MarkerButton from './components/marker-button.js'
-import Board from './components/board.js';
+import MarkCollection from './components/mark/mark-collection.js';
 
 class NoteTaking extends Component {
   constructor(player, options) {
@@ -33,12 +33,14 @@ class NoteTaking extends Component {
     if (!this.notes_) {
       this.notes_ = {};
     }
+		
+		this.playerSize_ = this.determinePlayerSize();
     
     // Separate the Mark and the DisableControl options from config
-		const boardOptions = options.Board;
+		const markCollectionOptions = options.MarkCollection;
     const markerButtonOptions = options.MarkerButton;
     
-    this.injectBoard(boardOptions);
+    this.injectMarkCollection(markCollectionOptions);
     this.injectMarkerButton(markerButtonOptions);
   }
  
@@ -49,7 +51,7 @@ class NoteTaking extends Component {
 	 * @return {Object=} Created Board element
 	 * @method addDisableControl
 	 */
-  injectBoard(options) { 
+  injectMarkCollection(options) { 
 		let player = this.player();
 		
     if (player && player.controlBar) {
@@ -57,13 +59,13 @@ class NoteTaking extends Component {
       
       if (controlBar.progressControl) {
         let progressControl = controlBar.progressControl;
-        if (progressControl.getChild('Board')) {
+        if (progressControl.getChild('MarkCollection')) {
 					throw new Error(
 						'There is already a Board attached to the progress control'
 					);
 				}
-        let board = progressControl.addChild('board', options);
-        return board;
+        let markCollection = progressControl.addChild('MarkCollection', options);
+        return markCollection;
       }
     }
   }
@@ -86,10 +88,48 @@ class NoteTaking extends Component {
 					'There is already a MarkerButton attached to the control bar'
 				);
 			}
-      let markerButton = controlBar.addChild('markerButton', options);
+      let markerButton = controlBar.addChild('MarkerButton', options);
       return markerButton;
     }
   }
+	
+	/**
+   * Adds a class name that corresponds to a dialog size dependent on the video dim
+	 * 
+	 * @method calculateSizeClass
+	 */
+	determinePlayerSize() {
+		// YouTube videos have 1.77 ratio width:height
+		// Coursera videos have 1.77 ratio width:height
+		let size = 'medium';
+
+		let height = this.player().videoHeight();
+		let width = this.player().videoWidth();
+		
+		if (width >= 850 && height >= 400) {
+			size = 'large';
+		} else if (width >= 640 && height >= 360) {
+			size = 'medium';
+		} else {
+			size = 'small';
+		}
+		
+		return size;
+	}
+	
+	/**
+	 * Returns the size for the dialog
+	 *
+	 * @return {String} the size descriptor
+	 * @method getSize
+	 */
+	getPlayerSize() {
+		if (!this.size_) {
+			this.playerSize_ = this.determinePlayerSize();
+		}
+		
+		return this.playerSize_;
+	}
 	
 	/**
 	 * Returns the private notetaking object
@@ -101,7 +141,7 @@ class NoteTaking extends Component {
 		let player = this.player();
 		
 		if (!player.notetaking_) {
-			return;
+			player.notetaking_ = this;
 		}
 		
 		return player.notetaking_;
@@ -153,7 +193,7 @@ class NoteTaking extends Component {
 	}
 }
 
-NoteTaking.prototype.options_ = config;
+NoteTaking.prototype.options_ = Config;
 
 Component.registerComponent('NoteTaking', NoteTaking);
 export default NoteTaking;

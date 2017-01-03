@@ -49,8 +49,14 @@
 	background-color: rgba(0,0,0,0.2);
 }
 
-.ntk-marks .ntk-active-mark {
-	background-color: yellow;
+.ntk-marks .ntk-mark-selected {
+	border: 1px solid white;
+	border-radius: 5px;
+}
+
+.ntk-marks .ntk-mark-focused {
+	border: 1px solid yellow;
+	border-radius: 5px;
 }
 
 .ntk-mark-selected {
