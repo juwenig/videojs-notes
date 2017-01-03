@@ -1,5 +1,5 @@
 import mergeOptions from '../utils/merge-options.js';
-import {Component} from '../utils/vjs-classes.js';
+import {Component, Button} from '../utils/vjs-classes.js';
 
 import Config from '../config.js';
 

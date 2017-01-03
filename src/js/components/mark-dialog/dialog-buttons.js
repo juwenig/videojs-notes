@@ -1,5 +1,6 @@
 import mergeOptions from '../utils/merge-options.js';
 import {Component} from '../utils/vjs-classes.js';
+import {assign} from '../utils/obj.js';
 import * as Dom from '../utils/dom.js';
 
 import Config from '../config.js';
@@ -13,7 +14,7 @@ class DialogButtons extends Component {
 	createEl(tag = 'div', props = {}, attrs = {}) {
 		props = assign({
 			className: 'ntk-dialog-buttons'
-		});
+		}, props);
 		
 		const el = super.createEl(tag, props, attrs);
 		

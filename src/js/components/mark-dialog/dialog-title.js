@@ -1,5 +1,6 @@
 import mergeOptions from '../utils/merge-options.js';
 import {Component} from '../utils/vjs-classes.js';
+import {assign} from '../utils/obj.js';
 
 import Config from '../config.js';
 
@@ -12,12 +13,12 @@ class DialogTitle extends Component {
 	createEl(tag = 'input', props = {}, attrs = {}) {
 		props = assign({
 			className: 'ntk-dialog-title'
-		});
+		}, props);
 		
-		attrs = {
+		attrs = assign({
 			placeholder: 'Title',
 			type: 'text'
-		}
+		}, attrs);
 		
 		const el = super.createEl(tag, props, attrs);
 		

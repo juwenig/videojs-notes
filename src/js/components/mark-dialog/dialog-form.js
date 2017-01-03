@@ -1,5 +1,6 @@
 import mergeOptions from '../utils/merge-options.js';
 import {Component} from '../utils/vjs-classes.js';
+import {assign} from '../utils/obj.js';
 
 import Config from '../config.js';
 
@@ -12,7 +13,7 @@ class DialogForm extends Component {
 	createEl(tag = 'form', props = {}, attrs = {}) {
 		props = assign({
 			className: 'ntk-dialog-form'
-		});
+		}, props);
 		
 		const el = super.createEl(tag, props, attrs);
 		

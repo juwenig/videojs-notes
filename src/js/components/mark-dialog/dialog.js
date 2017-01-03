@@ -48,7 +48,7 @@ class Dialog extends Component {
 		
 		props = assign({
 			className: `${sizeClass} ntk-dialog`
-		});
+		}, props);
 		
 		const el = super.createEl(tag, props, attrs);
 		
