@@ -5,16 +5,18 @@ import Config from '../config.js';
 
 class DialogDelete extends Button {
 	constructor(player, options) {
-		options = mergeOptions(DialogText.prototype.options_, options);
+		options = mergeOptions(DialogDelete.prototype.options_, options);
 		super(player, options);
+		
+		this.controlText(this.localize('Delete'));
 	}
 	
 	buildCSSClass() {
-		
+		return 'ntk-dialog-delete fa fa-trash-o';
 	}
 }
 
-DialogText.prototype.options_ = Config.DialogText;
+DialogDelete.prototype.options_ = Config.DialogDelete;
 
-Component.registerComponent('DialogText', DialogText);
-export default DialogText;
+Component.registerComponent('DialogDelete', DialogDelete);
+export default DialogDelete;
