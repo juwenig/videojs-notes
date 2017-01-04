@@ -179,8 +179,9 @@ export function add(item) {
 	
 }
 
-export function delete(item) {
+export function remove(item) {
 	// deleting an item
+	return item;
 }
 
 

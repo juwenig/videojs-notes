@@ -4,12 +4,16 @@
 
 import * as Dom from './utils/dom.js';
 import * as Fn from './utils/fn.js';
+import Log from './utils/log.js';
 import mergeOptions from './utils/merge-options.js';
 import {Button, Component} from './utils/vjs-classes.js';
 
 import Config from '../config.js';
 
 import Icon from './button-icons/icon.js';
+import CreateIcon from './button-icons/create-icon.js';
+import SelectIcon from './button-icons/select-icon.js';
+import NormalIcon from './button-icons/normal-icon.js';
 
 class MarkerButton extends Button {
   constructor(player, options) {
@@ -28,7 +32,7 @@ class MarkerButton extends Button {
 		
 		let initialOrder = [];
 		
-		for (icon in Icon.getIcons()) {
+		for (let icon in Icon.getIcons()) {
 			this.addIcon(icon, Icon.getIcon(icon));
 			initialOrder.push(icon);
 		}
@@ -48,7 +52,7 @@ class MarkerButton extends Button {
     const el = super.createEl();
     
 		// Icon 1
-    props = {
+    let props = {
       className: `fa fa-stack-2x fa-sticky-note-o`
     };
     el.insertBefore(Dom.createEl('i', props), null);
@@ -158,7 +162,12 @@ class MarkerButton extends Button {
 			return;
 		}
 		
-		this.currentIcon_ = this.icons_[name];
+		this.currentIcon_ = this.icons_[name] || {};
+
+		if (!this.currentIcon_) {
+			Log.error(name, ' icon cannot be found.');
+			return;
+		}
 		
 		let state = this.currentIcon_.state();
 		this.target_.setDefaultState(state);

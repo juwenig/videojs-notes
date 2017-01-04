@@ -1,6 +1,7 @@
 
 import * as Dom from '../utils/dom.js';
 import Log from '../utils/log.js';
+import toTitleCase from '../utils/to-title-case.js';
 
 import Config from '../../config.js';
 
@@ -123,3 +124,4 @@ class Icon {
 	}
 }
 
+export default Icon;

@@ -19,7 +19,7 @@ import State from './state.js';
  */
 class SelectState extends State {
 	constructor(context, options) {
-		options = mergeOptions(NormalState.prototype.options_, options);
+		options = mergeOptions(SelectState.prototype.options_, options);
 		super(context, options);
 	}
 	

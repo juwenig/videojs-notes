@@ -66,6 +66,10 @@ let componentExtension = function(A) {
 				throw new Error('No element by name ', name);
 			}
 			
+			if (element.length = 1) {
+				element = element[0];
+			}
+			
 			return element;
 		}
 	}

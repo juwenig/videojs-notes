@@ -10,14 +10,11 @@ import {Component} from './utils/vjs-classes.js';
 import Config from '../config.js';
 
 import State from './state/state.js';
+import CreateState from './state/create-state.js';
+import NormalState from './state/select-state.js';
+import SelectState from './state/normal-state.js';
 
-let boardExtension = function(A) {
-	if (Component.isPrototypeOf(A)) {
-		console.log('Component identified');
-	} else {
-		return Log.error('Board needs to be a subclass of Component');
-	}
-	
+import MarkCollection from './mark/mark-collection.js';
 
 /**
  * Overalys element over the player seek bar in order to prevent triggering of seek bar events
@@ -32,7 +29,7 @@ let boardExtension = function(A) {
  * @Board
  */
 
-class Board extends A {
+class Board extends MarkCollection {
   constructor(player, options) {
     options.reportTouchActivity = false;
     options = mergeOptions(Board.prototype.options_, options);
@@ -49,7 +46,7 @@ class Board extends A {
 		
 		// adds states from the State array and initializes order
 		let initialOrder = [];
-		for (state in State.getStates()) {			
+		for (let state in State.getStates()) {			
 			this.addState(state, State.getState(state));
 			initialOrder.push(state);
 		}
@@ -160,8 +157,4 @@ class Board extends A {
 Board.prototype.options_ = Config.Board;
 
 Component.registerComponent('Board', Board);
-	
-return Board;
-} // end of boardExtension definition
-
-export default boardExtension;
+export default Board;

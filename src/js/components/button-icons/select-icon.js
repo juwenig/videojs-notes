@@ -10,6 +10,7 @@ import Icon from './icon.js';
 
 class SelectIcon extends Icon { 
 	constructor(options) {
+		options = mergeOptions(SelectIcon.prototype.options_, options);
 		super(options);
 	}
 	
@@ -22,9 +23,9 @@ class SelectIcon extends Icon {
    * @return {Element} The element that gets created
 	 * @method createEl
    */
-	createEl(type, props, attrs){
+	createEl(tag = 'i', props = {}, attrs = {}){
 		super.createEl(
-			'i',
+			tag,
 			{
 				className: 'ntk-marker-mode-icon fa fa-stack-2x fa-hand-pointer-o',
 			},

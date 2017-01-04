@@ -15,7 +15,7 @@ import {Component} from './components/utils/vjs-classes.js';
 import Config from './config.js';
 
 import MarkerButton from './components/marker-button.js'
-import MarkCollection from './components/mark/mark-collection.js';
+import Board from './components/board.js';
 
 class NoteTaking extends Component {
   constructor(player, options) {
@@ -37,10 +37,10 @@ class NoteTaking extends Component {
 		this.playerSize_ = this.determinePlayerSize();
     
     // Separate the Mark and the DisableControl options from config
-		const markCollectionOptions = options.MarkCollection;
+		const boardOptions = options.Board;
     const markerButtonOptions = options.MarkerButton;
     
-    this.injectMarkCollection(markCollectionOptions);
+    this.injectMarkBoard(boardOptions);
     this.injectMarkerButton(markerButtonOptions);
   }
  
@@ -51,7 +51,7 @@ class NoteTaking extends Component {
 	 * @return {Object=} Created Board element
 	 * @method addDisableControl
 	 */
-  injectMarkCollection(options) { 
+  injectMarkBoard(options) { 
 		let player = this.player();
 		
     if (player && player.controlBar) {
@@ -59,13 +59,13 @@ class NoteTaking extends Component {
       
       if (controlBar.progressControl) {
         let progressControl = controlBar.progressControl;
-        if (progressControl.getChild('MarkCollection')) {
+        if (progressControl.getChild('Board')) {
 					throw new Error(
 						'There is already a Board attached to the progress control'
 					);
 				}
-        let markCollection = progressControl.addChild('MarkCollection', options);
-        return markCollection;
+        let board = progressControl.addChild('Board', options);
+        return board;
       }
     }
   }

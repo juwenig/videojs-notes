@@ -8,7 +8,6 @@ import mergeOptions from '../utils/merge-options.js';
 import * as Logic from '../../logic/occlusion.js'
 
 import Config from '../../config.js';
-
 import State from './state.js';
 
 /**
@@ -20,7 +19,7 @@ import State from './state.js';
  */
 class CreateState extends State {
 	constructor(context, options) {
-		options = mergeOptions(NormalState.prototype.options_, options);
+		options = mergeOptions(CreateState.prototype.options_, options);
 		super(context, options);
 	}
 	

@@ -10,7 +10,6 @@ import {Component} from '../utils/vjs-classes.js';
 
 import config from '../../config.js';
 
-import Board from '../board.js';
 import Dialog from '../mark-dialog/dialog.js';
 
 /**
@@ -20,7 +19,7 @@ import Dialog from '../mark-dialog/dialog.js';
  * @param {Object=} options
  * @MarkCollection
  */
-class MarkCollection extends Board(Component) {
+class MarkCollection extends Component {
   constructor(player, options) {
 		options = mergeOptions(MarkCollection.prototype.options_, options);
     super(player, options);
