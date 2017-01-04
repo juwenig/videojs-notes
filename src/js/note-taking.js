@@ -40,7 +40,7 @@ class NoteTaking extends Component {
 		const boardOptions = options.Board;
     const markerButtonOptions = options.MarkerButton;
     
-    this.injectMarkBoard(boardOptions);
+    this.injectBoard(boardOptions);
     this.injectMarkerButton(markerButtonOptions);
   }
  
@@ -51,7 +51,7 @@ class NoteTaking extends Component {
 	 * @return {Object=} Created Board element
 	 * @method addDisableControl
 	 */
-  injectMarkBoard(options) { 
+  injectBoard(options) { 
 		let player = this.player();
 		
     if (player && player.controlBar) {

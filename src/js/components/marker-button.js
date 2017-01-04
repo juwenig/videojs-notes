@@ -11,9 +11,9 @@ import {Button, Component} from './utils/vjs-classes.js';
 import Config from '../config.js';
 
 import Icon from './button-icons/icon.js';
+import NormalIcon from './button-icons/normal-icon.js';
 import CreateIcon from './button-icons/create-icon.js';
 import SelectIcon from './button-icons/select-icon.js';
-import NormalIcon from './button-icons/normal-icon.js';
 
 class MarkerButton extends Button {
   constructor(player, options) {
@@ -37,7 +37,12 @@ class MarkerButton extends Button {
 			initialOrder.push(icon);
 		}
 		
-		this.setIconOrder(initialOrder);
+		if (!options.order) {
+			this.setIconOrder(initialOrder);
+		} else {
+			this.setIconOrder(options.order);
+		}
+		
 		let firstIcon = Object.keys(this.icons_)[0];
 		this.setDefaultIcon(firstIcon);
   }
@@ -69,7 +74,7 @@ class MarkerButton extends Button {
     this.goToNextIcon();
 		this.target_.goToNextState();
 		
-		this.controlText(this.currentIcon_.replace(/([A-Z])/g, ' $1'));
+		this.controlText(this.currentIcon_.name().replace(/([A-Z])/g, ' $1'));
   }
 
   /**

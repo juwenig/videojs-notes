@@ -25,7 +25,7 @@ import MarkCollection from './mark/mark-collection.js';
  * 				options.order flag sets whether to automatically order states based on initialization
  *				order
  *
- * @extends Component
+ * @extends MarkCollection
  * @Board
  */
 
@@ -51,8 +51,10 @@ class Board extends MarkCollection {
 			initialOrder.push(state);
 		}
 		
-		if (options.order) {
+		if (!options.order) {
 			this.setStateOrder(initialOrder);
+		} else {
+			this.setStateOrder(options.order);
 		}
 		
 		let firstState = Object.keys(this.states_)[0];

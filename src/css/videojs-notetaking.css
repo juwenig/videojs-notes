@@ -14,14 +14,25 @@
   content: '\f040';
 }
 
-.ntk-disable-control {
-  z-index: 1000;
+.ntk-mark-collection {
+  z-index: -1;
   width: 100%;
   height: 100%;
   position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
+	-webkit-box-flex: auto;
+	-moz-box-flex: auto;
+	-webkit-flex: auto;
+	-ms-flex: auto;
+	flex: auto;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	min-width: 4em;
 }
 
 .ntk-board {

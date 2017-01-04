@@ -33,9 +33,17 @@ class MarkCollection extends Component {
 	 * @method createEl
    */
   createEl() {
-    return Dom.createEl('ul', {
-      className: this.options_.className
+    const el = Dom.createEl('div', {
+      className: 'ntk-mark-collection'
     });
+		
+		this.contentEl_ = Dom.createEl('div', {
+			className: 'ntk-board'
+		});
+		
+		el.appendChild(this.contentEl_);
+		
+		return el;
   }
 	
   /**

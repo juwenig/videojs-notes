@@ -4,6 +4,11 @@ const options = {
 
 options.MarkerButton = {
   name: 'MarkerButton',
+	order: [
+		'Normal',
+		'Create',
+		'Select'
+	]
 }
 
 options.CreateIcon = {
@@ -23,9 +28,6 @@ options.SelectIcon = {
 
 options.Board = {
   name: 'Board',
-  children: [
-    'MarkCollection'
-  ]
 }
 
 options.SelectState = {
