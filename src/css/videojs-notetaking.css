@@ -15,7 +15,7 @@
 }
 
 .ntk-mark-collection {
-  z-index: -1;
+  z-index: 10;
   width: 100%;
   height: 100%;
   position: absolute;
@@ -42,16 +42,9 @@
   width: 100%;
   position: absolute;
 	z-index: 1;
-}
+}ex: 100;
 
-.ntk-marks {
-  width: 100%;
-  height: 0.3em;
-	position: absolute;
-	z-index: 100;
-}
-
-.ntk-marks li {
+.ntk-board li {
   min-width: 3px;
   height: 0.3em;
   list-style: none;
@@ -60,17 +53,12 @@
 	background-color: rgba(0,0,0,0.2);
 }
 
-.ntk-marks .ntk-mark-selected {
+.ntk-board .ntk-mark-selected {
 	border: 1px solid white;
 	border-radius: 5px;
 }
 
-.ntk-marks .ntk-mark-focused {
-	border: 1px solid yellow;
-	border-radius: 5px;
-}
-
-.ntk-mark-selected {
+.ntk-board .ntk-mark-focused {
 	border: 1px solid yellow;
 	border-radius: 5px;
 }

@@ -53,15 +53,13 @@ class Board extends MarkCollection {
 		
 		if (!options.order) {
 			this.setStateOrder(initialOrder);
+			let firstState = Object.keys(this.states_)[0];
+			this.setDefaultState(firstState);
 		} else {
 			this.setStateOrder(options.order);
+			this.setDefaultState(options.order[0])
 		}
-		
-		let firstState = Object.keys(this.states_)[0];
-		this.setDefaultState(firstState);
-		
-		this.bindEvents();
-		
+			
 		initialOrder = null;
   }
  

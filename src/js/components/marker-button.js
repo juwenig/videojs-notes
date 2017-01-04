@@ -39,12 +39,14 @@ class MarkerButton extends Button {
 		
 		if (!options.order) {
 			this.setIconOrder(initialOrder);
+			let firstIcon = Object.keys(this.icons_)[0];
+			this.setDefaultIcon(firstIcon);
 		} else {
 			this.setIconOrder(options.order);
+			this.setDefaultIcon(options.order[0]);
 		}
 		
-		let firstIcon = Object.keys(this.icons_)[0];
-		this.setDefaultIcon(firstIcon);
+		this.controlText(this.currentIcon_.name().replace(/([A-Z])/g, ' $1'));
   }
   
   /**
@@ -73,8 +75,6 @@ class MarkerButton extends Button {
   handleClick() {
     this.goToNextIcon();
 		this.target_.goToNextState();
-		
-		this.controlText(this.currentIcon_.name().replace(/([A-Z])/g, ' $1'));
   }
 
   /**
@@ -130,7 +130,7 @@ class MarkerButton extends Button {
 			
 			this.nextIcon_[icon] = next;
 		}
-		
+
 		this.syncStateOrder(order);
 	}
 	
@@ -154,6 +154,8 @@ class MarkerButton extends Button {
 		}
 		
 		this.target_.setStateOrder(stateOrder);
+		this.target_.setDefaultState(stateOrder[0]);
+		this.target_.bindEvents();
 	}
 	
 	/**
@@ -190,6 +192,8 @@ class MarkerButton extends Button {
 		let next = this.nextIcon_[current];
 		
 		this.currentIcon_ = this.icons_[next];
+		this.controlText(this.currentIcon_.name().replace(/([A-Z])/g, ' $1'));
+
 		return this.currentIcon_;
 	}
   
