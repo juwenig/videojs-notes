@@ -21,7 +21,9 @@ class NormalState extends State {
 		super(context, options);
 	}
 	
-
+	initialize() {
+		this.style_.zIndex = -100;
+	}
 }
 
 NormalState.prototype.options_ = Config.NormalState;

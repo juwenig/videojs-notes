@@ -23,6 +23,10 @@ class SelectState extends State {
 		super(context, options);
 	}
 	
+	initialize() {
+		this.style_.zIndex = 100;
+	}
+	
   /**
 	 * Stops propogation of marks element click event to parent elements
 	 */

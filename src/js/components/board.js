@@ -111,6 +111,7 @@ class Board extends MarkCollection {
 		this.on('mousedown', state.handleMouseDown);
     this.on('touchstart', state.handleMouseDown);
 		
+		state.initialize();
 		this.triggerReady();
 	}
 	

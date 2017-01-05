@@ -12,11 +12,17 @@ class State {
 	constructor(context, options) {
 		this.options_ = options;
 		this.context_ = context;
+		this.style_ = context.el().style;
 		
 		if (options.name) {
 			this.name_ = options.name;	
 		}
 	}
+	
+	/**
+	 * Called for initialization steps
+	 */
+	initialize() {}
 	
 	/**
 	 * Returns the name of the state

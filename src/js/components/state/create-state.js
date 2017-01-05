@@ -23,6 +23,10 @@ class CreateState extends State {
 		super(context, options);
 	}
 	
+	initialize() {
+		this.style_.zIndex = 100;
+	}
+	
   /**
 	 * Stops propogation of marks element click event to parent elements
 	 *
@@ -40,9 +44,9 @@ class CreateState extends State {
    * @param {Event} event
    * @method handleMouseDown
    */
-  handleMouseDown(event) {
+  handleMouseDown(event) {	
     const doc = this.el().ownerDocument;
-    
+		
     event.preventDefault();
     Dom.blockTextSelection();
 
@@ -52,7 +56,7 @@ class CreateState extends State {
 
     let startPoint = this.calculateDistance(event);
     
-    this.createNewMark(startPoint);
+    context.createNewMark(startPoint);
     this.handleMouseMove(event);
   }
   
@@ -63,8 +67,10 @@ class CreateState extends State {
    * @method handleMouseMove
    */
   handleMouseMove(event){
-    let progress = this.calculateDistance(event);
-    this.updateActiveMark(progress);
+    const context = this.context_;
+		let progress = this.calculateDistance(event);
+    
+		context.updateActiveMark(progress);
   }
   
   /**
@@ -75,15 +81,16 @@ class CreateState extends State {
    */
   handleMouseUp(event) {
     const doc = this.el().ownerDocument;
-    
+    const context = this.context_;
+		
     Dom.unblockTextSelection();
     
     this.off(doc, 'mousemove', this.handleMouseMove);
     this.off(doc, 'mouseup', this.handleMouseUp);
     this.off(doc, 'touchend', this.handleMouseUp);
     
-    let endPoint = this.calculateDistance(event);
-    this.endActiveMark(endPoint);
+    let endPoint = context.calculateDistance(event);
+    context.endActiveMark(endPoint);
   }
 }
 
