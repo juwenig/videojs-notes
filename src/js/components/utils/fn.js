@@ -14,7 +14,7 @@ import { newGUID } from './guid.js';
  * @private
  * @method bind
  */
-export const bind = function(context, fn, uid) {
+export const bind = function(context, fn, uid) {	
   // Make sure the function has a unique ID
   if (!fn.guid) { fn.guid = newGUID(); }
 

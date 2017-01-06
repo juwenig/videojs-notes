@@ -3,6 +3,7 @@
  */
 
 import * as Dom from '../utils/dom.js';
+import * as Fn from '../utils/fn.js';
 import mergeOptions from '../utils/merge-options.js';
 
 import * as Logic from '../../logic/occlusion.js'
@@ -27,6 +28,14 @@ class CreateState extends State {
 		this.style_.zIndex = 100;
 	}
 	
+	bindToContext() {
+		const context = this.context_;
+		
+		context.on('click', Fn.bind(this, this.handleClick));
+		context.on('mousedown', Fn.bind(this, this.handleMouseDown));
+    context.on('touchstart', Fn.bind(this, this.handleMouseDown));
+	}
+	
   /**
 	 * Stops propogation of marks element click event to parent elements
 	 *
@@ -45,14 +54,15 @@ class CreateState extends State {
    * @method handleMouseDown
    */
   handleMouseDown(event) {	
-    const doc = this.el().ownerDocument;
+		const context = this.context_;
+		const doc = context.el().ownerDocument;
 		
     event.preventDefault();
     Dom.blockTextSelection();
 
-		this.on(doc, 'mousemove', this.handleMouseMove);
-    this.on(doc, 'mouseup', this.handleMouseUp);
-    this.on(doc, 'touchend', this.handleMouseUp);
+		context.on(doc, 'mousemove', Fn.bind(this, this.handleMouseMove));
+    context.on(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
+    context.on(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
 
     let startPoint = this.calculateDistance(event);
     
@@ -80,14 +90,14 @@ class CreateState extends State {
    * @method handleMouseUp
    */
   handleMouseUp(event) {
-    const doc = this.el().ownerDocument;
     const context = this.context_;
+		const doc = context.el().ownerDocument;
 		
     Dom.unblockTextSelection();
     
-    this.off(doc, 'mousemove', this.handleMouseMove);
-    this.off(doc, 'mouseup', this.handleMouseUp);
-    this.off(doc, 'touchend', this.handleMouseUp);
+    context.off(doc, 'mousemove', Fn.bind(this, this.handleMouseMove));
+    context.off(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
+    context.off(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
     
     let endPoint = context.calculateDistance(event);
     context.endActiveMark(endPoint);

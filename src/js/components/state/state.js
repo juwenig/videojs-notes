@@ -20,9 +20,18 @@ class State {
 	}
 	
 	/**
-	 * Called for initialization steps
+	 * Called for initialization steps 
+	 *
+	 * @method initialize
 	 */
 	initialize() {}
+	
+	/**
+	 * Called by context to bind event handlers
+	 * 
+	 * @method bindToContext
+	 */
+	bindToContext() {}
 	
 	/**
 	 * Returns the name of the state

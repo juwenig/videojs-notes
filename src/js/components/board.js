@@ -104,14 +104,11 @@ class Board extends MarkCollection {
 	 * @method bindEventsToState
 	 */
 	bindEvents() {
+		const state = this.currentState_;
 		Dom.unblockTextSelection();
-
-		let state = this.currentState_;
-		this.on('click', state.handleClick);
-		this.on('mousedown', state.handleMouseDown);
-    this.on('touchstart', state.handleMouseDown);
 		
 		state.initialize();
+		state.bindToContext();
 		this.triggerReady();
 	}
 	
@@ -119,7 +116,7 @@ class Board extends MarkCollection {
 	 * Converts an array describing state order to the private order data structure
 	 * 
 	 * @param {Array} order Ordered array
-	 * @method setStateOrder
+	 * @method setStateOrder 
 	 */
 	setStateOrder(order) {
 		if (!this.nextState_) {
