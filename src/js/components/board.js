@@ -108,7 +108,7 @@ class Board extends MarkCollection {
 		Dom.unblockTextSelection();
 		
 		state.initialize();
-		state.bindToContext();
+		state.bindEvents();
 		this.triggerReady();
 	}
 	

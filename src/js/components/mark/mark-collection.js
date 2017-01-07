@@ -46,52 +46,58 @@ class MarkCollection extends Component {
 		return el;
   }
 	
-  /**
+ 
+	/// REMOVE BELOW
+	/**
    * Creates a new mark at given point
 	 * 
 	 * @param {Number} percentage of left dist within scrollbar
+	 * @param {Boolean} set start flag if starting to create new, false if ending 
 	 * @method createNewMark
    */
-  createNewMark(point) {
-		options = {
-			time: [point, point],
+  createMark(options, start = true) {
+		options = mergeOptions({
+			time: [],
 			vertical: this.vertical()
-		};
+		}, options);
 		
-    let newMark = new MarkItem(this.player(), options);
-   	return this.addChild(newMark);
+		if (start) {
+			let newMark = new MarkItem(this.player(), options);
+			this.addChild(newMark);
+			
+			return newMark.id();
+		} else {
+			
+		}
+    
   }
+	
+	readMark(markID) {
+		
+	}
   
 	/**
 	 * Removes the current mark
 	 * 
 	 * @method deleteNewMark
 	 */
-  deleteNewMark() {
-    this.el().removeChild(this.activeMark);
+  deleteMark(markID) {
+		this.readMark(markID); 
+    this.el().removeChild();
   }
-  
-  /**
-   * Handles the end of a new mark and is API for board-create
-   *
-   * @param {Number} time End time of mark
-   * @method handleStart
-   */
-  endActiveMark(point) {
-		this.activeMark.addChild(MarkCollection.prototype.options_.dialogName, options);
-  }
-  
+	
 	/**
-   * Get percentage of video played
-   *
-   * @return {Number} Percentage played
-   * @method getPercent
-   */
-  getPercent() {
-    const percent = this.player_.currentTime() / this.player_.duration();
-
-    return percent >= 1 ? 1 : percent;
-  }
+	 * 
+	 */
+  updateMark(markID, options) {
+		
+	}
+	//// REMOVE ABOVE
+	
+	/**
+	 * 
+	 */
+	addMark()
   
   /**
    * Gets the mouse position in percentage x y within this element
@@ -100,7 +106,7 @@ class MarkCollection extends Component {
    * @method calculateDistance
    */
   calculateDistance(event) {
-    const position = Dom.getPointerPosition(this.el_, event);
+    const position = Dom.getPointerPosition(this.contentEl(), event);
 
     if (this.vertical()) {
       return position.y;
@@ -122,6 +128,13 @@ class MarkCollection extends Component {
   }
 	
 }
+
+/**
+ * Holds the marks elements 
+ * Make sure set to null when destroying the mark-collection
+ * by including it in the dispose method
+ */
+MarkCollection.marks = {};
 
 MarkCollection.prototype.options_ = config.MarkCollection;
 

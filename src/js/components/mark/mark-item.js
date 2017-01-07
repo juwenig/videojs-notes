@@ -16,15 +16,17 @@ class MarkItem extends Component {
 		options = mergeOptions(MarkItem.prototype.options_, options);
 		super(player, options);
 				
-		if (!options.time) {
-			this.setTimeRange();
+		if (options.time || options.position) {
+			this.setTimeRange(options.time || options.position);
 		} else {
-			this.setTimeRange(options.time);
+			this.setTimeRange();
 		}
 		
 		if (options.vertical) {
 			this.vertical_ = options.vertical;
 		}
+			
+		this.id_ = `Item_${Guid.newGUID().toString()}`;
 	}
 	
 	createEl(tag = 'li', props = {}, attrs = {}) {
@@ -33,34 +35,51 @@ class MarkItem extends Component {
       className: 'ntk-active-mark'
 		};
 		let attrs = {
-			id: `Item_${Guid.newGUID().toString()}`
+			id: this.id()
 		}
 		
 		return super.createEl(tag, props, attrs);
 	}
 	
-	setStart(point) {
+	/**
+	 * Sets the starting point of the mark
+	 *
+	 * @param {Number} point Left position of mark in percent
+	 * @param {Boolean} left True if point indicates left pos, false otherwise
+	 * @method setStart
+	 */
+	setStart(point, left = true) {
 		let style = this.el().style;
-		let leftPosition = point;
+		let position = 0;
 		
-		leftPosition = (point * 100).toFixed(2) + '%';
+		position = (point * 100).toFixed(2) + '%';
 		
-		style.left = leftPosition;
+		if (left) {
+			style.left = position;
+		} else {
+			style.right = position;
+		}
 	}
 	
+	/**
+	 * Sets width/height of item based on vertical flag
+	 *
+	 * @param {Number} length Length of the item in percent or decimal value
+	 * @method setLength
+	 */
 	setLength(length) {
 		let el = this.el();
-		
-		if (typeof length !== 'number' ||
-        length !== progress ||
-        length < 0 ||
-        length === Infinity) {
-      length = 0;
-    }
     
+		const percentLength;
+		
+		if (length === 'string' && 
+				length.indexOf('%') != -1) {
+			percentLength = length;
+		} else {
+			const percentLength = (length * 100).toFixed(2) + '%';
+		}
     let offSetPercent = (length - this.time_.start);
     // Convert to a percentage for setting
-    const percentLength = (offSetPercent * 100).toFixed(2) + '%';
 		
 		if (this.vertical_) {
 			el.height(percentLength, true);
@@ -69,7 +88,7 @@ class MarkItem extends Component {
 		}
 	}
 	
-	setFocus(focused) {
+	setFocusClass(focused) {
 		if (focused) {
 			this.addClass('ntk-mark-focused')
 		} else {
@@ -77,7 +96,7 @@ class MarkItem extends Component {
 		}
 	}
 	
-	setSelect(selected) {
+	setSelectClass(selected) {
 		if (selected) {
 			this.addClass('ntk-mark-selected');
 		} else {
@@ -85,7 +104,13 @@ class MarkItem extends Component {
 		}
 	}
 	
-	setTimeRange(timeRange = []) {
+	/**
+	 * Sets the time range info to item object
+	 * 
+	 * @param {Object} timeRange Should include 'start' and 'end' props
+	 * @method setTimeRange
+	 */
+	setTimeRange(timeRange = {}) {
 		if (!this.time_) {
 			this.time_ = {
 				start: 0,
@@ -93,12 +118,13 @@ class MarkItem extends Component {
 			};
 		} 
 		
-		if (timeRange[0]) {
-			this.time_.start = timeRange[0];
-		} 
+		// don't use merge because we only want start and end
+		if (timeRange.start && typeof timeRange.start === "number") {
+			this.time_.start = timeRange.start;
+		} else
 		
-		if (timeRange[1]) {
-			this.time_.end = timeRange[1];
+		if (timeRange.end && typeof timeRange.end === "number") {
+			this.time_.end = timeRange.end;
 		}
 	}
 }

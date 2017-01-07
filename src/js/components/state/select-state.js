@@ -27,6 +27,14 @@ class SelectState extends State {
 		this.style_.zIndex = 100;
 	}
 	
+	bindToContext() {
+		const context = this.context_;
+		
+		context.on('click', Fn.bind(this, this.handleClick));
+		context.on('mousedown', Fn.bind(this, this.handleMouseDown));
+    context.on('touchstart', Fn.bind(this, this.handleMouseDown));
+	}
+	
   /**
 	 * Stops propogation of marks element click event to parent elements
 	 */

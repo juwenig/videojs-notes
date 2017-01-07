@@ -29,9 +29,9 @@ class State {
 	/**
 	 * Called by context to bind event handlers
 	 * 
-	 * @method bindToContext
+	 * @method bindEvents
 	 */
-	bindToContext() {}
+	bindEvents() {}
 	
 	/**
 	 * Returns the name of the state

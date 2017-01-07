@@ -28,12 +28,13 @@ class CreateState extends State {
 		this.style_.zIndex = 100;
 	}
 	
-	bindToContext() {
+	bindEvents() {
 		const context = this.context_;
+		const target = context.contentEl();
 		
-		context.on('click', Fn.bind(this, this.handleClick));
-		context.on('mousedown', Fn.bind(this, this.handleMouseDown));
-    context.on('touchstart', Fn.bind(this, this.handleMouseDown));
+		context.on(target, 'click', Fn.bind(this, this.handleClick));
+		context.on(target, 'mousedown', Fn.bind(this, this.handleMouseDown));
+    context.on(target, 'touchstart', Fn.bind(this, this.handleMouseDown));
 	}
 	
   /**
@@ -48,7 +49,7 @@ class CreateState extends State {
 	}
 	
 	/**
-   * Triggers the mark start event for a new active mark
+   * Initiates creation of a new mark item
    * 
    * @param {Event} event
    * @method handleMouseDown
@@ -64,9 +65,26 @@ class CreateState extends State {
     context.on(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
     context.on(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
 
-    let startPoint = this.calculateDistance(event);
-    
-    context.createNewMark(startPoint);
+		let startPoint = context.calculateDistance(event);
+		
+		options = {
+			time: {
+				start: startPoint,
+				end: null
+			},
+			vertical: this.vertical()
+		};
+		
+		let newMark = new MarkItem(this.player(), options);
+		this.addChild(newMark);
+
+		let options = {
+			point: [startPoint, startPoint],
+		}
+		
+		let newID = context.createMark(options, true);
+		context.readMark()
+
     this.handleMouseMove(event);
   }
   
@@ -78,9 +96,9 @@ class CreateState extends State {
    */
   handleMouseMove(event){
     const context = this.context_;
-		let progress = this.calculateDistance(event);
+		let progress = context.calculateDistance(event);
     
-		context.updateActiveMark(progress);
+		;
   }
   
   /**
