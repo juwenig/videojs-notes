@@ -53,6 +53,12 @@
 	background-color: rgba(0,0,0,0.2);
 }
 
+.ntk-board .ntk-mark-item {
+	position: absolute;
+	height: 100%;
+	list-style-type: none;
+}
+
 .ntk-board .ntk-mark-selected {
 	border: 1px solid white;
 	border-radius: 5px;

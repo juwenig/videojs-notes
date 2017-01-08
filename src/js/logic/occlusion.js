@@ -98,6 +98,12 @@ const ZINDEX = "zIndex";
 let _resolution = RESOLUTION;
 let _defaultZ = DEFAULT;
 
+/**
+ * Any initialization steps before using this module
+ * 
+ * @param {Object} options The options for the module
+ * @method init
+ */
 export function init(options) {
 	_resolution = options.resolution || RESOLUTION;
 	_defaultZ = options.defaultz || DEFAULT;
@@ -118,7 +124,10 @@ export function setCurrent(id) {
 }
 
 /**
- * 
+ * Updates the z-index of the items based on current mouse position
+ *
+ * @param {Decimal} position Mouse pos in percent of parent el
+ * @method update
  */
 export function update(position) {
 	if (!typeof position === "number"){
@@ -144,6 +153,12 @@ export function update(position) {
 	// if there is none then there's nothing to do...
 }
 
+/**
+ * Adds an item and sets it up for occlusion 
+ *
+ * @param {Object} item Includes the edge, id and z-index info
+ * @method add
+ */
 export function add(item) {
 	if (!item)
 		return;
@@ -177,14 +192,26 @@ export function add(item) {
 		insertEdge(item.edges[edge], id);
 	}
 	
+	assignInitialZIndexByWidth(idsInWidthOrder);
 }
 
+/**
+ * Removes an item from the globals
+ *
+ * @param {Object}
+ * @method remove
+ */
 export function remove(item) {
 	// deleting an item
 	return item;
 }
 
-
+/**
+ * Brings the z-index of currently focused item above its neighbor's
+ * 
+ * @param {String} neighbor ID of the item
+ * @method activateNeighbor
+ */
 function activateNeighbor(neighbor) {
 	if (_currentItem == neighbor) 
 		return;
@@ -199,6 +226,14 @@ function activateNeighbor(neighbor) {
 	}
 }
 
+/**
+ * Gets the z-index / reference to CSSStyle of item
+ * 
+ * @param {String} id ID of the item
+ * @param {String} type Type of description you would like to retrieve
+ * @param {Number} 
+ * @method getZIndex
+ */
 function getZIndex(id, type) {
 	if (!type) {
 		type = 'default';
@@ -210,6 +245,15 @@ function getZIndex(id, type) {
 		return _zindex[id].reference[ZINDEX];
 }
 
+/**
+ * Sets the z-index of an item either to the default property or to the actual
+ * CSS reference value
+ *
+ * @param {String} id ID of the item
+ * @param {String} val Value of the zindex
+ * @param {String} type Setting type
+ * @method setZIndex
+ */
 function setZIndex(id, val, type) {
 	if (!type) {
 		type = 'reference';
@@ -221,13 +265,26 @@ function setZIndex(id, val, type) {
 		_zindex[id].reference[ZINDEX] = val;
 }
 
+/**
+ * Sets the default zindex of the item
+ * 
+ * @param {String} id ID of the item
+ * @method defaultZIndex
+ */
 function defaultZIndex(id) {
-	if (!_zindex[id].default)
+	if (!_zindex[id].default) {
 		log.error('no default z-index set for id ', id);
+	}
 	
 	setZIndex(id, _zindex[id].default);
 }
 
+/**
+ * Assigns the initial zindex for all items
+ * 
+ * @param {Array} idsInWidthOrder Sorted ids by increasing widths
+ * @method assignInitialZIndexByWidth
+ */
 function assignInitialZIndexByWidth(idsInWidthOrder) {
 	let start = DEFAULT;
 	
@@ -237,6 +294,13 @@ function assignInitialZIndexByWidth(idsInWidthOrder) {
 	}
 }
 
+/**
+ * Inserts an edge in the time indexed array
+ *
+ * @param {Decimal} edge Time value in percent of parent el
+ * @param {String} id ID of the item
+ * @method insertEdge
+ */
 function insertEdge(edge, id) {
 	if (!_edges[edge]) {
 		_edges[edge].push(id);
@@ -245,6 +309,13 @@ function insertEdge(edge, id) {
 	}
 }
 	
+/**
+ * Gets the midpoint between item edges and surrounding item edges
+ *
+ * @param {Number} edge The time point at which an edge occurs
+ * @param {String} id ID of the item
+ * @method createMidpoint
+ */
 function createMidpoint(edge, id) {
 	let boundaries = {
 		'left': 0,
@@ -257,7 +328,7 @@ function createMidpoint(edge, id) {
 	leftOfEdge = findNextEdge(edge, -1);
 	rightOfEdge = findNextEdge(edge, 1);
 	
-	for (bound in [leftOfEdge, rightOfEdge]) {
+	[leftOfEdge, rightOfEdge].forEach(function(bound) {
 		let point;
 		
 		if (bound < 0) {
@@ -279,14 +350,23 @@ function createMidpoint(edge, id) {
 				}
 			}
 		}
+		
 		insertMidpoint(point, id);
 		if (bound == leftOfEdge) boundaries.left = point;
 		if (bound == rightOfEdge) boundaries.right = point;
-	}
+	});
 	
 	insertClosest(boundaries.left, boundaries.right, id);
 }
 
+/** 
+ * Calculates the midpoint between edges
+ * 
+ * @param {Number} right Right end of interval
+ * @param {Number} left Left end of interval
+ * @return {Number}
+ * @method calculateMidpoint
+ */
 function calculateMidpoint(right, left) {
 	if ((left && right) || typeof left !== 'number' || typeof right !== 'number')
 		log.error('need two indices as arguments for calculateMidpoint');
@@ -296,6 +376,14 @@ function calculateMidpoint(right, left) {
 	return (right + left) / 2; 
 }
 
+/**
+ * Inserts id into midpoint array with priority given to 
+ * shorter intervals
+ * 
+ * @param {Number} time Time point at which you would like to enter midpoint
+ * @param {String} id ID of item
+ * @method insertMidpoint
+ */
 function insertMidpoint(time, id) {
 	if (_midpoints[time]) {
 		let presentMidpointWidth = _widths[_midpoints[time]];
@@ -307,6 +395,15 @@ function insertMidpoint(time, id) {
 	} 
 }
 
+/**
+ * Sets up closest array denoting the element ids that are closest 
+ * to a given time point
+ *
+ * @param {Number} left Left point
+ * @param {Number} right RIght point
+ * @param {String} id ID of item that is going to be copied into closest
+ * @method insertClosest
+ */
 function insertClosest(left, right, id) {
 	if (left > right) {
 		log.warn('illegal boundaries for id ', id);
@@ -321,6 +418,14 @@ function insertClosest(left, right, id) {
 	}
 }
 
+/**
+ * Finds the edge that is left or right to the given time point
+ * 
+ * @param {Number} time Time point that you would like to find closest edge to
+ * @param {-1, 1} direction -1 = to the left, 1 = to the right
+ * @return {Number}
+ * @method findNextEdge
+ */
 function findNextEdge(time, direction) {
 	let updateIndex;
 	

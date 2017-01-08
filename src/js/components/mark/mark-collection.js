@@ -38,8 +38,8 @@ class MarkCollection extends Component {
       className: 'ntk-mark-collection'
     });
 		
-		this.contentEl_ = Dom.createEl('div', {
-			className: 'ntk-board'
+		this.contentEl_ = Dom.createEl('ul', {
+			className: 'ntk-board vjs-progress-holder'
 		});
 		
 		el.appendChild(this.contentEl_);
@@ -48,13 +48,39 @@ class MarkCollection extends Component {
   }
 	
 	/**
+	 * Returns the marks_ - all mark items
+	 *
+	 * @return {Object} mark
+	 * @method getAllMarks
+	 */
+	getAllMarks(){
+		return MarkCollection.prototype.marks;	
+	}
+	
+	/**
 	 * Gets the most recently added mark
 	 * 	- useful for consecutive operations of creating then updating item
 	 *
-	 * @method getCurrentMark
+	 * @method getActiveMark
 	 */
-	getCurrentMark(){
+	getActiveMark() {
 		return this.mark_;
+	}
+	
+	/**
+	 * Sets current mark
+	 *
+	 * @param {String} markID The id of the mark to set
+	 * @method setActiveMark
+	 */
+	setActiveMark(markID) { 
+		if (!markID) {
+			this.mark_ = null;
+			return;
+		}
+		
+		let mark = this.getMark(markID); 
+		this.mark_ = mark;
 	}
 	
 	/**
@@ -65,8 +91,8 @@ class MarkCollection extends Component {
 	 * @method getMark
 	 */
 	getMark(markID) {
-		if (MarkCollection.marks[markID]) {
-			return MarkCollection.marks[markID];
+		if (MarkCollection.prototype.marks[markID]) {
+			return MarkCollection.prototype.marks[markID];
 		} else {
 			Log.Error('missing id encountered');
 			return null;
@@ -80,27 +106,29 @@ class MarkCollection extends Component {
 	 */
  	removeMark(markID) {
 		let mark = this.getMark(markID); 
-    this.el().removeChild(mark.el());
+    this.contentEl().removeChild(mark.el());
 		
 		mark.dispose();
-		MarkCollection.marks[mark.id()] = null;
+		MarkCollection.prototype.marks[mark.id()] = null;
   }
 	
 	/**
 	 * Adds a mark to the collection object
 	 *
-	 * @returns mark
+	 * @return {MarkItem}
 	 * @method addMark
 	 */
 	addMark(options = {}) {
+		// might need to refactor
+		if (this.mark_) {
+			this.removeMark(this.mark_.id());
+		}
+		
 		let mark = new MarkItem(this.player(), options);
 		this.addChild(mark);
 		
-		// add reference to most recent mark
-		this.mark_ = mark;
-		
-		MarkCollection.marks[mark.id()] = mark;
-		return mark.id();
+		MarkCollection.prototype.marks[mark.id()] = mark;
+		return mark;
 	}
   
   /**
@@ -121,7 +149,7 @@ class MarkCollection extends Component {
   /**
    * Gets the vertical status of slider bars from player's control bar
    * 
-   * @method vertical()
+   * @method vertical
    */
   vertical() {
     let controlBar = this.player_.getChild('controlBar');
@@ -129,8 +157,7 @@ class MarkCollection extends Component {
     let seekBar = progressControl.getChild('seekBar');
 
     return seekBar.vertical();
-  }
-	
+	}
 }
 
 /**
@@ -138,7 +165,7 @@ class MarkCollection extends Component {
  * Make sure set to null when destroying the mark-collection
  * by including it in the dispose method
  */
-MarkCollection.marks = {};
+MarkCollection.prototype.marks = {};
 
 MarkCollection.prototype.options_ = config.MarkCollection;
 

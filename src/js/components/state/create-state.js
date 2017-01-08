@@ -10,7 +10,7 @@ import * as Logic from '../../logic/occlusion.js'
 
 import Config from '../../config.js';
 import State from './state.js';
-im
+import Dialog from '../mark-dialog/dialog.js';
 
 /**
  * Handles events for creating marks
@@ -25,10 +25,27 @@ class CreateState extends State {
 		super(context, options);
 	}
 	
+	/**
+	 * Initialization of state
+	 * 
+	 * @method initialize
+	 */
 	initialize() {
+		const marks = this.context_.getAllMarks();
 		this.style_.zIndex = 100;
+		
+		for (let item in marks) {
+			if (marks[item]) {
+				marks[item].el().style.zIndex = -10;
+			}
+		}
 	}
 	
+	/**
+	 * Binds the events to the context - called on state changes
+	 * 
+	 * @method bindEvents
+	 */
 	bindEvents() {
 		const context = this.context_;
 		const target = context.contentEl();
@@ -46,7 +63,10 @@ class CreateState extends State {
 	 */
 	handleClick(event) {
 		const context = this.context_;
-		
+		// close out of any opened dialog
+		// TODO
+		// delete currently active mark
+		// TODO
 		
 		event.preventDefault();
 		event.stopImmediatePropagation();
@@ -68,20 +88,25 @@ class CreateState extends State {
 		context.on(doc, 'mousemove', Fn.bind(this, this.handleMouseMove));
     context.on(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
     context.on(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
-
+		
 		let start = context.calculateDistance(event);
 		
 		// we assume user starts from left and moves right
-		options = {
+		let options = {
 			position: {
 				left: start, 
 				right: 1
 			},
 			anchor: start,
-			vertical: this.vertical()
+			vertical: context.vertical()
 		};
+		
 		// creates mark-item and adds to mark-collection
-		context.addMark(options);
+		let mark = context.addMark(options);
+		
+		mark.addClass('ntk-mark-selected');
+		// must set active mark for referencing later
+		context.setActiveMark(mark.id());
 		
     this.handleMouseMove(event);
   }
@@ -94,22 +119,28 @@ class CreateState extends State {
    */
   handleMouseMove(event){
     const context = this.context_;
-		const mark = context.getCurrentMark();
-		const anchor = mark.getAnchor();
 		
-		let progressLeft = context.calculateDistance(event);
-		let progressRight = 1 - progressLeft;
+		// gets current mark that was created
+		const mark = context.getActiveMark();
 		
+		// gets the first time point user selected with mousedown event
+		const anchor =  mark.getAnchor();
+		
+		// calculates the position of mouse in percent of scroll bar
+		let progress = context.calculateDistance(event);
+		
+		// updates the left or right depending on which direction
+		// the user is updating the mark item
 		if (progress < anchor) {
 			mark.setPosition({
-				left: progressLeft,
-				right: start
+				left: progress,
+				right: 1 - anchor
 			});
-		} else if (pregress >= start) {
+		} else if (progress >= anchor) {
 			mark.setPosition({
-				left: start,
-				right: progressRight
-			})
+				left: anchor,
+				right: 1 - progress
+			});
 		}
   }
   
@@ -129,8 +160,15 @@ class CreateState extends State {
     context.off(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
     context.off(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
     
-    let endPoint = context.calculateDistance(event);
-  }
+		const mark = context.getActiveMark();
+		// brings the active mark behind the board in order to allow
+		// more items to be created
+		mark.el().style.zIndex = -10;
+		
+		// add mark id to associate dialog with mark
+		const dialog = new Dialog(context.player(), {mark: mark.id()});
+		context.player().addChild(dialog);
+	}
 }
 
 CreateState.prototype.options_ = Config.CreateState;

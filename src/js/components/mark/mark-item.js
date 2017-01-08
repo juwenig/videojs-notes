@@ -8,21 +8,22 @@ import * as Guid from '../utils/guid.js';
 import mergeOptions from '../utils/merge-options.js';
 import Log from '../utils/log.js';
 import {Component} from '../utils/vjs-classes.js';
+import {assign} from '../utils/obj.js';
 
-import config from '../config.js';
+import config from '../../config.js';
 
 class MarkItem extends Component {
 	constructor(player, options){
 		options = mergeOptions(MarkItem.prototype.options_, options);
 		super(player, options);
 				
-		if (options.position) {
+		if (!!options.position) {
 			this.setPosition(options.position);
 		} else {
 			Log.warn('defaulting position of item');
 		}
 		
-		if (options.vertical) {
+		if (options.hasOwnProperty('vertical')) {
 			this.vertical_ = options.vertical;
 		} else {
 			Log.warn('not known if vertical');
@@ -42,13 +43,14 @@ class MarkItem extends Component {
 	 * @method createEl
    */
 	createEl(tag = 'li', props = {}, attrs = {}) {
-		let props = {
+		props = assign({
 			startPoint: 0,
-      className: 'ntk-active-mark'
-		};
-		let attrs = {
+      className: 'ntk-mark-item'
+		}, props);
+		
+		attrs = assign({
 			id: this.id()
-		}
+		}, attrs);
 		
 		return super.createEl(tag, props, attrs);
 	}
@@ -63,22 +65,6 @@ class MarkItem extends Component {
 	 */
 	getAnchor() {
 		return this.anchor_;
-	}
-	
-	setFocusClass(focused) {
-		if (focused) {
-			this.addClass('ntk-mark-focused')
-		} else {
-			this.removeClass('ntk-mark-focused');
-		}
-	}
-	
-	setSelectClass(selected) {
-		if (selected) {
-			this.addClass('ntk-mark-selected');
-		} else {
-			this.removeClass('ntk-mark-selected');
-		}
 	}
 	
 	/**

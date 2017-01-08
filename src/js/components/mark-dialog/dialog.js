@@ -18,7 +18,7 @@ class Dialog extends Component {
 		}
 		
 		if (!options.mark) {
-			Log.warn('New dialog constructed without associated mark');
+			Log.warn('new dialog constructed without associated mark');
 			this.mark_ = new MarkItem(player);
 		} else {
 			this.mark_ = options.mark;
