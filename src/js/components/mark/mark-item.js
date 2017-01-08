@@ -6,7 +6,7 @@ import * as Dom from '../utils/dom.js';
 import * as Guid from '../utils/guid.js';
 
 import mergeOptions from '../utils/merge-options.js';
-import log from '../utils/log.js';
+import Log from '../utils/log.js';
 import {Component} from '../utils/vjs-classes.js';
 
 import config from '../config.js';
@@ -16,19 +16,31 @@ class MarkItem extends Component {
 		options = mergeOptions(MarkItem.prototype.options_, options);
 		super(player, options);
 				
-		if (options.time || options.position) {
-			this.setTimeRange(options.time || options.position);
+		if (options.position) {
+			this.setPosition(options.position);
 		} else {
-			this.setTimeRange();
+			Log.warn('defaulting position of item');
 		}
 		
 		if (options.vertical) {
 			this.vertical_ = options.vertical;
+		} else {
+			Log.warn('not known if vertical');
+		}
+		
+		if (options.anchor) {
+			this.anchor_ = options.anchor;
 		}
 			
 		this.id_ = `Item_${Guid.newGUID().toString()}`;
 	}
 	
+	/**
+   * Creates the MarkItem element
+	 * 
+	 * @return {HTMLElement}
+	 * @method createEl
+   */
 	createEl(tag = 'li', props = {}, attrs = {}) {
 		let props = {
 			startPoint: 0,
@@ -42,50 +54,15 @@ class MarkItem extends Component {
 	}
 	
 	/**
-	 * Sets the starting point of the mark
-	 *
-	 * @param {Number} point Left position of mark in percent
-	 * @param {Boolean} left True if point indicates left pos, false otherwise
-	 * @method setStart
+	 * Gets the position where mouse down event happened
+	 * Applies to the case when the user interacts with the 
+	 * scroll bar in order to create an item
+	 * 
+	 * @return {Number} 
+	 * @method getAnchor
 	 */
-	setStart(point, left = true) {
-		let style = this.el().style;
-		let position = 0;
-		
-		position = (point * 100).toFixed(2) + '%';
-		
-		if (left) {
-			style.left = position;
-		} else {
-			style.right = position;
-		}
-	}
-	
-	/**
-	 * Sets width/height of item based on vertical flag
-	 *
-	 * @param {Number} length Length of the item in percent or decimal value
-	 * @method setLength
-	 */
-	setLength(length) {
-		let el = this.el();
-    
-		const percentLength;
-		
-		if (length === 'string' && 
-				length.indexOf('%') != -1) {
-			percentLength = length;
-		} else {
-			const percentLength = (length * 100).toFixed(2) + '%';
-		}
-    let offSetPercent = (length - this.time_.start);
-    // Convert to a percentage for setting
-		
-		if (this.vertical_) {
-			el.height(percentLength, true);
-		} else {
-			el.width(percentLength, true);
-		}
+	getAnchor() {
+		return this.anchor_;
 	}
 	
 	setFocusClass(focused) {
@@ -105,27 +82,44 @@ class MarkItem extends Component {
 	}
 	
 	/**
-	 * Sets the time range info to item object
-	 * 
-	 * @param {Object} timeRange Should include 'start' and 'end' props
-	 * @method setTimeRange
+	 * Sets the position of the item
+	 *
+	 * @param {Object} position Contains the left and right positions in percent
+	 * @method setPosition
 	 */
-	setTimeRange(timeRange = {}) {
-		if (!this.time_) {
-			this.time_ = {
-				start: 0,
-				end: 0
-			};
-		} 
-		
-		// don't use merge because we only want start and end
-		if (timeRange.start && typeof timeRange.start === "number") {
-			this.time_.start = timeRange.start;
-		} else
-		
-		if (timeRange.end && typeof timeRange.end === "number") {
-			this.time_.end = timeRange.end;
+	setPosition(position) {
+		for (let side in position) {
+			if (typeof position[side] === "number") {
+				position[side] = (position[side] * 100).toFixed(2) + "%";
+			} else if (typeof position[side] === "string") {
+				if (position[side].indexOf("%") === -1) {
+					position[side] = position[side] + "%";
+				}
+			}
 		}
+		
+		if (position.left) {
+			this.el().style.left = position.left;
+		}
+		
+		if (position.right) {
+			this.el().style.right = position.right;	
+		}
+	}
+	
+	/**
+	 * Get the position of the item
+	 *
+	 * @return {Object} Position object with left and right values
+	 * @method getPosition
+	 */
+	getPosition() {
+		let position = {
+			left: this.el().style.left,
+			right: this.el().style.right
+		}
+		
+		return position;
 	}
 }
 

@@ -27,12 +27,13 @@ class SelectState extends State {
 		this.style_.zIndex = 100;
 	}
 	
-	bindToContext() {
+	bindEvents() {
 		const context = this.context_;
+		const target = context.contentEl();
 		
-		context.on('click', Fn.bind(this, this.handleClick));
-		context.on('mousedown', Fn.bind(this, this.handleMouseDown));
-    context.on('touchstart', Fn.bind(this, this.handleMouseDown));
+		context.on(target, 'click', Fn.bind(this, this.handleClick));
+		context.on(target, 'mousedown', Fn.bind(this, this.handleMouseDown));
+    context.on(target, 'touchstart', Fn.bind(this, this.handleMouseDown));
 	}
 	
   /**

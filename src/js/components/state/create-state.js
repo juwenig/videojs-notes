@@ -10,6 +10,7 @@ import * as Logic from '../../logic/occlusion.js'
 
 import Config from '../../config.js';
 import State from './state.js';
+im
 
 /**
  * Handles events for creating marks
@@ -44,6 +45,9 @@ class CreateState extends State {
 	 * @method handleClick
 	 */
 	handleClick(event) {
+		const context = this.context_;
+		
+		
 		event.preventDefault();
 		event.stopImmediatePropagation();
 	}
@@ -65,26 +69,20 @@ class CreateState extends State {
     context.on(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
     context.on(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
 
-		let startPoint = context.calculateDistance(event);
+		let start = context.calculateDistance(event);
 		
+		// we assume user starts from left and moves right
 		options = {
-			time: {
-				start: startPoint,
-				end: null
+			position: {
+				left: start, 
+				right: 1
 			},
+			anchor: start,
 			vertical: this.vertical()
 		};
+		// creates mark-item and adds to mark-collection
+		context.addMark(options);
 		
-		let newMark = new MarkItem(this.player(), options);
-		this.addChild(newMark);
-
-		let options = {
-			point: [startPoint, startPoint],
-		}
-		
-		let newID = context.createMark(options, true);
-		context.readMark()
-
     this.handleMouseMove(event);
   }
   
@@ -96,9 +94,23 @@ class CreateState extends State {
    */
   handleMouseMove(event){
     const context = this.context_;
-		let progress = context.calculateDistance(event);
-    
-		;
+		const mark = context.getCurrentMark();
+		const anchor = mark.getAnchor();
+		
+		let progressLeft = context.calculateDistance(event);
+		let progressRight = 1 - progressLeft;
+		
+		if (progress < anchor) {
+			mark.setPosition({
+				left: progressLeft,
+				right: start
+			});
+		} else if (pregress >= start) {
+			mark.setPosition({
+				left: start,
+				right: progressRight
+			})
+		}
   }
   
   /**
@@ -118,7 +130,6 @@ class CreateState extends State {
     context.off(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
     
     let endPoint = context.calculateDistance(event);
-    context.endActiveMark(endPoint);
   }
 }
 

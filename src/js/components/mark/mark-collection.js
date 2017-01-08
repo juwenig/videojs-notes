@@ -1,16 +1,16 @@
 /**
- * @file mark.js
+ * @file mark-collection.js
  */
 
 import * as Dom from '../utils/dom.js';
 import * as Guid from '../utils/guid.js';
 import mergeOptions from '../utils/merge-options.js';
-import log from '../utils/log.js';
+import Log from '../utils/log.js';
 import {Component} from '../utils/vjs-classes.js';
 
 import config from '../../config.js';
 
-import Dialog from '../mark-dialog/dialog.js';
+import MarkItem from './mark-item.js';
 
 /**
  * Controls the CRUD operations for the mark items
@@ -30,6 +30,7 @@ class MarkCollection extends Component {
   /**
    * Creates the parent element for holding all MarkCollection
 	 * 
+	 * @return {HTMLElement}
 	 * @method createEl
    */
   createEl() {
@@ -46,58 +47,61 @@ class MarkCollection extends Component {
 		return el;
   }
 	
- 
-	/// REMOVE BELOW
 	/**
-   * Creates a new mark at given point
-	 * 
-	 * @param {Number} percentage of left dist within scrollbar
-	 * @param {Boolean} set start flag if starting to create new, false if ending 
-	 * @method createNewMark
-   */
-  createMark(options, start = true) {
-		options = mergeOptions({
-			time: [],
-			vertical: this.vertical()
-		}, options);
-		
-		if (start) {
-			let newMark = new MarkItem(this.player(), options);
-			this.addChild(newMark);
-			
-			return newMark.id();
-		} else {
-			
-		}
-    
-  }
+	 * Gets the most recently added mark
+	 * 	- useful for consecutive operations of creating then updating item
+	 *
+	 * @method getCurrentMark
+	 */
+	getCurrentMark(){
+		return this.mark_;
+	}
 	
-	readMark(markID) {
-		
+	/**
+	 * Gets the mark of mark id
+	 * 
+	 * @param {String} markID The id of the mark
+	 * @returns {MarkItem}
+	 * @method getMark
+	 */
+	getMark(markID) {
+		if (MarkCollection.marks[markID]) {
+			return MarkCollection.marks[markID];
+		} else {
+			Log.Error('missing id encountered');
+			return null;
+		}
 	}
   
 	/**
 	 * Removes the current mark
 	 * 
-	 * @method deleteNewMark
+	 * @method removeMark
 	 */
-  deleteMark(markID) {
-		this.readMark(markID); 
-    this.el().removeChild();
+ 	removeMark(markID) {
+		let mark = this.getMark(markID); 
+    this.el().removeChild(mark.el());
+		
+		mark.dispose();
+		MarkCollection.marks[mark.id()] = null;
   }
 	
 	/**
-	 * 
+	 * Adds a mark to the collection object
+	 *
+	 * @returns mark
+	 * @method addMark
 	 */
-  updateMark(markID, options) {
+	addMark(options = {}) {
+		let mark = new MarkItem(this.player(), options);
+		this.addChild(mark);
 		
+		// add reference to most recent mark
+		this.mark_ = mark;
+		
+		MarkCollection.marks[mark.id()] = mark;
+		return mark.id();
 	}
-	//// REMOVE ABOVE
-	
-	/**
-	 * 
-	 */
-	addMark()
   
   /**
    * Gets the mouse position in percentage x y within this element
