@@ -58,12 +58,10 @@ class MarkerButton extends Button {
 		// Button creates the container el with classnames taken from buildCSSClass
     const el = super.createEl();
     
-		// Icon 1
-    let props = {
-      className: `fa fa-stack-2x fa-sticky-note-o`
-    };
-    el.insertBefore(Dom.createEl('i', props), null);
-    
+		// Where the icon will go
+		this.contentEl_ = Dom.createEl('i');
+    el.appendChild(this.contentEl_);
+		
     return el;
   }
 	
@@ -109,6 +107,24 @@ class MarkerButton extends Button {
 	}
 	
 	/**
+	 * Changes the content of the button
+	 *
+	 * @param {String} name 
+	 */
+	changeContent(name) {
+		if (this.icons_[name]) {
+			let icon = this.icons_[name];
+			
+			this.el().removeChild(this.contentEl());
+			
+			this.contentEl_ = icon.el();
+			this.el().appendChild(this.contentEl_);
+		}
+		
+		return this.contentEl_;
+	}
+	
+	/**
 	 * Converts an array describing state order to the private order data structure
 	 * 
 	 * @param {Array} order Ordered array
@@ -149,7 +165,7 @@ class MarkerButton extends Button {
 		let orderLen = order.length;
 		for (let i = 0; i < orderLen; i++) {
 			let icon = order[i];
-			let state = this.icons_[icon].state();
+			let state = this.icons_[icon].getState();
 			stateOrder.push(state);
 		}
 		
@@ -176,8 +192,11 @@ class MarkerButton extends Button {
 			return;
 		}
 		
-		let state = this.currentIcon_.state();
+		let state = this.currentIcon_.getState();
 		this.target_.setDefaultState(state);
+		
+		// changes the element
+		this.changeContent(name);
 		
 		return this.currentIcon_;
 	}
@@ -192,8 +211,10 @@ class MarkerButton extends Button {
 		let next = this.nextIcon_[current];
 		
 		this.currentIcon_ = this.icons_[next];
-		this.controlText(this.currentIcon_.name().replace(/([A-Z])/g, ' $1'));
+		this.controlText(this.currentIcon_.name().replace(/([A-Z])/g, '$1'));
 
+		this.changeContent(next);
+		
 		return this.currentIcon_;
 	}
   

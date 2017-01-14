@@ -24,10 +24,10 @@ class SelectIcon extends Icon {
 	 * @method createEl
    */
 	createEl(tag = 'i', props = {}, attrs = {}){
-		super.createEl(
+		return super.createEl(
 			tag,
 			{
-				className: 'ntk-marker-mode-icon fa fa-stack-2x fa-hand-pointer-o',
+				className: 'ntk-marker-mode-icon fa fa-hand-pointer-o',
 			},
 			attrs
 		)

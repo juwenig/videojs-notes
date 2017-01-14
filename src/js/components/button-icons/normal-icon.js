@@ -24,10 +24,10 @@ class NormalIcon extends Icon {
 	 * @method createEl
    */
 	createEl(tag = 'i', props = {}, attrs = {}){
-		super.createEl(
+		return super.createEl(
 			tag,
 			{
-				className: 'ntk-marker-mode-icon',
+				className: 'ntk-marker-mode-icon fa fa-sticky-note-o',
 			},
 			attrs
 		)

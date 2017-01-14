@@ -23,8 +23,6 @@ class MarkCollection extends Component {
   constructor(player, options) {
 		options = mergeOptions(MarkCollection.prototype.options_, options);
     super(player, options);
-		
-    this.mark_ = null;
   }
   
   /**
@@ -48,6 +46,15 @@ class MarkCollection extends Component {
   }
 	
 	/**
+	 * Removes all marks from the static marks list
+	 * 
+	 * @method removeAllMarks
+	 */
+	removeAllMarks() {
+		
+	}
+	
+	/**
 	 * Returns the marks_ - all mark items
 	 *
 	 * @return {Object} mark
@@ -55,32 +62,6 @@ class MarkCollection extends Component {
 	 */
 	getAllMarks(){
 		return MarkCollection.prototype.marks;	
-	}
-	
-	/**
-	 * Gets the most recently added mark
-	 * 	- useful for consecutive operations of creating then updating item
-	 *
-	 * @method getActiveMark
-	 */
-	getActiveMark() {
-		return this.mark_;
-	}
-	
-	/**
-	 * Sets current mark
-	 *
-	 * @param {String} markID The id of the mark to set
-	 * @method setActiveMark
-	 */
-	setActiveMark(markID) { 
-		if (!markID) {
-			this.mark_ = null;
-			return;
-		}
-		
-		let mark = this.getMark(markID); 
-		this.mark_ = mark;
 	}
 	
 	/**
@@ -119,11 +100,6 @@ class MarkCollection extends Component {
 	 * @method addMark
 	 */
 	addMark(options = {}) {
-		// might need to refactor
-		if (this.mark_) {
-			this.removeMark(this.mark_.id());
-		}
-		
 		let mark = new MarkItem(this.player(), options);
 		this.addChild(mark);
 		
@@ -131,6 +107,10 @@ class MarkCollection extends Component {
 		return mark;
 	}
   
+	/**
+	 * Creates a dialog and checks if there is an active mark
+	 */
+	
   /**
    * Gets the mouse position in percentage x y within this element
    *

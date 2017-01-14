@@ -1,3 +1,7 @@
+/**
+ * @file dialog.js
+ */
+
 import * as Dom from '../utils/dom.js';
 import mergeOptions from '../utils/merge-options.js';
 import * as Fn from '../utils/fn.js';

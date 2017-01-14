@@ -4,9 +4,8 @@
 }
 
 .ntk-marker-mode-icon {
-  font-size: 1em;
+  font-size: 1.5em;
   padding-left: 0;
-  padding-top: 0.4em;
 }
 
 .ntk-highlighter:before{
@@ -79,7 +78,7 @@
 
 .ntk-dialog {
 	position: absolute;
-	bottom: 40px;
+	bottom: 50px;
 	background: rgba(43, 51, 63, 0.7);
 	padding: 16px 8px 10px;
 	border-radius: 4px;

@@ -22,6 +22,7 @@ class NormalState extends State {
 	}
 	
 	initialize() {
+		// put the board markcollection behind scrollbar
 		this.style_.zIndex = -100;
 	}
 }

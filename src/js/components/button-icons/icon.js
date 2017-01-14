@@ -65,7 +65,7 @@ class Icon {
 	 * @return {String}
 	 * @method state
 	 */
-	state() {
+	getState() {
 		return this.state_;
 	}
 	

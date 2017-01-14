@@ -34,6 +34,13 @@ class State {
 	bindEvents() {}
 	
 	/**
+	 * Disposes the states internal state and variables
+	 *
+	 * @method dipose
+	 */
+	dispose() {}
+	
+	/**
 	 * Returns the name of the state
 	 * 
 	 * @return {String}

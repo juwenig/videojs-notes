@@ -24,10 +24,10 @@ class CreateIcon extends Icon {
 	 * @method createEl
    */
 	createEl(tag = 'i', props = {}, attrs = {}){
-		super.createEl(
+		return super.createEl(
 			tag,
 			{
-				className: 'ntk-marker-mode-icon fa fa-stack-2x fa-pencil',
+				className: 'ntk-marker-mode-icon fa fa-pencil',
 			},
 			attrs
 		)
@@ -37,4 +37,4 @@ class CreateIcon extends Icon {
 CreateIcon.prototype.options_ = Config.CreateIcon;
 
 Icon.registerIcon('Create', CreateIcon);
-export default CreateIcon;
+export default CreateIcon; 

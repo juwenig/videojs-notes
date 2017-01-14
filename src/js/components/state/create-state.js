@@ -32,8 +32,10 @@ class CreateState extends State {
 	 */
 	initialize() {
 		const marks = this.context_.getAllMarks();
+		// set board zindex
 		this.style_.zIndex = 100;
 		
+		// reset all zindexes behind the board
 		for (let item in marks) {
 			if (marks[item]) {
 				marks[item].el().style.zIndex = -10;
@@ -50,9 +52,75 @@ class CreateState extends State {
 		const context = this.context_;
 		const target = context.contentEl();
 		
+		// bind events to the ntk board el
 		context.on(target, 'click', Fn.bind(this, this.handleClick));
 		context.on(target, 'mousedown', Fn.bind(this, this.handleMouseDown));
     context.on(target, 'touchstart', Fn.bind(this, this.handleMouseDown));
+	}
+	
+	/**
+	 * Disposes of class properties
+	 *
+	 * @method dispose
+	 */
+	dispose() {
+		const context = this.context_;
+		const target = context.contentEl();
+		
+		// remove any active mark
+		if (this.currentMark_) {
+			context.removeMark(this.currentMark_.id());
+		}
+		
+		// remove any dialog from player
+		if (this.currentDialog_) {
+			context.player().removeChild(this.currentDialog_);
+		}
+		
+		// allow garbage collector to collect these items
+		this.currentMark_ = null;
+		this.currentDialog_ = null;
+		this.anchor_ = null;
+		
+		context.off(target, 'click', Fn.bind(this, this.handleClick));
+		context.off(target, 'mousedown', Fn.bind(this, this.handleMouseDown));
+    context.off(target, 'touchstart', Fn.bind(this, this.handleMouseDown));
+	}
+	
+	/**
+	 * Creates a new mark on the board
+	 *
+	 * @param {Object} pos The position indicating start and end values
+	 * @method createMark
+	 */
+	createMark(pos) {
+		const context = this.context_; 
+		
+		// we assume user starts from left and moves right
+		let options = {
+			position: {
+				left: pos.start, 
+				right: 1
+			},
+			vertical: context.vertical()
+		};
+		
+		// creates mark-item and adds to mark-collection
+		let mark = context.addMark(options);
+		
+		mark.addClass('ntk-mark-selected');
+		// must set active mark for referencing later
+		
+		if (this.currentMark_) {
+			context.removeMark(this.currentMark_.id());
+		}
+		
+		this.currentMark_ = mark;
+		this.anchor_ = pos.start;
+		
+		if (this.currentDialog_) {
+			context.player().removeChild(this.currentDialog_);
+		}
 	}
 	
   /**
@@ -89,26 +157,13 @@ class CreateState extends State {
     context.on(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
     context.on(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
 		
+		// get the distance of where the anchor should be
+		// and create mark
 		let start = context.calculateDistance(event);
+		this.createMark({start: start});
 		
-		// we assume user starts from left and moves right
-		let options = {
-			position: {
-				left: start, 
-				right: 1
-			},
-			anchor: start,
-			vertical: context.vertical()
-		};
-		
-		// creates mark-item and adds to mark-collection
-		let mark = context.addMark(options);
-		
-		mark.addClass('ntk-mark-selected');
-		// must set active mark for referencing later
-		context.setActiveMark(mark.id());
-		
-    this.handleMouseMove(event);
+		// used to capture other pos of mark
+		this.handleMouseMove(event);
   }
   
   /**
@@ -121,10 +176,10 @@ class CreateState extends State {
     const context = this.context_;
 		
 		// gets current mark that was created
-		const mark = context.getActiveMark();
+		const mark = this.currentMark_;
 		
 		// gets the first time point user selected with mousedown event
-		const anchor =  mark.getAnchor();
+		const anchor = this.anchor_;
 		
 		// calculates the position of mouse in percent of scroll bar
 		let progress = context.calculateDistance(event);
@@ -160,14 +215,23 @@ class CreateState extends State {
     context.off(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
     context.off(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
     
-		const mark = context.getActiveMark();
+		const mark = this.currentMark_;
+		
 		// brings the active mark behind the board in order to allow
 		// more items to be created
 		mark.el().style.zIndex = -10;
 		
+		let options = {
+			mark: mark.id(),
+			position: mark.getPosition()
+		}
+		let player = context.player();
+		
 		// add mark id to associate dialog with mark
-		const dialog = new Dialog(context.player(), {mark: mark.id()});
-		context.player().addChild(dialog);
+		const dialog = new Dialog(player, options);
+		player.addChild(dialog);
+		
+		this.currentDialog_ = dialog;
 	}
 }
 

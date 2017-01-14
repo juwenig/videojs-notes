@@ -143,6 +143,8 @@ class Board extends MarkCollection {
 	 */
 	goToNextState() {
 		let current = this.currentState_.name();
+		this.currentState_.dispose();
+		
 		let next = this.nextState_[current];
 		
 		this.currentState_ = this.states_[next];

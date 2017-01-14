@@ -28,10 +28,6 @@ class MarkItem extends Component {
 		} else {
 			Log.warn('not known if vertical');
 		}
-		
-		if (options.anchor) {
-			this.anchor_ = options.anchor;
-		}
 			
 		this.id_ = `Item_${Guid.newGUID().toString()}`;
 	}
@@ -53,18 +49,6 @@ class MarkItem extends Component {
 		}, attrs);
 		
 		return super.createEl(tag, props, attrs);
-	}
-	
-	/**
-	 * Gets the position where mouse down event happened
-	 * Applies to the case when the user interacts with the 
-	 * scroll bar in order to create an item
-	 * 
-	 * @return {Number} 
-	 * @method getAnchor
-	 */
-	getAnchor() {
-		return this.anchor_;
 	}
 	
 	/**
