@@ -76,9 +76,14 @@ options.DialogTitle = {
 	registerElement: false
 }
 
+options.DialogTExt = {
+	name: 'DialogText',
+	registerElement: false
+}
+
 options.DialogButtons = {
 	name: 'DialogButtons',
-	childre: [
+	children: [
 		'DialogSave',
 		'DialogDelete'
 	], 
@@ -87,14 +92,22 @@ options.DialogButtons = {
 
 options.DialogTime = {
 	name: 'DialogTime',
+	children: [
+		'DialogTimeStart',
+		'DialogTimeEnd'
+	],
 	registerElement: false
 }
 
-/*
-		save: 'ntk-dialog-save fa fa-floppy-o',
-		delete: 'ntk-dialog-delete fa fa-trash-o'*/
+options.DialogTimeStart = {
+	name: 'DialogTimeStart',
+	registerElement: false
+}
 
-
+options.DialogTimeEnd = {
+	name: 'DialogTimeEnd',
+	registerElement: false
+}
 
 
 export default options;

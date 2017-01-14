@@ -18,5 +18,5 @@ class DialogSave extends Button {
 
 DialogSave.prototype.options_ = Config.DialogSave;
 
-Component.registerComponent('DialogDelete', DialogSave);
+Component.registerComponent('DialogSave', DialogSave);
 export default DialogSave;

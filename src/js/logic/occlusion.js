@@ -125,6 +125,7 @@ export function setCurrent(id) {
 
 /**
  * Updates the z-index of the items based on current mouse position
+ * Call this every mouse move
  *
  * @param {Decimal} position Mouse pos in percent of parent el
  * @method update
@@ -155,6 +156,7 @@ export function update(position) {
 
 /**
  * Adds an item and sets it up for occlusion 
+ * Call this to add mark item
  *
  * @param {Object} item Includes the edge, id and z-index info
  * @method add

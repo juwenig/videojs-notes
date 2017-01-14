@@ -82,6 +82,7 @@ class CreateState extends State {
 		this.currentDialog_ = null;
 		this.anchor_ = null;
 		
+		// dispose attached events to board
 		context.off(target, 'click', Fn.bind(this, this.handleClick));
 		context.off(target, 'mousedown', Fn.bind(this, this.handleMouseDown));
     context.off(target, 'touchstart', Fn.bind(this, this.handleMouseDown));
@@ -152,7 +153,9 @@ class CreateState extends State {
 		
     event.preventDefault();
     Dom.blockTextSelection();
-
+		
+		// enable other mouse events to implement
+		// user sequence of input
 		context.on(doc, 'mousemove', Fn.bind(this, this.handleMouseMove));
     context.on(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
     context.on(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
@@ -231,6 +234,8 @@ class CreateState extends State {
 		const dialog = new Dialog(player, options);
 		player.addChild(dialog);
 		
+		// the current dialog is kept until user
+		// saves dialog or clicks away to exit
 		this.currentDialog_ = dialog;
 	}
 }
