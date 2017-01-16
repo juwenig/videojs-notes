@@ -32,7 +32,7 @@ class Dialog extends Component {
 		
 		this.form_ = this.el_.children[0];
 		
-		this.on(this.form_, 'submit', )
+		this.on(this.form_, 'submit', Fn.bind(this, this.handleDialogFormSubmit));
 	}
 	
 	/**
@@ -148,9 +148,20 @@ class Dialog extends Component {
 	
 	/**
 	 * Gets all the dialog elements
+	 *
+	 * @method getAllElements
 	 */
 	getAllElements() {
 		return this.form_.elements;
+	}
+	
+	/**
+	 * Handles dialog form submit
+	 *
+	 * @method handleDialogFormSubmit
+	 */
+	handleDialogFormSubmit() {
+		
 	}
 }
 

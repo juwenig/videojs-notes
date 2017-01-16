@@ -247,8 +247,17 @@ class CreateState extends State {
 	 */
 	handleDialogFormSubmit(event) {
 		event.preventDefault();
-		const id = this.currentMark_.id();
-		const edges = 
+		
+		const mark = this.currentMark_;
+		const id = mark.id();
+		
+		let edges = mark.getPosition();
+		
+		for (edge in edges) {
+			edges[edge] = Math.floor(edges * 100);
+		}
+		
+		
 		
 		Logic.add()
 	}

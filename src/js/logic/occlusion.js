@@ -291,7 +291,7 @@ function assignInitialZIndexByWidth(idsInWidthOrder) {
 	let start = DEFAULT;
 	
 	for (id in idsInWidthOrder) {
-		_zindex[id].reference = start * 2;
+		setZIndex(id, start * 2);
 		start++;
 	}
 }
