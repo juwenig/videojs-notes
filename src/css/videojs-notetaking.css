@@ -146,9 +146,12 @@ ntk-dialog-time-text { width: 33.33333%; }
 }
 
 .ntk-dialog-start-time:focus,
-.ntk-dialog-end-time:focus,
+.ntk-dialog-end-time:focus {
+	outline: none;
+}
+
 .ntk-dialog-start-time:hover,
 .ntk-dialog-end-time:hover {
-	outline: none !important;
-	background: rgba(5,15,5,0.6);
+	box-shadow: 0 1px 0 0 rgba(255, 255, 255,0.85);
+	border-radius: 0px;
 }

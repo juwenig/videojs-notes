@@ -29,6 +29,10 @@ class Dialog extends Component {
 		} else {
 			this.mark_ = options.mark;
 		}
+		
+		this.form_ = this.el_.children[0];
+		
+		this.on(this.form_, 'submit', )
 	}
 	
 	/**
@@ -66,6 +70,8 @@ class Dialog extends Component {
 		let leftPos = markL - playerL + 0.5*(markW - dialogW); 
 		let leftMax = playerW - dialogW;
 		
+		// we do not want dialog to end outside
+		// of player
 		leftPos = Math.max(0, Math.min(leftMax, leftPos));
 		
 		this.el_.style['left'] = leftPos + 'px';
@@ -117,11 +123,10 @@ class Dialog extends Component {
 		if ('controls_' in this.player()) {
 			this.player().controls_ = true;
 		}
-		
-		let parent = mark.parentElement;
-		
+		let parent = mark.el_.parentElement;
+
 		if (parent) {
-			parent.removeChild(mark);
+			parent.removeChild(mark.el_);
 		}
 		
 		event.preventDefault();
@@ -139,6 +144,13 @@ class Dialog extends Component {
 	handleContainerClick(event) {
 		event.preventDefault();
 		event.stopImmediatePropagation();
+	}
+	
+	/**
+	 * Gets all the dialog elements
+	 */
+	getAllElements() {
+		return this.form_.elements;
 	}
 }
 

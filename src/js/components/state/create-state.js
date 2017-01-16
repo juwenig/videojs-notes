@@ -240,7 +240,18 @@ class CreateState extends State {
 		this.createDialog();
 	}
 	
-	
+	/**
+	 * Handles dialog form submit
+	 *
+	 * @method handleDialogFormSubmit
+	 */
+	handleDialogFormSubmit(event) {
+		event.preventDefault();
+		const id = this.currentMark_.id();
+		const edges = 
+		
+		Logic.add()
+	}
 }
 
 CreateState.prototype.options_ = Config.CreateState;
