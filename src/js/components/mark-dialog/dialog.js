@@ -11,6 +11,8 @@ import {assign} from '../utils/obj.js'
 
 import Config from '../../config.js';
 
+import DialogForm from './dialog-form.js';
+
 class Dialog extends Component {
 	constructor(player, options){
 		options = mergeOptions(Dialog.prototype.options_, options);
@@ -28,6 +30,48 @@ class Dialog extends Component {
 			this.mark_ = options.mark;
 		}
 	}
+	
+	/**
+	 * Returns the mark 
+	 *
+	 * @return {MarkItem}
+	 * @method mark
+	 */
+	mark() {
+		return this.mark_;
+	}
+	
+	/**
+	 * Calculates and sets the position of dialog
+	 * Call function after inserting dialog into DOM
+	 * 
+	 * @method setPosition
+	 */
+	position() {		
+		const playerEl = this.player().el();
+		const markEl = this.mark().el();
+
+		let boxPlayer = Dom.findElPosition(playerEl);
+		let boxMark = Dom.findElPosition(markEl);
+		
+		const markL = boxMark.left;
+		const playerL = boxPlayer.left;
+		
+		// offsets only work after element
+		// has been added into the DOM
+		const markW = this.mark().el_.offsetWidth;
+		const dialogW = this.el_.offsetWidth;
+		const playerW = this.player().el_.offsetWidth;
+		
+		let leftPos = markL - playerL + 0.5*(markW - dialogW); 
+		let leftMax = playerW - dialogW;
+		
+		leftPos = Math.max(0, Math.min(leftMax, leftPos));
+		
+		this.el_.style['left'] = leftPos + 'px';
+		
+		return leftPos;
+	}
 		
 	/**
 	 * Changed name from createEl because Component calls createDialog and 
@@ -36,25 +80,26 @@ class Dialog extends Component {
 	 * @method createEl
 	 */
 	createEl(tag = 'div', props = {}, attrs = {}) {
-		let sizeClass;
+		let width;
 		let size = this.player().notetaking().getPlayerSize();
 		
 		switch(size) {
 			case 'large': 
-				sizeClass = 'ntk-lg-dialog';
+				width = '200px';
 				break;
 			case 'medium':
-				sizeClass = 'ntk-md-dialog';
+				width = '150px';
 				break;
 			default:
-				sizeClass = '';
+				width = '';
 		}
 		
 		props = assign({
-			className: `${sizeClass} ntk-dialog`
+			className: 'ntk-dialog'
 		}, props);
 		
 		const el = super.createEl(tag, props, attrs);
+		el.style.width = width;
 		
 		// We cannot add this to the tech_ object so this will have to do for now..
 		this.player().tech_.on('click', Fn.bind(this, this.handleTechClick));

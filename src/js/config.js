@@ -63,9 +63,9 @@ options.Dialog = {
 options.DialogForm = {
 	name: 'DialogForm',
 	children: [
+		'DialogTime',
 		'DialogTitle',
 		'DialogText',
-		'DialogTime',
 		'DialogButtons'
 	],
 	registerElement: false
@@ -76,7 +76,7 @@ options.DialogTitle = {
 	registerElement: false
 }
 
-options.DialogTExt = {
+options.DialogText = {
 	name: 'DialogText',
 	registerElement: false
 }
@@ -92,10 +92,6 @@ options.DialogButtons = {
 
 options.DialogTime = {
 	name: 'DialogTime',
-	children: [
-		'DialogTimeStart',
-		'DialogTimeEnd'
-	],
 	registerElement: false
 }
 

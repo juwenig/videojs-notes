@@ -3,11 +3,14 @@ import {Component} from '../utils/vjs-classes.js';
 import {assign} from '../utils/obj.js';
 import * as Dom from '../utils/dom.js';
 
-import Config from '../config.js';
+import Config from '../../config.js';
+
+import DialogSave from './dialog-save.js';
+import DialogDelete from './dialog-delete.js';
 
 class DialogButtons extends Component {
 	constructor(player, options) {
-		options = mergeOptions(DialogForm.prototype.options_, options);
+		options = mergeOptions(DialogButtons.prototype.options_, options);
 		super(player, options);
 	}
 	

@@ -1,7 +1,7 @@
 import mergeOptions from '../utils/merge-options.js';
 import {Component, Button} from '../utils/vjs-classes.js';
 
-import Config from '../config.js';
+import Config from '../../config.js';
 
 class DialogSave extends Button {
 	constructor(player, options) {

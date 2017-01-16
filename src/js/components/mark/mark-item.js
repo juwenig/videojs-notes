@@ -17,8 +17,10 @@ class MarkItem extends Component {
 		options = mergeOptions(MarkItem.prototype.options_, options);
 		super(player, options);
 				
+		this.position_ = {};
+		
 		if (!!options.position) {
-			this.setPosition(options.position);
+			this.setElPosition(options.position);
 		} else {
 			Log.warn('defaulting position of item');
 		}
@@ -54,26 +56,34 @@ class MarkItem extends Component {
 	/**
 	 * Sets the position of the item
 	 *
-	 * @param {Object} position Contains the left and right positions in percent
+	 * @param {Object} position 
+	 *				ratio of pointer position to parent element width
+	 *				where pointer position is taken from left edge of 
+	 *				the parent element
 	 * @method setPosition
 	 */
-	setPosition(position) {
+	setElPosition(position) {
+		let percent = {};
+		
 		for (let side in position) {
 			if (typeof position[side] === "number") {
-				position[side] = (position[side] * 100).toFixed(2) + "%";
-			} else if (typeof position[side] === "string") {
-				if (position[side].indexOf("%") === -1) {
-					position[side] = position[side] + "%";
-				}
-			}
+				// add percent sign later
+				percent[side] = (position[side] * 100).toFixed(2);
+			} 
 		}
 		
-		if (position.left) {
-			this.el().style.left = position.left;
+		if (percent.left) {
+			let left = percent.left;
+			this.el().style.left = left + "%";
+			
+			this.position_["left"] = position.left;
 		}
 		
 		if (position.right) {
-			this.el().style.right = position.right;	
+			let right = 100 - percent.right;
+			this.el().style.right = right + "%";
+			
+			this.position_["right"] = position.right;
 		}
 	}
 	
@@ -84,12 +94,7 @@ class MarkItem extends Component {
 	 * @method getPosition
 	 */
 	getPosition() {
-		let position = {
-			left: this.el().style.left,
-			right: this.el().style.right
-		}
-		
-		return position;
+		return this.position_;
 	}
 }
 

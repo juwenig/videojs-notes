@@ -2,7 +2,7 @@ import mergeOptions from '../utils/merge-options.js';
 import {Component} from '../utils/vjs-classes.js';
 import {assign} from '../utils/obj.js';
 
-import Config from '../config.js';
+import Config from '../../config.js';
 
 class DialogText extends Component {
 	constructor(player, options) {
@@ -10,7 +10,7 @@ class DialogText extends Component {
 		super(player, options);
 	}
 	
-	createEl(tag = 'form', props = {}, attrs = {}) {
+	createEl(tag = 'textarea', props = {}, attrs = {}) {
 		let rows;
 		let size = this.player().notetaking().getPlayerSize();
 		
@@ -31,7 +31,8 @@ class DialogText extends Component {
 		
 		attrs = assign({
 			placeholder: 'Notes',
-			rows: rows
+			rows: rows,
+			name: 'Notes'
 		}, attrs);
 		const el = super.createEl(tag, props, attrs);
 		

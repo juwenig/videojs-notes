@@ -224,7 +224,7 @@ class MarkerButton extends Button {
    * @method buildCSSClass
    */
   buildCSSClass() {
-    return 'ntk-marker fa-stack';
+    return 'ntk-marker fa-stack vjs-control';
   }
   
   /**

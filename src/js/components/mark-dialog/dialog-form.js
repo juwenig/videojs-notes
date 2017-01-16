@@ -2,7 +2,12 @@ import mergeOptions from '../utils/merge-options.js';
 import {Component} from '../utils/vjs-classes.js';
 import {assign} from '../utils/obj.js';
 
-import Config from '../config.js';
+import Config from '../../config.js';
+
+import DialogTitle from './dialog-title.js';
+import DialogText from './dialog-text.js';
+import DialogTime from './dialog-time.js';
+import DialogButtons from './dialog-buttons.js';
 
 class DialogForm extends Component {
 	constructor(player, options) {
@@ -14,6 +19,10 @@ class DialogForm extends Component {
 		props = assign({
 			className: 'ntk-dialog-form'
 		}, props);
+		
+		attrs = assign({
+			autocomplete: 'off',
+		}, attrs)
 		
 		const el = super.createEl(tag, props, attrs);
 		

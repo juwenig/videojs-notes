@@ -1,7 +1,7 @@
 import mergeOptions from '../utils/merge-options.js';
 import {Component} from '../utils/vjs-classes.js';
 
-import Config from '../config.js';
+import Config from '../../config.js';
 
 class DialogTimeStart extends Component {
 	constructor(player, options) {
@@ -17,10 +17,12 @@ class DialogTimeStart extends Component {
 		};
 		
 		const attrs = {
-			type: 'time',
+			type: 'text',
+			name: 'StartTime'
 		};
 		
 		const el = super.createEl(tag, props, attrs);
+		
 		return el;
 	}
 }

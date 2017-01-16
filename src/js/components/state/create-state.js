@@ -94,13 +94,13 @@ class CreateState extends State {
 	 * @param {Object} pos The position indicating start and end values
 	 * @method createMark
 	 */
-	createMark(pos) {
+	createMark(start) {
 		const context = this.context_; 
 		
 		// we assume user starts from left and moves right
 		let options = {
 			position: {
-				left: pos.start, 
+				left: start, 
 				right: 1
 			},
 			vertical: context.vertical()
@@ -111,17 +111,41 @@ class CreateState extends State {
 		
 		mark.addClass('ntk-mark-selected');
 		// must set active mark for referencing later
-		
 		if (this.currentMark_) {
 			context.removeMark(this.currentMark_.id());
 		}
 		
 		this.currentMark_ = mark;
-		this.anchor_ = pos.start;
+		this.anchor_ = start;
 		
 		if (this.currentDialog_) {
 			context.player().removeChild(this.currentDialog_);
 		}
+	}
+	
+	/**
+	 * Creates a new dialog on the board
+	 * 
+	 * @method createDialog
+	 */
+	createDialog() {
+		const mark = this.currentMark_;
+		const context = this.context_;
+		
+		// brings the active mark behind the board in order to allow
+		// more items to be created
+		mark.el().style.zIndex = -10;
+		
+		let player = context.player();
+		
+		// add mark id to associate dialog with mark
+		const dialog = new Dialog(player, {mark: mark});
+		player.addChild(dialog);
+		dialog.position();
+		
+		// the current dialog is kept until user
+		// saves dialog or clicks away to exit
+		this.currentDialog_ = dialog;
 	}
 	
   /**
@@ -131,12 +155,6 @@ class CreateState extends State {
 	 * @method handleClick
 	 */
 	handleClick(event) {
-		const context = this.context_;
-		// close out of any opened dialog
-		// TODO
-		// delete currently active mark
-		// TODO
-		
 		event.preventDefault();
 		event.stopImmediatePropagation();
 	}
@@ -163,7 +181,7 @@ class CreateState extends State {
 		// get the distance of where the anchor should be
 		// and create mark
 		let start = context.calculateDistance(event);
-		this.createMark({start: start});
+		this.createMark(start);		
 		
 		// used to capture other pos of mark
 		this.handleMouseMove(event);
@@ -190,14 +208,14 @@ class CreateState extends State {
 		// updates the left or right depending on which direction
 		// the user is updating the mark item
 		if (progress < anchor) {
-			mark.setPosition({
+			mark.setElPosition({
 				left: progress,
-				right: 1 - anchor
+				right: anchor
 			});
 		} else if (progress >= anchor) {
-			mark.setPosition({
+			mark.setElPosition({
 				left: anchor,
-				right: 1 - progress
+				right: progress
 			});
 		}
   }
@@ -218,26 +236,11 @@ class CreateState extends State {
     context.off(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
     context.off(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
     
-		const mark = this.currentMark_;
-		
-		// brings the active mark behind the board in order to allow
-		// more items to be created
-		mark.el().style.zIndex = -10;
-		
-		let options = {
-			mark: mark.id(),
-			position: mark.getPosition()
-		}
-		let player = context.player();
-		
-		// add mark id to associate dialog with mark
-		const dialog = new Dialog(player, options);
-		player.addChild(dialog);
-		
-		// the current dialog is kept until user
-		// saves dialog or clicks away to exit
-		this.currentDialog_ = dialog;
+		// create dialog on finish
+		this.createDialog();
 	}
+	
+	
 }
 
 CreateState.prototype.options_ = Config.CreateState;
