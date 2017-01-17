@@ -11,8 +11,18 @@ class DialogSave extends Button {
 		this.controlText(this.localize('Save'));
 	}
 	
-	buildCSSClass() {
-		return 'ntk-dialog-save fa fa-floppy-o';
+	createEl() {
+		const props = {
+			className: 'ntk-dialog-save fa fa-floppy-o'
+		}
+		
+		const attrs = {
+			type: 'submit'
+		}
+		
+		const el = super.createEl('button', props, attrs);
+		
+		return el;
 	}
 }
 

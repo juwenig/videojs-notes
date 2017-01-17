@@ -6,6 +6,7 @@ import * as Dom from '../utils/dom.js';
 import mergeOptions from '../utils/merge-options.js';
 import * as Fn from '../utils/fn.js';
 import Log from '../utils/log.js';
+import * as Form from '../utils/form.js';
 import {Component} from '../utils/vjs-classes.js';
 import {assign} from '../utils/obj.js'
 
@@ -78,6 +79,15 @@ class Dialog extends Component {
 		
 		return leftPos;
 	}
+	
+	/**
+	 * Gets all the dialog elements
+	 *
+	 * @method getAllFormElements
+	 */
+	getAllFormElements() {
+		return this.form_.elements;
+	}
 		
 	/**
 	 * Changed name from createEl because Component calls createDialog and 
@@ -147,21 +157,17 @@ class Dialog extends Component {
 	}
 	
 	/**
-	 * Gets all the dialog elements
-	 *
-	 * @method getAllElements
-	 */
-	getAllElements() {
-		return this.form_.elements;
-	}
-	
-	/**
 	 * Handles dialog form submit
 	 *
 	 * @method handleDialogFormSubmit
 	 */
-	handleDialogFormSubmit() {
+	handleDialogFormSubmit(event) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
 		
+		const data = Form.formToJson(this.getAllFormElements());
+		console.log(data);
+		console.log(this.getAllFormElements());
 	}
 }
 

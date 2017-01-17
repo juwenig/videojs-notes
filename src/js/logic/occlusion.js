@@ -169,8 +169,8 @@ export function add(item) {
 		log.error('right edge not found in item ', item);
 	if (!item.id) 
 		log.error('id not found in item ', item);
-	if (!item.z) 
-		log.error('z-index reference not found in item ', item);
+	if (!item.style) 
+		log.error('style reference not found in item ', item);
 	
 	const leftEdge = item.edges.left;
 	const rightEdge = item.edges.right;
@@ -179,7 +179,7 @@ export function add(item) {
 	let idsInWidthOrder;
 	
 	// setting _zindex must come before _widths
-	_zindex[id].default = item.z;
+	_zindex[id].default = 0;
 	_zindex[id].reference = item.style;
 	
 	_widths[id] = rightEdge - leftEdge;
@@ -278,7 +278,7 @@ function defaultZIndex(id) {
 		log.error('no default z-index set for id ', id);
 	}
 	
-	setZIndex(id, _zindex[id].default);
+	setZIndex(id, _zindex[id].default, 'default');
 }
 
 /**

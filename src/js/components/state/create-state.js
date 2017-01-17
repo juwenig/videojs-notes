@@ -257,9 +257,13 @@ class CreateState extends State {
 			edges[edge] = Math.floor(edges * 100);
 		}
 		
+		const styleRef = mark.el_.style;
 		
-		
-		Logic.add()
+		Logic.add({
+			id: id,
+			edges: edges,
+			style: styleRef
+		})
 	}
 }
 
