@@ -1,4 +1,9 @@
 /**
+ * Board class 
+ *		Interface that connects state behavior
+ *		to the Mark Collection board, which is
+ *		the actual UI object accessible to users
+ *
  * @file board.js
  */
 
@@ -107,8 +112,7 @@ class Board extends MarkCollection {
 		const state = this.currentState_;
 		Dom.unblockTextSelection();
 		
-		state.initialize();
-		state.bindEvents();
+		state.bindState();
 		this.triggerReady();
 	}
 	
@@ -143,7 +147,7 @@ class Board extends MarkCollection {
 	 */
 	goToNextState() {
 		let current = this.currentState_.name();
-		this.currentState_.dispose();
+		this.currentState_.disposeState();
 		
 		let next = this.nextState_[current];
 		

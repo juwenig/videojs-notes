@@ -26,29 +26,14 @@ class CreateState extends State {
 	}
 	
 	/**
-	 * Initialization of state
-	 * 
-	 * @method initialize
-	 */
-	initialize() {
-		const marks = this.context_.getAllMarks();
-		// set board zindex
-		this.style_.zIndex = 100;
-		
-		// reset all zindexes behind the board
-		for (let item in marks) {
-			if (marks[item]) {
-				marks[item].el().style.zIndex = -10;
-			}
-		}
-	}
-	
-	/**
-	 * Binds the events to the context - called on state changes
+	 * Binds the events to the context 
+	 * 		called on state changes
 	 * 
 	 * @method bindEvents
 	 */
-	bindEvents() {
+	bindState() {
+		this.context_.addClass('ntk-create-state');
+
 		const context = this.context_;
 		const target = context.contentEl();
 		
@@ -59,22 +44,22 @@ class CreateState extends State {
 	}
 	
 	/**
-	 * Disposes of class properties
+	 * Disposes of state properties
 	 *
 	 * @method dispose
 	 */
-	dispose() {
+	disposeState() {
 		const context = this.context_;
 		const target = context.contentEl();
 		
 		// remove any active mark
 		if (this.currentMark_) {
-			context.removeMark(this.currentMark_.id());
+			this.currentMark_.trigger('dispose');
 		}
 		
 		// remove any dialog from player
 		if (this.currentDialog_) {
-			context.player().removeChild(this.currentDialog_);
+			this.currentDialog_.trigger('dispose');
 		}
 		
 		// allow garbage collector to collect these items
@@ -86,6 +71,14 @@ class CreateState extends State {
 		context.off(target, 'click', Fn.bind(this, this.handleClick));
 		context.off(target, 'mousedown', Fn.bind(this, this.handleMouseDown));
     context.off(target, 'touchstart', Fn.bind(this, this.handleMouseDown));
+		
+		if (this.currentDialog_) {
+			// dispose should be on dialog class def
+			const techClick = Fn.bind(this, this.handleTechClick);
+			context.player().tech_.off('click', techClick);
+		}
+		
+		this.context_.removeClass('ntk-create-state');
 	}
 	
 	/**
@@ -94,14 +87,14 @@ class CreateState extends State {
 	 * @param {Object} pos The position indicating start and end values
 	 * @method createMark
 	 */
-	createMark(start) {
+	createMark(start, end) {
 		const context = this.context_; 
 		
 		// we assume user starts from left and moves right
 		let options = {
 			position: {
 				left: start, 
-				right: 1
+				right: end || 1
 			},
 			vertical: context.vertical()
 		};
@@ -110,17 +103,14 @@ class CreateState extends State {
 		let mark = context.addMark(options);
 		
 		mark.addClass('ntk-mark-selected');
-		// must set active mark for referencing later
+		
 		if (this.currentMark_) {
+			this.currentMark_.dispose();
 			context.removeMark(this.currentMark_.id());
 		}
 		
 		this.currentMark_ = mark;
 		this.anchor_ = start;
-		
-		if (this.currentDialog_) {
-			context.player().removeChild(this.currentDialog_);
-		}
 	}
 	
 	/**
@@ -132,10 +122,6 @@ class CreateState extends State {
 		const mark = this.currentMark_;
 		const context = this.context_;
 		
-		// brings the active mark behind the board in order to allow
-		// more items to be created
-		mark.el().style.zIndex = -10;
-		
 		let player = context.player();
 		
 		// add mark id to associate dialog with mark
@@ -143,9 +129,14 @@ class CreateState extends State {
 		player.addChild(dialog);
 		dialog.position();
 		
+		context.on('dispose', Fn.bind(dialog, dialog.dispose()));
+		
 		// the current dialog is kept until user
 		// saves dialog or clicks away to exit
 		this.currentDialog_ = dialog;
+		
+		const techClick = Fn.bind(this, this.handleTechClick);
+		context.player().tech_.on('click', techClick);
 	}
 	
   /**
@@ -166,25 +157,14 @@ class CreateState extends State {
    * @method handleMouseDown
    */
   handleMouseDown(event) {	
+		super.handleMouseDown(event);
 		const context = this.context_;
-		const doc = context.el().ownerDocument;
 		
     event.preventDefault();
-    Dom.blockTextSelection();
-		
-		// enable other mouse events to implement
-		// user sequence of input
-		context.on(doc, 'mousemove', Fn.bind(this, this.handleMouseMove));
-    context.on(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
-    context.on(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
 		
 		// get the distance of where the anchor should be
-		// and create mark
 		let start = context.calculateDistance(event);
 		this.createMark(start);		
-		
-		// used to capture other pos of mark
-		this.handleMouseMove(event);
   }
   
   /**
@@ -193,27 +173,21 @@ class CreateState extends State {
    * @param {Event} event
    * @method handleMouseMove
    */
-  handleMouseMove(event){
-    const context = this.context_;
-		
-		// gets current mark that was created
-		const mark = this.currentMark_;
-		
+  handleMouseMove(event){				
 		// gets the first time point user selected with mousedown event
 		const anchor = this.anchor_;
-		
 		// calculates the position of mouse in percent of scroll bar
-		let progress = context.calculateDistance(event);
+		let progress = this.context_.calculateDistance(event);
 		
 		// updates the left or right depending on which direction
 		// the user is updating the mark item
 		if (progress < anchor) {
-			mark.setElPosition({
+			this.currentMark_.setElPosition({
 				left: progress,
 				right: anchor
 			});
 		} else if (progress >= anchor) {
-			mark.setElPosition({
+			this.currentMark_.setElPosition({
 				left: anchor,
 				right: progress
 			});
@@ -227,17 +201,26 @@ class CreateState extends State {
    * @method handleMouseUp
    */
   handleMouseUp(event) {
-    const context = this.context_;
-		const doc = context.el().ownerDocument;
-		
-    Dom.unblockTextSelection();
-    
-    context.off(doc, 'mousemove', Fn.bind(this, this.handleMouseMove));
-    context.off(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
-    context.off(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
-    
 		// create dialog on finish
 		this.createDialog();
+	}
+	
+	/**
+	 * Handles clicks on the tech
+	 *
+	 * @method handleTechClick
+	 */
+	handleTechClick(event) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		
+		this.currentMark_.trigger('dispose');
+		this.currentDialog_.trigger('dispose');
+		
+		// always dereference these properties
+		this.currentMark_ = null;
+		this.currentDialog_ = null;
+		this.anchor_ = null;
 	}
 	
 	/**
@@ -263,8 +246,15 @@ class CreateState extends State {
 			id: id,
 			edges: edges,
 			style: styleRef
-		})
+		});
+		
+		this.currentMark_ = null;
+		this.currentDialog_ = null;
+		this.anchor_ = null;
 	}
+	
+	
+	
 }
 
 CreateState.prototype.options_ = Config.CreateState;

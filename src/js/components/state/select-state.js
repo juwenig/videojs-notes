@@ -23,19 +23,28 @@ class SelectState extends State {
 		super(context, options);
 	}
 	
-	initialize() {
-		// bring the board index up
-		this.style_.zIndex = 100;
-	}
-	
-	bindEvents() {
+	/**
+	 * Binds the events to the context 
+	 * 		called on state changes
+	 * 
+	 * @method bindState
+	 */
+	bindState() {
+		this.context_.addClass('ntk-select-state');
+
 		const context = this.context_;
 		const target = context.contentEl();
+	
 		
-		// bind events on the ntk board el
-		context.on(target, 'click', Fn.bind(this, this.handleClick));
-		context.on(target, 'mousedown', Fn.bind(this, this.handleMouseDown));
-    context.on(target, 'touchstart', Fn.bind(this, this.handleMouseDown));
+	}
+	
+	/**
+	 * Disposes of state properties
+	 *
+	 * @method disposeState
+	 */
+	disposeState() {
+		this.context_.removeClass('ntk-select-state');
 	}
 	
   /**

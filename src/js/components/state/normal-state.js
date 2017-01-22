@@ -21,9 +21,22 @@ class NormalState extends State {
 		super(context, options);
 	}
 	
-	initialize() {
-		// put the board markcollection behind scrollbar
-		this.style_.zIndex = -100;
+	/**
+	 * 
+	 *
+	 * @method bindState
+	 */
+	bindState() {
+		this.context_.addClass('ntk-normal-state');
+	}
+	
+	/**
+	 * Disposes state properties 
+	 *
+	 * @method disposeState
+	 */
+	disposeState() {
+		this.context_.removeClass('ntk-normal-state');
 	}
 }
 

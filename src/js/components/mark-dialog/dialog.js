@@ -9,6 +9,7 @@ import Log from '../utils/log.js';
 import * as Form from '../utils/form.js';
 import {Component} from '../utils/vjs-classes.js';
 import {assign} from '../utils/obj.js'
+import formatTime from '../utils/format-time.js';
 
 import Config from '../../config.js';
 
@@ -33,17 +34,9 @@ class Dialog extends Component {
 		
 		this.form_ = this.el_.children[0];
 		
-		this.on(this.form_, 'submit', Fn.bind(this, this.handleDialogFormSubmit));
-	}
-	
-	/**
-	 * Returns the mark 
-	 *
-	 * @return {MarkItem}
-	 * @method mark
-	 */
-	mark() {
-		return this.mark_;
+		const formHandler = Fn.bind(this, this.handleFormSubmit);
+		this.form_.on('submit', formHandler);
+					
 	}
 	
 	/**
@@ -81,12 +74,65 @@ class Dialog extends Component {
 	}
 	
 	/**
+	 * Returns the mark 
+	 *
+	 * @return {MarkItem}
+	 * @method mark
+	 */
+	mark() {
+		return this.mark_;
+	}
+	
+	/**
 	 * Gets all the dialog elements
 	 *
 	 * @method getAllFormElements
 	 */
 	getAllFormElements() {
 		return this.form_.elements;
+	}
+	
+	/**
+	 * Gets the form object
+	 *
+	 * @method getForm
+	 */
+	getForm() {
+		return this.form_;
+	}
+	
+	/**
+	 * Disposes the dialog
+	 *
+	 * @dispose
+	 */
+	dispose() {
+		const formHandler = Fn.bind(this, this.handleFormSubmit);
+		this.form_.off('submit', formHandler);
+
+		this.mark_ = null;
+		this.form_ = null;
+		
+		this.form_.off();
+		
+		super.dispose();
+	}
+	
+	/**
+	 * Sets initial time values
+	 *
+	 * @method setTimeValues
+	 */
+	setTimeValues() {
+		const duration = this.player.duration();
+		const mark = this.mark_;
+		
+		if (mark) {
+			const markPos = mark.position_;
+			
+		} else {
+			Log.error('no mark item associated with dialog');
+		}
 	}
 		
 	/**
@@ -117,32 +163,7 @@ class Dialog extends Component {
 		const el = super.createEl(tag, props, attrs);
 		el.style.width = width;
 		
-		// We cannot add this to the tech_ object so this will have to do for now..
-		this.player().tech_.on('click', Fn.bind(this, this.handleTechClick));
 		return el;
-	}
-	
-	/**
-	 * Handles clicking on the player object to exit dialog
-	 *
-	 * @param event Event object
-	 * @method handlePlayerClick
-	 */
-	handleTechClick(event) {
-		let mark = this.mark_;
-		if ('controls_' in this.player()) {
-			this.player().controls_ = true;
-		}
-		let parent = mark.el_.parentElement;
-
-		if (parent) {
-			parent.removeChild(mark.el_);
-		}
-		
-		event.preventDefault();
-		event.stopImmediatePropagation();
-		
-		this.player().tech_.off('click', this.handleTechClick);
 	}
 	
 	/**
@@ -159,15 +180,13 @@ class Dialog extends Component {
 	/**
 	 * Handles dialog form submit
 	 *
-	 * @method handleDialogFormSubmit
+	 * @method handleFormSubmit
 	 */
-	handleDialogFormSubmit(event) {
+	handleFormSubmit(event) {
 		event.preventDefault();
 		event.stopImmediatePropagation();
 		
 		const data = Form.formToJson(this.getAllFormElements());
-		console.log(data);
-		console.log(this.getAllFormElements());
 	}
 }
 

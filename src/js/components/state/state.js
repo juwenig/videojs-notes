@@ -17,28 +17,23 @@ class State {
 		if (options.name) {
 			this.name_ = options.name;	
 		}
+		
+		context.on('dispose', Fn.bind(this, this.disposeState));
 	}
-	
-	/**
-	 * Called for initialization steps 
-	 *
-	 * @method initialize
-	 */
-	initialize() {}
 	
 	/**
 	 * Called by context to bind event handlers
 	 * 
-	 * @method bindEvents
+	 * @method bindState
 	 */
-	bindEvents() {}
+	bindState() {}
 	
 	/**
 	 * Disposes the states internal state and variables
 	 *
-	 * @method dipose
+	 * @method disposeState
 	 */
-	dispose() {}
+	disposeState() {}
 	
 	/**
 	 * Returns the name of the state
@@ -60,11 +55,21 @@ class State {
 	
 	/**
 	 * To be implemented by subclass
+	 * override if necessary 
 	 *
 	 * @param {Event} event
 	 * @method handleMouseDown
 	 */
-	handleMouseDown(event) {}
+	handleMouseDown(event) {
+		const doc = this.context_.el().ownerDocument;
+		Dom.blockTextSelection();
+		
+		context.on(doc, 'mousemove', Fn.bind(this, this.handleMouseMove));
+    context.on(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
+    context.on(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
+		
+		this.handleMouseMove(event);
+	}
 	
 	/**
 	 * To be implemented by subclass
@@ -80,7 +85,14 @@ class State {
 	 * @param {Event} event
 	 * @method handleUp
 	 */
-	handleMouseUp(event) {}
+	handleMouseUp(event) {
+		const doc = context.el().ownerDocument;		
+    Dom.unblockTextSelection();
+    
+    context.off(doc, 'mousemove', Fn.bind(this, this.handleMouseMove));
+    context.off(doc, 'mouseup', Fn.bind(this, this.handleMouseUp));
+    context.off(doc, 'touchend', Fn.bind(this, this.handleMouseUp));
+	}
 	
 	/**
 	 * Adds a state to the private states object

@@ -1,4 +1,8 @@
 /**
+ * Mark Collection component
+ * 		UI object that lays over the slider bar
+ * 		to give access to mark item creation.
+ * 
  * @file mark-collection.js
  */
 
@@ -83,24 +87,27 @@ class MarkCollection extends Component {
 	/**
 	 * Removes the current mark
 	 * 
+	 * @param {String} markID The id of the mark
 	 * @method removeMark
 	 */
  	removeMark(markID) {
 		let mark = this.getMark(markID); 
-    this.contentEl().removeChild(mark.el());
 		
-		mark.dispose();
-		MarkCollection.prototype.marks[mark.id()] = null;
+		if (mark) {
+			mark.dispose();
+		}
+
+		MarkCollection.prototype.marks[markID] = null;
   }
 	
 	/**
 	 * Adds a mark to the collection object
 	 *
+	 * @param {Object} options Options for MarkItem
 	 * @return {MarkItem}
 	 * @method addMark
 	 */
-	addMark(options = {}) {
-		let mark = new MarkItem(this.player(), options);
+	addMark(mark) {
 		this.addChild(mark);
 		
 		MarkCollection.prototype.marks[mark.id()] = mark;
