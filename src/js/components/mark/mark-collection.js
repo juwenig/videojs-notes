@@ -55,7 +55,11 @@ class MarkCollection extends Component {
 	 * @method removeAllMarks
 	 */
 	removeAllMarks() {
+		for (id in MarkCollection.prototype.marks) {
+			delete MarkCollection.prototype.marks[id];
+		}
 		
+		MarkCollection.prototype.marks = {};
 	}
 	
 	/**
