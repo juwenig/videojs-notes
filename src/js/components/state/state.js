@@ -3,6 +3,7 @@
  */
 
 import * as Dom from '../utils/dom.js';
+import * as Fn from '../utils/fn.js';
 import toTitleCase from '../utils/to-title-case.js';
 import Log from '../utils/log.js';
 
@@ -61,7 +62,8 @@ class State {
 	 * @method handleMouseDown
 	 */
 	handleMouseDown(event) {
-		const doc = this.context_.el().ownerDocument;
+		const context = this.context_;
+		const doc = context.el().ownerDocument;
 		Dom.blockTextSelection();
 		
 		context.on(doc, 'mousemove', Fn.bind(this, this.handleMouseMove));
@@ -86,6 +88,7 @@ class State {
 	 * @method handleUp
 	 */
 	handleMouseUp(event) {
+		const context = this.context_;
 		const doc = context.el().ownerDocument;		
     Dom.unblockTextSelection();
     

@@ -36,7 +36,8 @@ class Dialog extends Component {
 		
 		const formHandler = Fn.bind(this, this.handleFormSubmit);
 		this.form_.on('submit', formHandler);
-					
+		
+		this.setTimeValues();
 	}
 	
 	/**
@@ -129,10 +130,24 @@ class Dialog extends Component {
 		
 		if (mark) {
 			const markPos = mark.position_;
-			
+			const startTime = formatTime(markPos.left * duration);
+			const endTime = formatTime(markPos.right * duration);
+			this.insertFormData({
+				'time-start': startTime,
+				'time-end': endTime
+			});
 		} else {
 			Log.error('no mark item associated with dialog');
 		}
+	}
+	
+	insertFormData() {
+		const data = Form.formToJson(this.getAllFormElements());
+		
+		for (name in data) {
+			if (name === '') {}
+		}
+		
 	}
 		
 	/**

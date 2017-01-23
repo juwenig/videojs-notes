@@ -23,6 +23,13 @@ class CreateState extends State {
 	constructor(context, options) {
 		options = mergeOptions(CreateState.prototype.options_, options);
 		super(context, options);
+		
+		this.handleTechClick = Fn.bind(this, this.handleTechClick);
+		
+		this.anchor_ = 0;
+		this.positions_ = {};
+		this.currentMark_ = null;
+		this.currentDialog_ = null;
 	}
 	
 	/**
@@ -74,8 +81,7 @@ class CreateState extends State {
 		
 		if (this.currentDialog_) {
 			// dispose should be on dialog class def
-			const techClick = Fn.bind(this, this.handleTechClick);
-			context.player().tech_.off('click', techClick);
+			context.player().tech_.off('click', this.handleTechClick);
 		}
 		
 		this.context_.removeClass('ntk-create-state');
@@ -163,8 +169,7 @@ class CreateState extends State {
     event.preventDefault();
 		
 		// get the distance of where the anchor should be
-		let start = context.calculateDistance(event);
-		this.createMark(start);		
+		this.anchor_ = context.calculateDistance(event);
   }
   
   /**
@@ -201,7 +206,10 @@ class CreateState extends State {
    * @method handleMouseUp
    */
   handleMouseUp(event) {
+		super.handleMouseUp(event);
+		
 		// create dialog on finish
+		this.createMark();
 		this.createDialog();
 	}
 	

@@ -111,7 +111,8 @@ class MarkCollection extends Component {
 	 * @return {MarkItem}
 	 * @method addMark
 	 */
-	addMark(mark) {
+	addMark(options) {
+		const mark = new MarkItem(this.player_, options);
 		this.addChild(mark);
 		
 		MarkCollection.prototype.marks[mark.id()] = mark;
