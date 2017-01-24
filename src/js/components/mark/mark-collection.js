@@ -15,6 +15,7 @@ import {Component} from '../utils/vjs-classes.js';
 import config from '../../config.js';
 
 import MarkItem from './mark-item.js';
+import Dialog from '../mark-dialog/dialog.js';
 
 /**
  * Controls the CRUD operations for the mark items
@@ -27,6 +28,8 @@ class MarkCollection extends Component {
   constructor(player, options) {
 		options = mergeOptions(MarkCollection.prototype.options_, options);
     super(player, options);
+		
+		this.markActive_ = null;
   }
   
   /**
@@ -120,8 +123,42 @@ class MarkCollection extends Component {
 	}
   
 	/**
-	 * Creates a dialog and checks if there is an active mark
+	 * Creates a dialog but dialog can exist once
+	 *
+	 * @param {String} markID The id of the mark
+	 * @method openMark
 	 */
+	openMark(markID) {
+		const mark = this.getMark(markID);
+		const options = {
+			mark: mark
+		};
+		
+		if (this.active_) {
+			this.closeMark(this.active_.mark().id());
+		}
+		
+		const dialog = new Dialog(this.player_, options);
+		this.player_.addChild(dialog);
+		
+		this.active_ = dialog;
+	} 
+	
+	/**
+	 * Closes the dialog and resets active mark
+	 *
+	 * @param {String} markID The id of the mark
+	 * @method closeMark
+	 */
+	closeMark(markID) {
+		const mark = this.getMark(markID);
+		
+		if (this.active_.mark().id() == markID) {
+			this.player_.removeChild(this.active_);
+		}
+		
+		this.active_ = null;
+	}
 	
   /**
    * Gets the mouse position in percentage x y within this element

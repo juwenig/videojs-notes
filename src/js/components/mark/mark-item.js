@@ -24,12 +24,6 @@ class MarkItem extends Component {
 		} else {
 			Log.warn('defaulting position of item');
 		}
-		
-		if (options.hasOwnProperty('vertical')) {
-			this.vertical_ = options.vertical;
-		} else {
-			Log.warn('not known if vertical');
-		}
 			
 		this.id_ = `Item_${Guid.newGUID().toString()}`;
 	}

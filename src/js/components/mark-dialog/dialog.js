@@ -32,12 +32,13 @@ class Dialog extends Component {
 			this.mark_ = options.mark;
 		}
 		
-		this.form_ = this.el_.children[0];
+		
+		this.form_ = this.getChild('DialogForm');
 		
 		const formHandler = Fn.bind(this, this.handleFormSubmit);
 		this.form_.on('submit', formHandler);
 		
-		this.setTimeValues();
+		this.ready(this.setTimeValues);
 	}
 	
 	/**
@@ -105,7 +106,7 @@ class Dialog extends Component {
 	/**
 	 * Disposes the dialog
 	 *
-	 * @dispose
+	 * @method dispose
 	 */
 	dispose() {
 		const formHandler = Fn.bind(this, this.handleFormSubmit);
@@ -125,14 +126,15 @@ class Dialog extends Component {
 	 * @method setTimeValues
 	 */
 	setTimeValues() {
-		const duration = this.player.duration();
+		const duration = this.player_.duration();
 		const mark = this.mark_;
 		
 		if (mark) {
-			const markPos = mark.position_;
+			const markPos = mark.getPosition();
 			const startTime = formatTime(markPos.left * duration);
 			const endTime = formatTime(markPos.right * duration);
-			this.insertFormData({
+			
+			this.setFormData({
 				'time-start': startTime,
 				'time-end': endTime
 			});
@@ -141,10 +143,16 @@ class Dialog extends Component {
 		}
 	}
 	
-	insertFormData() {
-		const data = Form.formToJson(this.getAllFormElements());
+	/**
+	 * Sets data into respective form elements
+	 *
+	 * @param {Object} data The data object to set
+	 * @method setFormData
+	 */
+	setFormData(data) {
+		const els = this.getAllFormElements();
 		
-		for (name in data) {
+		for (name in els) {
 			if (name === '') {}
 		}
 		

@@ -27,8 +27,7 @@ class CreateState extends State {
 		this.handleTechClick = Fn.bind(this, this.handleTechClick);
 		
 		this.anchor_ = 0;
-		this.positions_ = {};
-		this.currentMark_ = null;
+		this.mark_ = null;
 		this.currentDialog_ = null;
 	}
 	
@@ -61,17 +60,11 @@ class CreateState extends State {
 		
 		// remove any active mark
 		if (this.currentMark_) {
-			this.currentMark_.trigger('dispose');
-		}
-		
-		// remove any dialog from player
-		if (this.currentDialog_) {
-			this.currentDialog_.trigger('dispose');
+			this.mark_.trigger('dispose');
 		}
 		
 		// allow garbage collector to collect these items
-		this.currentMark_ = null;
-		this.currentDialog_ = null;
+		this.mark_ = null;
 		this.anchor_ = null;
 		
 		// dispose attached events to board
@@ -163,13 +156,16 @@ class CreateState extends State {
    * @method handleMouseDown
    */
   handleMouseDown(event) {	
-		super.handleMouseDown(event);
 		const context = this.context_;
 		
     event.preventDefault();
 		
 		// get the distance of where the anchor should be
 		this.anchor_ = context.calculateDistance(event);
+		this.mark_ = context.addMark();
+		this.mark_.addClass('ntk-mark-selected');
+		
+		super.handleMouseDown(event);
   }
   
   /**
@@ -187,12 +183,12 @@ class CreateState extends State {
 		// updates the left or right depending on which direction
 		// the user is updating the mark item
 		if (progress < anchor) {
-			this.currentMark_.setElPosition({
+			this.mark_.setElPosition({
 				left: progress,
 				right: anchor
 			});
 		} else if (progress >= anchor) {
-			this.currentMark_.setElPosition({
+			this.mark_.setElPosition({
 				left: anchor,
 				right: progress
 			});
@@ -206,11 +202,11 @@ class CreateState extends State {
    * @method handleMouseUp
    */
   handleMouseUp(event) {
-		super.handleMouseUp(event);
+		const context = this.context_;
 		
 		// create dialog on finish
-		this.createMark();
-		this.createDialog();
+		context.openMark(this.mark_.id());
+		super.handleMouseUp(event);
 	}
 	
 	/**
