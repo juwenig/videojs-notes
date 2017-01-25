@@ -81,6 +81,14 @@
 	background-color: 
 }
 
+.ntk-dialog-lg {
+	width: 200px;
+}
+
+.ntk-dialog-md {
+	width: 150px;
+}
+
 .ntk-dialog {
 	display: block;
 	position: absolute;

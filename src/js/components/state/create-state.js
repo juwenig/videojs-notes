@@ -80,64 +80,6 @@ class CreateState extends State {
 		this.context_.removeClass('ntk-create-state');
 	}
 	
-	/**
-	 * Creates a new mark on the board
-	 *
-	 * @param {Object} pos The position indicating start and end values
-	 * @method createMark
-	 */
-	createMark(start, end) {
-		const context = this.context_; 
-		
-		// we assume user starts from left and moves right
-		let options = {
-			position: {
-				left: start, 
-				right: end || 1
-			},
-			vertical: context.vertical()
-		};
-		
-		// creates mark-item and adds to mark-collection
-		let mark = context.addMark(options);
-		
-		mark.addClass('ntk-mark-selected');
-		
-		if (this.currentMark_) {
-			this.currentMark_.dispose();
-			context.removeMark(this.currentMark_.id());
-		}
-		
-		this.currentMark_ = mark;
-		this.anchor_ = start;
-	}
-	
-	/**
-	 * Creates a new dialog on the board
-	 * 
-	 * @method createDialog
-	 */
-	createDialog() {
-		const mark = this.currentMark_;
-		const context = this.context_;
-		
-		let player = context.player();
-		
-		// add mark id to associate dialog with mark
-		const dialog = new Dialog(player, {mark: mark});
-		player.addChild(dialog);
-		dialog.position();
-		
-		context.on('dispose', Fn.bind(dialog, dialog.dispose()));
-		
-		// the current dialog is kept until user
-		// saves dialog or clicks away to exit
-		this.currentDialog_ = dialog;
-		
-		const techClick = Fn.bind(this, this.handleTechClick);
-		context.player().tech_.on('click', techClick);
-	}
-	
   /**
 	 * Stops propogation of marks element click event to parent elements
 	 *

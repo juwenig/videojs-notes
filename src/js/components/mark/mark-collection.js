@@ -29,7 +29,7 @@ class MarkCollection extends Component {
 		options = mergeOptions(MarkCollection.prototype.options_, options);
     super(player, options);
 		
-		this.markActive_ = null;
+		this.dialog_ = player.getChild('Dialog');
   }
   
   /**
@@ -66,7 +66,7 @@ class MarkCollection extends Component {
 	}
 	
 	/**
-	 * Returns the marks_ - all mark items
+	 * Returns the marks - all mark items
 	 *
 	 * @return {Object} mark
 	 * @method getAllMarks
@@ -130,18 +130,12 @@ class MarkCollection extends Component {
 	 */
 	openMark(markID) {
 		const mark = this.getMark(markID);
-		const options = {
-			mark: mark
-		};
 		
-		if (this.active_) {
-			this.closeMark(this.active_.mark().id());
+		if (this.dialog_.isActive()) {
+			this.closeMark(this.dialog_.mark().id());
 		}
 		
-		const dialog = new Dialog(this.player_, options);
-		this.player_.addChild(dialog);
-		
-		this.active_ = dialog;
+		this.dialog_.loadMark(mark);
 	} 
 	
 	/**
@@ -153,11 +147,9 @@ class MarkCollection extends Component {
 	closeMark(markID) {
 		const mark = this.getMark(markID);
 		
-		if (this.active_.mark().id() == markID) {
-			this.player_.removeChild(this.active_);
+		if (this.dialog_.mark().id() === markID) {
+			this.dialog_.unloadMark();
 		}
-		
-		this.active_ = null;
 	}
 	
   /**
@@ -186,6 +178,16 @@ class MarkCollection extends Component {
     let seekBar = progressControl.getChild('seekBar');
 
     return seekBar.vertical();
+	}
+	
+	/**
+	 * Specific dispose function for clearing internal ref
+	 *
+	 * @method dispose
+	 */
+	dispose() {
+		this.dialog_.dispose();
+		this.dialog_ = null;
 	}
 }
 

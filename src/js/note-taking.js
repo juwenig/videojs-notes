@@ -7,6 +7,7 @@
 import videojs from 'video.js';
 
 import * as Dom from './components/utils/dom.js';
+import * as Fn from './components/utils/fn.js';
 import log from './components/utils/log.js';
 import mergeOptions from './components/utils/merge-options.js';
 import toTitleCase from './components/utils/to-title-case.js';
@@ -14,8 +15,9 @@ import {Component} from './components/utils/vjs-classes.js';
 
 import Config from './config.js';
 
-import MarkerButton from './components/marker-button.js'
+import MarkerButton from './components/marker-button.js';
 import Board from './components/board.js';
+import Dialog from './components/mark-dialog/dialog.js';
 
 class NoteTaking extends Component {
   constructor(player, options) {
@@ -39,17 +41,34 @@ class NoteTaking extends Component {
     // Separate the Mark and the DisableControl options from config
 		const boardOptions = options.Board;
     const markerButtonOptions = options.MarkerButton;
+		const dialogOptions = options.Dialog;
     
+		this.injectDialog(dialogOptions);
     this.injectBoard(boardOptions);
     this.injectMarkerButton(markerButtonOptions);
   }
  
 	/**
+	 * Adds dialog to player for detailing mark item
+	 *
+	 * @param {Object} options Options for the Dialog component
+	 * @return {Object=} Created Dialog element
+	 * @method injectDialog
+	 */
+	injectDialog(options) {
+		let player = this.player();
+		
+		
+		let dialog = player.addChild('Dialog', options);
+		return dialog;
+	}
+	
+	/**
 	 * Adds disable control to the progress control that exists on the current player
 	 *
-	 * @param options Options for the DisableControl component
+	 * @param {Object} options Options for the Board component
 	 * @return {Object=} Created Board element
-	 * @method addDisableControl
+	 * @method injectBoard
 	 */
   injectBoard(options) { 
 		let player = this.player();

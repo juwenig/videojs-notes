@@ -25,20 +25,83 @@ class Dialog extends Component {
 			this.player().controls_ = false;
 		}
 		
-		if (!options.mark) {
-			Log.warn('new dialog constructed without associated mark');
-			this.mark_ = new MarkItem(player);
-		} else {
-			this.mark_ = options.mark;
-		}
-		
+		this.mark_ = null;
 		
 		this.form_ = this.getChild('DialogForm');
 		
 		const formHandler = Fn.bind(this, this.handleFormSubmit);
 		this.form_.on('submit', formHandler);
 		
-		this.ready(this.setTimeValues);
+		// hide initially
+		this.hide();
+		this.active_ = false;
+	}
+	
+	/**
+	 * Gets if element is shown or hidden
+	 *
+	 * @return {Boolean} true if active
+	 * @method isActive
+	 */
+	isActive() {
+		if (typeof active === 'undefined') {
+			return this.active_;
+		} 
+	}
+	
+	/**
+	 * Overrides super method and sets active
+	 *
+	 * @method show
+	 */
+	show() {
+		super.show();
+		this.active_ = true;
+	}
+	
+	/**
+	 * Overrides super method and sets inactive
+	 *
+	 * @method hide
+	 */
+	hide() {
+		super.hide();
+		this.active_ = false;
+	}
+	
+	/**
+	 * Loads mark into the dialog
+	 * 
+	 * @param {MarkItem} mark Mark object to be loaded
+	 * @method loadMark
+	 */
+	loadMark(mark) {
+		this.mark_ = mark;
+		
+		// add step for checking if there's data associated with this mark
+		// and add note data here
+		
+		this.position();
+		this.setTimeValues();
+		
+		if (!this.isActive()) {
+			this.show();
+		}
+	}
+	
+	/**
+	 * Unloads mark from dialog
+	 * 
+	 * @method unloadMark
+	 */
+	unloadMark() {
+		if (this.mark_) {
+			this.mark_ = null;
+			
+			if (this.isActive()) {
+				this.hide();
+			}
+		}
 	}
 	
 	/**
@@ -72,6 +135,7 @@ class Dialog extends Component {
 		
 		this.el_.style['left'] = leftPos + 'px';
 		
+		this.setTimeValues();
 		return leftPos;
 	}
 	
@@ -111,7 +175,8 @@ class Dialog extends Component {
 	dispose() {
 		const formHandler = Fn.bind(this, this.handleFormSubmit);
 		this.form_.off('submit', formHandler);
-
+		
+		// clears the internal references
 		this.mark_ = null;
 		this.form_ = null;
 		
@@ -153,7 +218,10 @@ class Dialog extends Component {
 		const els = this.getAllFormElements();
 		
 		for (name in els) {
-			if (name === '') {}
+			if (name === '') {
+			
+			}
+			console.log("Form Element: ", name, " is : ", els[name]);
 		}
 		
 	}
@@ -165,26 +233,25 @@ class Dialog extends Component {
 	 * @method createEl
 	 */
 	createEl(tag = 'div', props = {}, attrs = {}) {
-		let width;
 		let size = this.player().notetaking().getPlayerSize();
+		let sizeClass = 'ntk-dialog-md';
 		
 		switch(size) {
 			case 'large': 
-				width = '200px';
+				sizeClass = 'ntk-dialog-lg';
 				break;
 			case 'medium':
-				width = '150px';
+				sizeClass = 'ntk-dialog-md';
 				break;
 			default:
-				width = '';
+				break;
 		}
 		
 		props = assign({
-			className: 'ntk-dialog'
+			className: `ntk-dialog ${sizeClass}`
 		}, props);
 		
 		const el = super.createEl(tag, props, attrs);
-		el.style.width = width;
 		
 		return el;
 	}
