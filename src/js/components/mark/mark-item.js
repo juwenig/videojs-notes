@@ -28,6 +28,8 @@ class MarkItem extends Component {
 		this.id_ = `Item_${Guid.newGUID().toString()}`;
 		
 		this.on('click', this.handleClick);
+		this.on('mouseenter', this.handleHover);
+		this.on('mouseleave', this.handleHover);
 	}
 	
 	/**
@@ -102,6 +104,16 @@ class MarkItem extends Component {
  */
 MarkItem.prototype.handleClick = function(event) {
 	this.toggleClass('ntk-mark-selected');
+}
+
+/**
+ * Handles hover event
+ * 
+ * @param {Event} event
+ * @method handleHover
+ */
+MarkItem.prototype.handleHover = function(event) {
+	this.toggleClass('ntk-mark-focused');
 }
 
 MarkItem.prototype.options_ = config.MarkItem;

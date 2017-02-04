@@ -31,7 +31,6 @@ class Dialog extends Component {
 		
 		// hide initially
 		this.hide();
-		this.active_ = false;
 		
 		this.setDimension(options.size || null);
 	}
@@ -82,8 +81,8 @@ class Dialog extends Component {
 	loadMark(mark) {
 		this.mark_ = mark;
 		
-		// add step for checking if there's data associated with this mark
-		// and add note data here
+		// add step for checking if there's data associated 
+		// with this mark and add note data here
 		
 		this.position();
 		this.setTimeValues();
@@ -106,6 +105,16 @@ class Dialog extends Component {
 				this.hide();
 			}
 		}
+	}
+	
+	/**
+	 * Returns the mark 
+	 *
+	 * @return {MarkItem}
+	 * @method mark
+	 */
+	mark() {
+		return this.mark_;
 	}
 	
 	/**
@@ -144,16 +153,6 @@ class Dialog extends Component {
 	}
 	
 	/**
-	 * Returns the mark 
-	 *
-	 * @return {MarkItem}
-	 * @method mark
-	 */
-	mark() {
-		return this.mark_;
-	}
-	
-	/**
 	 * Gets all the dialog elements
 	 *
 	 * @method getAllFormElements
@@ -169,24 +168,6 @@ class Dialog extends Component {
 	 */
 	getForm() {
 		return this.form_;
-	}
-	
-	/**
-	 * Disposes the dialog
-	 *
-	 * @method dispose
-	 */
-	dispose() {
-		const formHandler = Fn.bind(this, this.handleFormSubmit);
-		this.form_.off('submit', formHandler);
-		
-		// clears the internal references
-		this.mark_ = null;
-		this.form_ = null;
-		
-		this.form_.off();
-		
-		super.dispose();
 	}
 	
 	/**
@@ -228,8 +209,8 @@ class Dialog extends Component {
 	}
 		
 	/**
-	 * Changed name from createEl because Component calls createDialog and 
-	 * that is unintended
+	 * Changed name from createEl because Component calls 
+	 * createDialog and that is unintended
 	 *
 	 * @method createEl
 	 */
@@ -241,6 +222,24 @@ class Dialog extends Component {
 		const el = super.createEl(tag, props, attrs);
 		
 		return el;
+	}
+	
+	/**
+	 * Disposes the dialog
+	 *
+	 * @method dispose
+	 */
+	dispose() {
+		const formHandler = Fn.bind(this, this.handleFormSubmit);
+		this.form_.off('submit', formHandler);
+		
+		// clears the internal references
+		this.mark_ = null;
+		this.form_ = null;
+		
+		this.form_.off();
+		
+		super.dispose();
 	}
 	
 	/**
@@ -280,6 +279,7 @@ class Dialog extends Component {
 	/**
 	 * Handles dialog form submit
 	 *
+	 * @param {Event} event
 	 * @method handleFormSubmit
 	 */
 	handleFormSubmit(event) {
