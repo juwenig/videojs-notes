@@ -24,7 +24,7 @@ class Dialog extends Component {
 		
 		this.form_ = this.getChild('DialogForm');
 		
-		const formHandler = Fn.bind(this, this.handleFormSubmit);
+		let formHandler = Fn.bind(this, this.handleFormSubmit);
 		this.form_.on('submit', formHandler);
 		
 		this.on('click', this.handleContainerClick);
@@ -287,7 +287,7 @@ class Dialog extends Component {
 		event.stopImmediatePropagation();
 		
 		const data = Form.formToJson(this.getAllFormElements());
-		
+		console.log('submitted');
 	}
 }
 

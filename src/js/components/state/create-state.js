@@ -96,7 +96,7 @@ class CreateState extends State {
    */
   handleMouseDown(event) {	
 		const context = this.context_;
-		
+			
     event.preventDefault();
 		
 		// get the distance of where the anchor should be
@@ -104,8 +104,9 @@ class CreateState extends State {
 		
 		// removes if already present
 		if (this.mark_) {
-			context.removeMark(this.mark_.id());
+			context.removeMark(mark.id());
 		}
+		
 		this.mark_ = context.addMark();
 		this.mark_.addClass('ntk-mark-selected');
 		
@@ -121,6 +122,7 @@ class CreateState extends State {
   handleMouseMove(event){				
 		// gets the first time point user selected with mousedown event
 		const anchor = this.anchor_;
+		
 		// calculates the position of mouse in percent of scroll bar
 		let progress = this.context_.calculateDistance(event);
 		
@@ -147,10 +149,11 @@ class CreateState extends State {
    */
   handleMouseUp(event) {
 		const context = this.context_;
-		
+				
 		// create dialog on finish
-		context.openMark(this.mark_.id());
+		let dialog = context.openMark(this.mark_.id());
 		context.player().tech_.on('click', this.handleTechClick);
+		dialog.getForm().on('submit', this.handleDialogFormSubmit);
 		
 		super.handleMouseUp(event);
 	}
@@ -181,8 +184,7 @@ class CreateState extends State {
 	handleDialogFormSubmit(event) {
 		event.preventDefault();
 		
-		const mark = this.mark_;
-		const id = mark.id();
+		const id = this.mark_.id();
 		
 		let edges = mark.getPosition();
 		
@@ -198,8 +200,10 @@ class CreateState extends State {
 			style: styleRef
 		});
 		
-		mark.removeClass('ntk-mark-selected');
+		this.mark_.removeClass('ntk-mark-selected');
+		
 		this.anchor_ = null;
+		this.mark_ = null;
 	}
 }
 

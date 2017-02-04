@@ -145,6 +145,7 @@ class MarkCollection extends Component {
 		}
 		
 		this.dialog_.loadMark(mark);
+		return this.dialog_;
 	} 
 	
 	/**
