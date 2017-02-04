@@ -86,7 +86,7 @@ class MarkCollection extends Component {
 		if (MarkCollection.prototype.marks[markID]) {
 			return MarkCollection.prototype.marks[markID];
 		} else {
-			Log.Error('missing id encountered');
+			Log.error('missing id encountered');
 			return null;
 		}
 	}

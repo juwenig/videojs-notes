@@ -61,7 +61,7 @@ class CreateState extends State {
 		
 		// remove any active mark
 		if (this.mark_) {
-			this.mark_.trigger('dispose');
+			context.removeMark(this.mark_.id());
 			context.player().tech_.off('click', this.handleTechClick);	
 		}
 		
@@ -86,8 +86,6 @@ class CreateState extends State {
 	handleClick(event) {
 		event.preventDefault();
 		event.stopImmediatePropagation();
-		
-		console.log(event.target);
 	}
 	
 	/**
@@ -105,8 +103,11 @@ class CreateState extends State {
 		this.anchor_ = context.calculateDistance(event);
 		
 		// removes if already present
-		context.removeMark(this.mark_.id());
+		if (this.mark_) {
+			context.removeMark(this.mark_.id());
+		}
 		this.mark_ = context.addMark();
+		this.mark_.addClass('ntk-mark-selected');
 		
 		super.handleMouseDown(event);
   }
@@ -165,12 +166,11 @@ class CreateState extends State {
 		
 		const context = this.context_;
 		
-		// always dereference these properties
-		this.anchor_ = null;
-		console.log(Logic)
 		context.removeMark(this.mark_.id());
-		
 		context.player().tech_.off('click', this.handleTechClick);
+
+		this.mark_ = null;
+		this.anchor_ = null;
 	}
 	
 	/**
@@ -198,6 +198,7 @@ class CreateState extends State {
 			style: styleRef
 		});
 		
+		mark.removeClass('ntk-mark-selected');
 		this.anchor_ = null;
 	}
 }

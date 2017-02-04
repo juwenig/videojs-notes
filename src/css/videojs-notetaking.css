@@ -62,11 +62,20 @@
 .ntk-normal-state .ntk-mark-item { display: none; }
 .ntk-select-state .ntk-mark-item { z-index: 10; }
 
-.ntk-board .ntk-mark-selected {
+/* 
+ * Limits the styling for these two states
+ * on click
+ */
+.ntk-create-state .ntk-mark-selected,
+.ntk-select-state .ntk-mark-selected {
 	border: 1px solid white;
 }
 
-.ntk-board .ntk-mark-focused {
+/* 
+ * Limits the styling for these select state
+ * on hover (not on create)
+ */
+.ntk-select-state .ntk-mark-focused {
 	border: 1px solid yellow;
 }
 
