@@ -29,7 +29,7 @@ class MarkCollection extends Component {
 		options = mergeOptions(MarkCollection.prototype.options_, options);
     super(player, options);
 		
-		this.dialog_ = player.getChild('Dialog');
+		this.dialog_ = null;
   }
   
   /**
@@ -98,9 +98,14 @@ class MarkCollection extends Component {
 	 * @method removeMark
 	 */
  	removeMark(markID) {
+		if (!markID) {
+			return;
+		}
+		
 		let mark = this.getMark(markID); 
 		
 		if (mark) {
+			this.closeMark(markID);
 			mark.dispose();
 		}
 
@@ -131,6 +136,10 @@ class MarkCollection extends Component {
 	openMark(markID) {
 		const mark = this.getMark(markID);
 		
+		if (!this.dialog_) {
+			this.dialog_ = this.player_.addChild('Dialog');
+		}
+		
 		if (this.dialog_.isActive()) {
 			this.closeMark(this.dialog_.mark().id());
 		}
@@ -146,6 +155,11 @@ class MarkCollection extends Component {
 	 */
 	closeMark(markID) {
 		const mark = this.getMark(markID);
+		
+		if (!this.dialog_) {
+			Log.warn('Called before instantiating dialog');
+			return;
+		}
 		
 		if (this.dialog_.mark().id() === markID) {
 			this.dialog_.unloadMark();

@@ -26,6 +26,8 @@ class MarkItem extends Component {
 		}
 			
 		this.id_ = `Item_${Guid.newGUID().toString()}`;
+		
+		this.on('click', this.handleClick);
 	}
 	
 	/**
@@ -90,6 +92,16 @@ class MarkItem extends Component {
 	getPosition() {
 		return this.position_;
 	}
+}
+
+/**
+ * Handles click event
+ * 
+ * @param {Event} event
+ * @method handleClick
+ */
+MarkItem.prototype.handleClick = function(event) {
+	this.toggleClass('ntk-mark-selected');
 }
 
 MarkItem.prototype.options_ = config.MarkItem;

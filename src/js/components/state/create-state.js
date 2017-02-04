@@ -25,6 +25,7 @@ class CreateState extends State {
 		super(context, options);
 		
 		this.handleTechClick = Fn.bind(this, this.handleTechClick);
+		this.handleDialogFormSubmit = Fn.bind(this, this.handleDialogFormSubmit);
 		
 		this.anchor_ = 0;
 		this.mark_ = null;
@@ -59,8 +60,9 @@ class CreateState extends State {
 		const target = context.contentEl();
 		
 		// remove any active mark
-		if (this.currentMark_) {
+		if (this.mark_) {
 			this.mark_.trigger('dispose');
+			context.player().tech_.off('click', this.handleTechClick);	
 		}
 		
 		// allow garbage collector to collect these items
@@ -71,11 +73,6 @@ class CreateState extends State {
 		context.off(target, 'click', Fn.bind(this, this.handleClick));
 		context.off(target, 'mousedown', Fn.bind(this, this.handleMouseDown));
     context.off(target, 'touchstart', Fn.bind(this, this.handleMouseDown));
-		
-		if (this.currentDialog_) {
-			// dispose should be on dialog class def
-			context.player().tech_.off('click', this.handleTechClick);
-		}
 		
 		this.context_.removeClass('ntk-create-state');
 	}
@@ -89,6 +86,8 @@ class CreateState extends State {
 	handleClick(event) {
 		event.preventDefault();
 		event.stopImmediatePropagation();
+		
+		console.log(event.target);
 	}
 	
 	/**
@@ -104,8 +103,10 @@ class CreateState extends State {
 		
 		// get the distance of where the anchor should be
 		this.anchor_ = context.calculateDistance(event);
+		
+		// removes if already present
+		context.removeMark(this.mark_.id());
 		this.mark_ = context.addMark();
-		this.mark_.addClass('ntk-mark-selected');
 		
 		super.handleMouseDown(event);
   }
@@ -148,6 +149,8 @@ class CreateState extends State {
 		
 		// create dialog on finish
 		context.openMark(this.mark_.id());
+		context.player().tech_.on('click', this.handleTechClick);
+		
 		super.handleMouseUp(event);
 	}
 	
@@ -160,13 +163,14 @@ class CreateState extends State {
 		event.preventDefault();
 		event.stopImmediatePropagation();
 		
-		this.currentMark_.trigger('dispose');
-		this.currentDialog_.trigger('dispose');
+		const context = this.context_;
 		
 		// always dereference these properties
-		this.currentMark_ = null;
-		this.currentDialog_ = null;
 		this.anchor_ = null;
+		console.log(Logic)
+		context.removeMark(this.mark_.id());
+		
+		context.player().tech_.off('click', this.handleTechClick);
 	}
 	
 	/**
@@ -177,7 +181,7 @@ class CreateState extends State {
 	handleDialogFormSubmit(event) {
 		event.preventDefault();
 		
-		const mark = this.currentMark_;
+		const mark = this.mark_;
 		const id = mark.id();
 		
 		let edges = mark.getPosition();
@@ -194,13 +198,8 @@ class CreateState extends State {
 			style: styleRef
 		});
 		
-		this.currentMark_ = null;
-		this.currentDialog_ = null;
 		this.anchor_ = null;
 	}
-	
-	
-	
 }
 
 CreateState.prototype.options_ = Config.CreateState;

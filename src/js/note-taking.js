@@ -1,9 +1,22 @@
 /**
- * Depends on the controlBar, progressControl as it exists in the DOM tree (v5.13.2)
- * Used as the API for retrieving notes and retrieving notetaking components
- * 
+ * Dependencies:
+ * controlBar (v5.13.2)
+ * progressControl (v5.13.2)
+ 
+ * Description:
+ * API for retrieving notes and notetaking components
+ * Initializes the notetaking plugin
+ 
+ * Example:
+ * 	var options = {
+ *		id: 'vjs-notetaking-1'
+ * 	}
+ *	var notetaking = new NoteTaking(player, options);
+ *	notetaking.getElement('board');
  */
 
+
+import window from 'global/window';
 import videojs from 'video.js';
 
 import * as Dom from './components/utils/dom.js';
@@ -35,34 +48,15 @@ class NoteTaking extends Component {
     if (!this.notes_) {
       this.notes_ = {};
     }
-		
-		this.playerSize_ = this.determinePlayerSize();
-    
+		    
     // Separate the Mark and the DisableControl options from config
 		const boardOptions = options.Board;
     const markerButtonOptions = options.MarkerButton;
-		const dialogOptions = options.Dialog;
     
-		this.injectDialog(dialogOptions);
     this.injectBoard(boardOptions);
     this.injectMarkerButton(markerButtonOptions);
   }
  
-	/**
-	 * Adds dialog to player for detailing mark item
-	 *
-	 * @param {Object} options Options for the Dialog component
-	 * @return {Object=} Created Dialog element
-	 * @method injectDialog
-	 */
-	injectDialog(options) {
-		let player = this.player();
-		
-		
-		let dialog = player.addChild('Dialog', options);
-		return dialog;
-	}
-	
 	/**
 	 * Adds disable control to the progress control that exists on the current player
 	 *
@@ -83,6 +77,7 @@ class NoteTaking extends Component {
 						'There is already a Board attached to the progress control'
 					);
 				}
+				
         let board = progressControl.addChild('Board', options);
         return board;
       }
@@ -115,39 +110,29 @@ class NoteTaking extends Component {
 	/**
    * Adds a class name that corresponds to a dialog size dependent on the video dim
 	 * 
+	 * @return {Object} Object with width and height prop
 	 * @method calculateSizeClass
 	 */
 	determinePlayerSize() {
 		// YouTube videos have 1.77 ratio width:height
 		// Coursera videos have 1.77 ratio width:height
-		let size = 'medium';
-
-		let height = this.player().videoHeight();
-		let width = this.player().videoWidth();
+		let size = {};
+		let height, width;
 		
-		if (width >= 850 && height >= 400) {
-			size = 'large';
-		} else if (width >= 640 && height >= 360) {
-			size = 'medium';
-		} else {
-			size = 'small';
-		}
+		let retrieveDims = Fn.bind(this, () => {
+			let playerEl = this.player().el();
+			let computeStyle = window.getComputedStyle(playerEl);
+			
+			height = parseFloat(computeStyle['height']);
+			width = parseFloat(computeStyle['width']);
+		});
+		
+		this.player().ready(retrieveDims, true);
+				
+		size['height'] = height;
+		size['width'] = width;
 		
 		return size;
-	}
-	
-	/**
-	 * Returns the size for the dialog
-	 *
-	 * @return {String} the size descriptor
-	 * @method getSize
-	 */
-	getPlayerSize() {
-		if (!this.size_) {
-			this.playerSize_ = this.determinePlayerSize();
-		}
-		
-		return this.playerSize_;
 	}
 	
 	/**

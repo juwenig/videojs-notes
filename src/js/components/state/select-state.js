@@ -48,7 +48,10 @@ class SelectState extends State {
 	}
 	
   /**
-	 * Stops propogation of marks element click event to parent elements
+	 * Stops propogation if target is this
+	 *
+	 * @param {Event} event
+	 * @method handleClick
 	 */
 	handleClick(event) {
 		event.preventDefault();
@@ -91,7 +94,7 @@ class SelectState extends State {
   }
 	
 	/**
-	 * Handles mark item click
+	 * Handles mark item click - relies on bubbling
 	 *
 	 * @param {Event} event Event object
 	 * @method handleItemClick

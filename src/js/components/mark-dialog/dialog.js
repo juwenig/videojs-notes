@@ -20,11 +20,6 @@ class Dialog extends Component {
 		options = mergeOptions(Dialog.prototype.options_, options);
 		super(player, options);
 		
-		// Disables player controls so that background click does not pause/play video
-		if ("controls_" in this.player()) {
-			this.player().controls_ = false;
-		}
-		
 		this.mark_ = null;
 		
 		this.form_ = this.getChild('DialogForm');
@@ -32,9 +27,13 @@ class Dialog extends Component {
 		const formHandler = Fn.bind(this, this.handleFormSubmit);
 		this.form_.on('submit', formHandler);
 		
+		this.on('click', this.handleContainerClick);
+		
 		// hide initially
 		this.hide();
 		this.active_ = false;
+		
+		this.setDimension(options.size || null);
 	}
 	
 	/**
@@ -44,7 +43,7 @@ class Dialog extends Component {
 	 * @method isActive
 	 */
 	isActive() {
-		if (typeof active === 'undefined') {
+		if (typeof this.active_ !== 'undefined') {
 			return this.active_;
 		} 
 	}
@@ -52,9 +51,12 @@ class Dialog extends Component {
 	/**
 	 * Overrides super method and sets active
 	 *
+	 * @param {Function} fn Callback for tech click handler
 	 * @method show
 	 */
-	show() {
+	show(fn) {
+		this.player().controls_ = false;
+		
 		super.show();
 		this.active_ = true;
 	}
@@ -65,6 +67,8 @@ class Dialog extends Component {
 	 * @method hide
 	 */
 	hide() {
+		this.player().controls_ = true;
+		
 		super.hide();
 		this.active_ = false;
 	}
@@ -123,7 +127,7 @@ class Dialog extends Component {
 		// offsets only work after element
 		// has been added into the DOM
 		const markW = this.mark().el_.offsetWidth;
-		const dialogW = this.el_.offsetWidth;
+		const dialogW = this.width();
 		const playerW = this.player().el_.offsetWidth;
 		
 		let leftPos = markL - playerL + 0.5*(markW - dialogW); 
@@ -155,7 +159,7 @@ class Dialog extends Component {
 	 * @method getAllFormElements
 	 */
 	getAllFormElements() {
-		return this.form_.elements;
+		return this.form_.getInputs();
 	}
 	
 	/**
@@ -200,8 +204,8 @@ class Dialog extends Component {
 			const endTime = formatTime(markPos.right * duration);
 			
 			this.setFormData({
-				'time-start': startTime,
-				'time-end': endTime
+				'StartTime': startTime,
+				'EndTime': endTime
 			});
 		} else {
 			Log.error('no mark item associated with dialog');
@@ -217,11 +221,8 @@ class Dialog extends Component {
 	setFormData(data) {
 		const els = this.getAllFormElements();
 		
-		for (name in els) {
-			if (name === '') {
-			
-			}
-			console.log("Form Element: ", name, " is : ", els[name]);
+		for (name in data) {
+			els[name].value = data[name];
 		}
 		
 	}
@@ -233,27 +234,36 @@ class Dialog extends Component {
 	 * @method createEl
 	 */
 	createEl(tag = 'div', props = {}, attrs = {}) {
-		let size = this.player().notetaking().getPlayerSize();
-		let sizeClass = 'ntk-dialog-md';
-		
-		switch(size) {
-			case 'large': 
-				sizeClass = 'ntk-dialog-lg';
-				break;
-			case 'medium':
-				sizeClass = 'ntk-dialog-md';
-				break;
-			default:
-				break;
-		}
-		
 		props = assign({
-			className: `ntk-dialog ${sizeClass}`
+			className: 'ntk-dialog'
 		}, props);
 		
 		const el = super.createEl(tag, props, attrs);
 		
 		return el;
+	}
+	
+	/**
+	 * Sets the dimensions of the dialog
+	 *
+	 * @param {Object} size Contains width and height props
+	 * @method setDimension
+	 */
+	setDimension(size){
+		let width = size && size.width;
+		let height = size && size.height;
+
+		if (!size) {
+			size = this.player().notetaking().determinePlayerSize();
+			width = size.width * 0.255555;
+			height = 0;
+		} 
+		
+		super.dimension('width', width);
+		
+		if (height) {
+			super.dimension('height', height);
+		}
 	}
 	
 	/**
@@ -277,6 +287,7 @@ class Dialog extends Component {
 		event.stopImmediatePropagation();
 		
 		const data = Form.formToJson(this.getAllFormElements());
+		
 	}
 }
 

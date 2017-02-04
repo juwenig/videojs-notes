@@ -29,6 +29,10 @@ class DialogForm extends Component {
 		// We cannot add this to the tech_ object so this will have to do for now..
 		return el;
 	}
+	
+	getInputs() {
+		return this.el_.elements;
+	}
 }
 
 DialogForm.prototype.options_ = Config.DialogForm;

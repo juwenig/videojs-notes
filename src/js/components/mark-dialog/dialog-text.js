@@ -12,17 +12,13 @@ class DialogText extends Component {
 	
 	createEl(tag = 'textarea', props = {}, attrs = {}) {
 		let rows;
-		let size = this.player().notetaking().getPlayerSize();
+		let size = this.player().notetaking().determinePlayerSize();
 		
-		switch(size) {
-			case 'large': 
-				rows = 5;
-				break;
-			case 'medium':
-				rows = 3;
-				break;
-			default:
-				rows = 2;
+		
+		if (size.width <= 180) {
+			rows = 3;
+		} else {
+			rows = 5;
 		}
 		
 		props = assign({
